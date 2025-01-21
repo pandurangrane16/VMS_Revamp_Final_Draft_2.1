@@ -3,6 +3,7 @@ import { MediaplayerserviceService } from '../services/vcms/mediaplayerservice.s
 import { MediaschedulerserviceService } from '../services/vcms/mediaschedulerservice.service';
 import { MediauploadserviceService } from '../services/vcms/mediauploadservice.service';
 import { BehaviorSubject, Observable, forkJoin, of, take, tap } from 'rxjs';
+import { MedialiveplayService } from '../services/vcms/medialiveplay.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,8 @@ export class CVMSMediaFacadeServiceService {
 
   constructor(private _mediaplayer: MediaplayerserviceService,
     private _mediascheduler:MediaschedulerserviceService,
-    private _mediupload:MediauploadserviceService
+    private _mediupload:MediauploadserviceService,
+    private _medialive: MedialiveplayService
   ) { }
 
   GetMediaPlayer() {
@@ -42,6 +44,10 @@ export class CVMSMediaFacadeServiceService {
 
   getMediaPlayerByIpAdd(ipAdd:string){
     return this._mediaplayer.getMediaPlayerByIpAddress(ipAdd);
+  }
+  PlayEmergencyMedia(inputReq: string,data:any) {   
+    
+    return this._medialive.PlayEmergencyMedia(inputReq,data);
   }
 }
 

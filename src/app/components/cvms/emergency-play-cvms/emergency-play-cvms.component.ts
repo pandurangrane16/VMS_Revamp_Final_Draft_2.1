@@ -114,6 +114,7 @@ export class EmergencyPlayCvmsComponent {
   getMediaPlayerList() {
     //let _vmsIpAdd = this.vmsIds[0];
     let _vmsIpAdd = "192.100.100.300";
+    //let _vmsIpAdd = "172.19.10.67";
     this.mediaFacade.getMediaPlayerByIpAdd(_vmsIpAdd).subscribe(res => {
       if (res != null) {
         if(res.length > 0){
@@ -134,6 +135,25 @@ export class EmergencyPlayCvmsComponent {
         }
       }
     })
+  }
+  onSubmit() {
+
+    let Ipaddress = "172.19.32.51";    
+       
+      let MediaJson = {
+        "mediaPlayerId": 1,
+        "mediaPlayerName": "ashish"
+      };
+      this.mediaFacade.PlayEmergencyMedia(Ipaddress, MediaJson).subscribe(data => {
+        if (data == 0) {
+          this.toast.error("Error occured while saving data for ");
+        }
+        else {
+  
+          this.toast.success("Send Media successfully");
+        }
+      });
+    
   }
   
 }

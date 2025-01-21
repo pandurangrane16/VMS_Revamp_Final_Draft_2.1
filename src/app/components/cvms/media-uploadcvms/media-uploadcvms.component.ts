@@ -91,7 +91,11 @@ export class MediaUploadcvmsComponent implements OnInit {
       mediatype: ['', ''],
     });
   }
+  BacktoList(){
+    this._router.navigate(['cvms/uploadMedia']);
+  }
 
+  
   ngOnInit(): void {
     this.GetVmsDetails();
     this.getMedialistData();
@@ -162,6 +166,7 @@ export class MediaUploadcvmsComponent implements OnInit {
 
         this.toast.success("Saved successfully for " + _vcmsuploadmediadata.controllerName);
       }
+      this._router.navigate(['cvms/uploadMedia']);
     });
 
   }
