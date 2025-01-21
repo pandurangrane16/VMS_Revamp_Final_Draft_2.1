@@ -1,0 +1,125 @@
+<div class="p-4">
+  <div class="row">
+    <div class="col-xl-4 d-flex grid-margin stretch-card">
+
+      <div class="card border-0">
+
+        <div class="card-body p-0 pt-2 pb-2 text-center" style="height:200px;">
+
+          <!-- <canvas id="deviceChart"></canvas> -->
+          <canvas
+                  baseChart
+                  [data]="chartDataDevice"
+                  [type]="'pie'"
+                  [options]="chartOptions"
+                  style="margin: 0 auto;"
+                >
+                </canvas>
+        </div>
+        <div class="card-footer bgTable">
+          <h4 class="card-title text-center">Device Status</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 d-flex grid-margin stretch-card">
+      <div class="card border-0">
+        <div class="card-body pb-0 pl-3 pr-3">
+          <canvas baseChart class="chart"
+          [data]="mediaData"
+          [options]="barChartOptions"
+          [type]="barChartType"
+          >
+        </canvas>
+        </div>
+        <div class="card-footer bgTable">
+          <h4 class="card-title text-center">Media Audit</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 d-flex grid-margin stretch-card">
+      <div class="card border-0">
+        <div class="card-body pb-0 pl-3 pr-3">
+
+          <canvas baseChart class="chart"
+          [data]="PlaylistData"
+          [options]="barChartOptions"
+          [type]="barChartType"
+          >
+          </canvas>
+        </div>
+        <div class="card-footer bgTable">
+          <h4 class="card-title text-center">Playlist Audit</h4>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-xl-6  grid-margin stretch-card">
+
+      <div class="card border-0">
+        <div class="card-body pb-0 pt-3">
+
+          <div class="row">
+
+            <div class="col-lg-12">
+              <div class="chart-legends row">
+                <div *ngFor="let legend of AdsData.labels; let i = index;" class="col-3">
+                  <h5 class="font-weight-bold text-dark mb-1" *ngFor="let datalist of AdsData.datasets; let j = index;">
+                    {{ datalist.data[i] }}</h5>
+                  <i class="legend-label mt-1" *ngFor="let color of AdsData.datasets;"
+                    ></i>
+                  <p class="text-muted m-0 ml-1"> {{ legend}}</p>
+
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <!-- <canvas id="addParty" class="mt-3"></canvas> -->
+              <canvas baseChart class="chart" [data]="AdsData" [options]="AdsOptions" [type]="barChartType">
+              </canvas>
+            </div>
+          </div>
+
+        </div>
+        <div class="card-footer bgTable">
+          <h4 class="card-title text-center">Top Ad Parties</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-6  grid-margin stretch-card">
+      <div class="card border-0">
+
+        <div class="card-body p-3 pb-0 bgTable">
+
+          <div class="table-responsive">
+            <table class="table table-striped text-center mb-0 table-light w-100" datatable>
+              <thead>
+                <tr>
+                  <th>Location</th>
+                  <th>Preview</th>
+                  <th>Screenshot</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let vms of vmsList">
+                  <td class="p-0">{{ vms.location }}</td>
+                  <td class="p-0"><a class="badge badge-primary" [href]="vms.name"><i class="icon-eye"></i> Preview</a>
+                  </td>
+                  <td class="p-0"><i class="icon-image text-primary icon-md"></i></td>
+                </tr>
+              </tbody>
+            </table>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

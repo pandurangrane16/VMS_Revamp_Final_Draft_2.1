@@ -1,0 +1,43 @@
+<div class="text-center w-100">
+  <input class="form-control col-8 float-right mt-2 mb-2" *ngIf="isSearchBox" type="text" [(ngModel)]="searchText" (input)="Search()"
+    placeholder="Search Here" />
+  <table class="table table-striped table-bordered table-sm row-border hover" id="datatableexample">
+    <thead class="table-dark">
+      <tr>
+        <th>Sr No.</th>
+        <th *ngFor="let column of headArr" >{{column.Head}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of gridArr;let sr=index" (click)="ShowForm(item)">
+        <td>{{sr+1}}</td>
+        <td *ngFor="let head of headArr">
+          <span *ngIf="head.FieldName != 'isActive' && head.FieldName != 'actions' && head.FieldName != 'statusText' && head.type != 'datetime'" >{{item[head.FieldName]}}</span>
+          <span *ngIf="head.FieldName != 'isActive' && head.FieldName != 'actions' && head.FieldName != 'statusText' && head.type == 'datetime'" >{{item[head.FieldName] | date:'dd-MM-YYYY HH:mm:ss'}}</span>
+          <span *ngIf="head.FieldName == 'isActive' && item[head.FieldName] == 'Active'" class="badge badge-success">{{item[head.FieldName]}}</span>
+          <span *ngIf="head.FieldName == 'isActive' && item[head.FieldName] == 'In Active'" class="badge badge-danger">{{item[head.FieldName]}}</span>
+          <span *ngIf="head.FieldName == 'statusText'" [class]="item.class">{{item[head.FieldName]}}</span>
+          <span *ngIf="head.type == 'checkbox'">
+            <input  class="chkBox" (change)="Checked($event,item)"
+            type="checkbox" id="defaultCheck1">
+          </span>
+          <span *ngIf="head.FieldName == 'actions' && btnArray.length > 0"><button *ngFor="let btn of btnArray" type="button" class="btn btn-inverse-primary btn-sm" (click)="GoToBtnAction(btn,item)">
+            <i [class]="btn.icon"></i>
+          </button></span>
+        </td>
+        <!-- <td *ngIf="btnArray.length > 0">
+          
+        </td> -->
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12" *ngIf="pagination || pagination == undefined">
+      <app-cm-pagination [totalRecords]="totalRecords" [recordsPerPage]="perPage" [collectionSize]="collectionSize" [totalPages]="totalPages"
+        (pageno)="onPageChange($event)" (perPage)="onPageRecordsChange($event)" >
+      </app-cm-pagination>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,80 @@
+<div class="p-4"   #scroll>
+<div class="row">
+<div class="col-xl-12 col-md-12 grid-margin">
+<button class="btn btn-primary btn-rounded mb-1" (click)="BackToList()">
+<!-- <span class="spinner-border spinner-border-sm me-1" ></span> -->
+<i class="icon-arrow-left"></i> Back To List 
+</button>
+
+    <div class="card">
+       <div class="card-body">
+                <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
+                    
+                        <div class="row">
+                            <div class="mb-3 col">
+                                <label class="form-label">Zone Name*</label>
+                                <input type="text" formControlName="zoneName" class="form-control"
+                                    placeholder="Zone Name"
+                                    [ngClass]="{ 'is-invalid': f['zoneName'].touched && f['zoneName'].errors, 'is-valid': f['zoneName'].valid }" />
+                                <div *ngIf="f['zoneName'].touched && f['zoneName'].errors" class="invalid-feedback">
+                                    <div>{{getErrorMessage('zoneName','Zone Name',true,"Invalid data available in Zone Name")}}</div>
+                                </div>
+                            </div>
+                            <div class="mb-9 col">
+                                <label class="form-label">Description*</label>
+                                <input type="text" formControlName="description" class="form-control"
+                                    placeholder="Description"
+                                    [ngClass]="{ 'is-invalid': f['description'].touched && f['description'].errors, 'is-valid': f['description'].valid }" />
+                                <div *ngIf="f['description'].touched && f['description'].errors"
+                                    class="invalid-feedback">
+                                    <div>{{getErrorMessage('description','Description',true,"Invalid data available in Description")}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-1 col">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Status*</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="switch active">
+                                            <input type="checkbox" formControlName="isActive" [(ngModel)]="active">
+                                            <div class="slider round"></div>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button [disabled]="!form.valid" class="btn btn-primary" (click)="ViewMap()">
+                                            <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                            {{btnSaveName}}
+                                        </button>
+
+                                        <button type="button" class="btn btn-danger ml-2" (click)="DeleteZone()" *ngIf="id!=0">
+                                            <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>
+                </form>
+        </div>
+            
+    </div>
+    <div class="card">
+        <div class="card-body p-2 pb-3">
+                <!-- <div class="bg-dark pl-2 pr-2 filterArea" id="filterArea">
+                    <div class="row">
+                    </div>
+                </div> -->
+                <div style="height:700px; padding-bottom: 20px;">
+                    <app-cm-leaflet (latLng)="GetLatLong($event)" [zoneId]="this.id" [btnDisabled]="btnDis" [isEdit]="isEdit" type="zone" mapType="zone"></app-cm-leaflet>
+                </div>
+            </div>
+        
+    </div>
+
+</div></div></div>

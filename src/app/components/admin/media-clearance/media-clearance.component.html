@@ -1,0 +1,101 @@
+<div class="p-4">
+    <div class="row">
+                             
+        <div class="col-md-12">
+          
+            <div class="card border-0  pb-0 bgTable"  #scroll>
+               
+              <div class="card-body p-2">
+                <button class="btn btn-primary  btn-rounded" (click)="BackToList()">
+                    <!-- <span class="spinner-border spinner-border-sm me-1" ></span> -->
+                    <i class="icon-arrow-left"></i>
+                    Back To List
+                </button>
+               
+                <button type="button" class="btn btn-danger btn-rounded float-right" type="text" (click)="RemoveMedias(0)">
+                    Remove All
+                </button>
+
+                <table class="table table-striped table-bordered table-sm row-border hover mt-1"
+                id="datatableexample">
+                <thead>
+                    <tr>
+                        <th>Sr No.</th>
+                        <th>VMS ID</th>
+                        <th>VMS Name</th>
+                        <th>Media Count</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of gridArr;let sr=index">
+                        <td>{{sr+1}}</td>
+                        <td>{{item.vmsCode}}</td>
+                        <td>{{item.description}}</td>
+                        <td>{{item.totalMedia}}</td>
+                        <td class="text-center"><button class="btn btn-primary btn-sm" (click)="RemoveMedias(item.vmsId)">
+                                <span class="spinner-border-sm me-1"></span>
+                                Clear Media
+                            </button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+                
+    </div>
+  </div>
+  </div>
+  </div>
+<!-- <div class="container" #scroll>
+    <div class="card card-css">
+        <div class="row">
+            <div class="col-md-12" style="padding: 25px;">
+                <button class="btn btn-primary" (click)="BackToList()">-->
+                    <!-- <span class="spinner-border spinner-border-sm me-1" ></span> -->
+ <!-- <i class="icon-arrow-left"></i>
+                    Back To List
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="modal-body">
+                    <div class="container text-center mt-4">
+                        <div class="row">
+                            <div class="col-md-2" style="padding:5px">
+                                <button type="button" class="btn btn-danger" type="text" (click)="RemoveMedias(0)">
+                                    Remove All
+                                </button>
+                            </div>
+                        </div>
+                        <table class="table table-striped table-bordered table-sm row-border hover"
+                            id="datatableexample">
+                            <thead>
+                                <tr>
+                                    <th>Sr No.</th>
+                                    <th>VMS ID</th>
+                                    <th>VMS Name</th>
+                                    <th>Media Count</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of gridArr;let sr=index">
+                                    <td>{{sr+1}}</td>
+                                    <td>{{item.vmsCode}}</td>
+                                    <td>{{item.description}}</td>
+                                    <td>{{item.totalMedia}}</td>
+                                    <td><button class="btn btn-primary" (click)="RemoveMedias(item.vmsId)">
+                                            <span class="spinner-border-sm me-1"></span>
+                                            Clear Media
+                                        </button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div> -->

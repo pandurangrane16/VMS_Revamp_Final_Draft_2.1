@@ -1,0 +1,121 @@
+<div class="p-4">
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-primary btn-rounded mb-1" (click)="BackToList()">
+                <!-- <span class="spinner-border spinner-border-sm me-1" ></span> -->
+                <i class="icon-arrow-left"></i>
+                Back To List
+            </button>
+       
+    <div class="card">
+        
+                <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3 col">
+                                <label class="form-label">Tarrif Code*</label>
+                                <input type="text" formControlName="tarrifCode" class="form-control" placeholder="Tarrif Code"
+                                    [ngClass]="{ 'is-invalid': f['tarrifCode'].touched && f['tarrifCode'].errors, 'is-valid': f['tarrifCode'].valid }" (focusout)="ValidateTarrifCode()" />
+                                <div *ngIf="f['tarrifCode'].touched && f['tarrifCode'].errors" class="invalid-feedback">
+                                    <div>{{getErrorMessage('tarrifCode','Tarrif Code',true,"Invalid data available in Tarrif Code")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 col">
+                                <label class="form-label">Tarrif Type*</label>
+                                <input type="text" formControlName="tarrifType" class="form-control"
+                                    placeholder="Tarrif Type"
+                                    [ngClass]="{ 'is-invalid': f['tarrifType'].touched && f['tarrifType'].errors, 'is-valid': f['tarrifType'].valid }" />
+                                <div *ngIf="f['tarrifType'].touched && f['tarrifType'].errors" class="invalid-feedback">
+                                    <div>{{getErrorMessage('tarrifType','Tarrif Type',true,"Invalid data available in Tarrif Type")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-9 col">
+                                <label class="form-label">Unit Of Measurement*</label> {{this.selectedUOM}}
+                                <select class="form-control form-control-sm" formControlName="uomName" [(ngModel)] = "selectedUOM"
+                                    [ngClass]="{'is-invalid': submitting && f['uomName'].errors}">
+                                    <option value="0" selected>Select UOM</option>
+                                    <option value="second">Second Wise</option>
+                                    <option value="minute">Minute Wise</option>
+                                    <option value="hour">Hourly</option>
+                                </select>
+                                <div *ngIf="f['uomName'].touched && f['uomName'].errors" class="invalid-feedback">
+                                    <div>{{getErrorMessage('uomName','Unit Of Measurement',true,"Invalid data available in Unit Of Measurement")}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col">
+                                <label class="form-label">Amount*</label>
+                                <input type="text" formControlName="amount" (focusout)="ChangeTotalAmount()" class="form-control"
+                                placeholder="Amount"
+                                [ngClass]="{ 'is-invalid': f['amount'].touched && f['amount'].errors, 'is-valid': f['amount'].valid }" />
+                                <div *ngIf="f['amount'].touched && f['amount'].errors" class="invalid-feedback">
+                                    <div>{{getErrorMessage('amount','Amount',true,"Invalid data available in Amount")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 col">
+                                <label class="form-label">GST(%)*</label>
+                                <input type="text" formControlName="gstPer" class="form-control"
+                                placeholder="GST Percentage" (focusout)="ChangeTotalAmount()"
+                                [ngClass]="{ 'is-invalid': f['gstPer'].touched && f['gstPer'].errors, 'is-valid': f['gstPer'].valid }" />
+                                <div *ngIf="f['gstPer'].touched && f['gstPer'].errors"
+                                    class="invalid-feedback">
+                                    <div>{{getErrorMessage('gstPer','GST Percentage',true,"Invalid data available in GST Percentage")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 col">
+                                <label class="form-label">Total Amount*</label>
+                                <input type="text" class="form-control form-control-sm" placeholder="Total Amount"
+                                    id='totalAmount' formControlName="totalAmount" maxlength="6" [(ngModel)]="totalAmt"
+                                    [ngClass]="{ 'is-invalid': f['totalAmount'].touched && f['totalAmount'].errors, 'is-valid': f['totalAmount'].valid }"  />
+                                <div *ngIf="f['totalAmount'].touched && f['totalAmount'].errors" class="invalid-feedback">
+                                    <div>{{getErrorMessage('totalAmount','Total Amount',true,"Invalid data available in Total Amount")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 col">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Status*</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="switch active">
+                                            <input type="checkbox" formControlName="isActive" [(ngModel)]="active">
+                                            <div class="slider round"></div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="card-footer text-right">
+
+                            <button [disabled]="!form.valid" class="btn btn-primary mr-2">
+                                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                Submit
+                            </button>
+                       
+                            <button [disabled]="!form.valid" class="btn btn-secondary" (click)="clearForm()">
+                                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                Reset
+                            </button>
+                       
+                            <button type="button" class="btn btn-danger ml-2" (click)="DeleteTarrif()" *ngIf="id!=0">
+                                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                Delete
+                            </button>
+                        </div>
+                   
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,131 @@
+.card-css{
+    padding: 20px;
+}
+
+
+::ng-deep .modal-content  {
+    border-radius: 15px!important;
+  }
+  ::ng-deep .modal .btn-primary {
+    color: #fff;
+    background-color: #ec37fc;
+    border-color: #ec37fc;
+}
+::ng-deep .modal .btn-outline-primary {
+    color: #ec37fc;
+    background-color: #fff;
+    border-color: #ec37fc;
+}
+::ng-deep .modal .btn-primary:hover, ::ng-deep .btn-outline-primary:hover {
+    color: #fff;
+    background-color: #bf21ce;
+    border-color: #ec37fc;
+}
+
+.error:focus,
+.error {
+  border-color: #E91E63;
+  color: #E91E63;
+}
+
+.invalid-feedback {
+  color: #E91E63;
+}
+
+/* range slider */
+
+::ng-deep .range-slider {
+    width: 90%;
+    margin: 0 auto;
+    position: relative;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+  ::ng-deep #range {
+       width: 100%;
+       --SliderColor:#7918f2!important;
+       -webkit-appearance: none;
+       background-color: rgba(222, 228, 236, 1);
+       border-radius: 1rem;
+  }
+  ::ng-deep #range:focus {
+    outline: none;
+  }
+  ::ng-deep #range::before,
+  ::ng-deep #range::after {
+    position: absolute;
+    top: -20px;
+    color: #333;
+    font-size: 14px;
+    line-height: 1;
+    padding: 3px 5px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+  ::ng-deep #range::before {
+    left: 0;
+    content: attr(data-min);
+    display: none;
+  }
+  ::ng-deep  #range::after {
+    right: 0;
+    content: attr(data-max);
+    display: none;
+  }
+  ::ng-deep #range::-webkit-slider-runnable-track {
+    -webkit-appearance: none!important; 
+    width: 100%;
+    height: 0.5rem;
+    cursor: pointer;
+    /* animate: 0.2s; */
+    background: linear-gradient(90deg, #ac32e4 var(--range-progress), #dee4ec var(--range-progress))!important;
+    border-radius: 1rem;
+  }
+  ::ng-deep #range::-webkit-slider-thumb {
+    -webkit-appearance: none!important;
+    border: 0.15rem solid #4801ff!important;
+    box-shadow: 0 1px 3px rgba(0, 0, 255, 0.3)!important;
+    border-radius: 50%!important;
+    background: #7918f2!important;
+    background: -webkit-linear-gradient(-68deg,#ac32e4,#4801ff)!important;
+    background: -o-linear-gradient(-68deg,#ac32e4,#4801ff)!important;
+    background: -moz-linear-gradient(-68deg,#ac32e4,#4801ff)!important;
+    background: linear-gradient(-68deg,#ac32e4,#4801ff)!important;
+    cursor: pointer;
+    height: 22px!important;
+    width: 22px!important;
+    transform: translateY(calc(-50% + 4px))!important;
+  }
+  ::ng-deep  #tooltip {
+    position: absolute;
+    top: -1.80rem;
+  }
+  ::ng-deep #tooltip span {
+    position: absolute;
+    text-align: center;
+    display: block;
+    line-height: 1;
+    padding: 0.125rem 0.25rem;
+    color: #fff;
+    border-radius: 0.125rem;
+    background: #7918f2;
+    background: -webkit-linear-gradient(-68deg,#ac32e4,#4801ff);
+    background: -o-linear-gradient(-68deg,#ac32e4,#4801ff);
+    background: -moz-linear-gradient(-68deg,#ac32e4,#4801ff);
+    background: linear-gradient(-68deg,#ac32e4,#4801ff);
+    font-size: 1.00rem;
+    left: 55%;
+    transform: translate(-50%, 0);
+  }
+  ::ng-deep #tooltip span:before {
+    position: absolute;
+    content: "";
+    left: 50%;
+    bottom: -8px;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border: 4px solid transparent;
+    border-top-color: #7918f2;
+  }
+  ::ng-deep .ol-viewport{border-radius: 15px 15px 0 0;}

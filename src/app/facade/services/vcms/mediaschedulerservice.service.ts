@@ -1,0 +1,25 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { HttpService } from '../common/http.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class MediaschedulerserviceService {
+
+  constructor(private http: HttpClient,
+       private _httpService: HttpService,
+       private _http: HttpClient) { }
+  
+       getMediaschedulerDetails(_data: any) {
+        return this._httpService._getMethod('Vcms_API/api/MediaUpload/GetDetails'+_data);
+      }
+      SaveMediascheduler(_data: any) {
+        return this._httpService._postMethod(_data,'Vcms_API/api/MediaScheduler/SaveMediaSchedulerMaster');
+      }
+     
+      UpdateMediascheduler(_data: any) {
+        return this._httpService._postMethod(_data,'Vcms_API/api/MediaScheduler/PutMediaSchedulerMaster');
+      }
+
+}

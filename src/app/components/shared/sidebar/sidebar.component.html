@@ -1,0 +1,32 @@
+<nav class="sidebar sidebar-offcanvas bg-dark" [class.sidebar-close]="!openSidebar" id="sidebar" >
+    <div class="user-profile">
+      <div class="user-image">
+        <img src="assets/images/faces/face28.png">
+      </div>
+      <div class="user-name">
+        Hi {{user?.username | titlecase}}!
+      </div>
+      <div class="user-designation">
+          Admin
+      </div>
+    </div>
+     <ul class="nav" *ngIf="menusVM != undefined">
+      <li *ngFor="let item of menusVM;  let i = index; let last = last" #itemEl  class="nav-item" (mouseover)="showSubmenu(itemEl)" (mouseout)="hideSubmenu(itemEl)" [class.hover-open]="i == HighlightRow" [class.last-item]="last">
+          <a [routerLink]="[item.link]" class="nav-link" data-toggle="collapse"  (click)="ClickedShow(i)"  >
+            <i [class]="item.icon"></i>
+            <span class="menu-title">{{item.link_name}}</span>
+            <i class="menu-arrow"  [class.roted]="i == HighlightRow" (click)="ClickedShow(-1)"></i>
+          </a>
+        <div *ngIf="item.sub_menu != undefined && item.sub_menu.length > 0" [id]="item.id" class="collapse"  [class.show]="i == HighlightRow">
+        <ul [class.blank]="item.sub_menu.length == 0" class="nav flex-column sub-menu">
+          <li *ngFor="let item_sub of item.sub_menu" class="nav-item" (mouseover)="showSubmenu(itemEl)" (mouseout)="hideSubmenu(itemEl)">
+            <a [routerLink]="[item_sub.link]" class="nav-link" >{{item_sub.link_name}}</a>
+          </li>
+        </ul>
+      </div>
+      
+      </li>
+    </ul>
+  </nav>
+  
+  

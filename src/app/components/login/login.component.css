@@ -1,0 +1,28 @@
+html{overflow: hidden;}
+svg{
+     
+     position:absolute;
+     left:0;
+     right:0;
+     top:0;
+     bottom:0;
+     margin:auto;
+     z-index:2;
+     opacity:0.5;
+   }
+.ftco-section {
+    padding: 2.9em 0;
+    position: relative;
+    z-index: 3;
+}
+section{display: block;}
+::ng-deep .sidebar-icon-only .main-panel {
+    width: 100vw;
+}
+.form-control:focus {
+    border-color: #ff5f3b;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem #fc641d26;
+}
+.content-wrapper{width: 100vw!important;}
+.page-body-wrapper{height: 100vh!important;}

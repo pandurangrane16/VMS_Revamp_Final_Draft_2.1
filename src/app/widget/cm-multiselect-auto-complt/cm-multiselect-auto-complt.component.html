@@ -1,0 +1,13 @@
+
+            <div class="form-group row">
+                <div class="col-md-12" *ngIf="inputData != undefined && isHide == false">
+                    <label for="">{{label}}</label>
+                    <form [formGroup]="form">
+                        <ng-multiselect-dropdown name="zones" (onSelectAll)="selectAll($event,1)"
+                            [settings]="dropdownSettings" [data]="inputData.data" [disabled]="inputData.disabled"
+                            (onSelect)="onItemSelect($event,1)" (onDeSelectAll)="selectAll($event,0)"
+                            (onDeSelect)="onItemSelect($event,0)">
+                        </ng-multiselect-dropdown>
+                    </form>
+                </div>
+       

@@ -1,0 +1,45 @@
+<div class="p-4">
+    <div class="row">
+                             
+        <div class="col-md-12">
+          
+            <div class="card border-0  pb-0 bgTable">
+               
+              <div class="card-body p-2">
+
+                <tabset #tabset>
+                    <tab heading="Pending" (selectTab)="OnTabChange(0)">
+                        <app-cm-table [headArr]="headerArr" [gridArr]="listOfMediaUploadPending" [totalRecords]="totalRecords"
+                        [totalPages]="totalPages" [perPage]="recordPerPage" (pager)="onPager($event)"
+                        [btnArray]="btnArray" (btnAction)="ButtonAction($event)" [collectionSize]="totalRecords"
+                        (recordPerPage)="onRecordPageChange($event)" link="users/add-user" fieldName="id"
+                        (search)="onPageSearch($event)" [isSearch]="isSearch" (searchWithId)="SearchWithId($event)"></app-cm-table>
+                    </tab>
+
+                    <tab heading="Approved" (selectTab)="OnTabChange(1)">
+                        <app-cm-table [headArr]="headerArr" [gridArr]="listOfMediaUploadApproved" [totalRecords]="totalRecords"
+                        [totalPages]="totalPages" [perPage]="recordPerPage" (pager)="onPager($event)"
+                        [btnArray]="btnArray" (btnAction)="ButtonAction($event)" [collectionSize]="totalRecords"
+                        (recordPerPage)="onRecordPageChange($event)" link="users/add-user" fieldName="id"
+                        (search)="onPageSearch($event)" [isSearch]="isSearch"   (searchWithId)="SearchWithId($event)"></app-cm-table>
+                    </tab>
+
+                    <tab heading="Rejected" (selectTab)="OnTabChange(2)">
+                        <app-cm-table [headArr]="headerArr" [gridArr]="listOfMediaUploadRejected" [totalRecords]="totalRecords"
+                        [totalPages]="totalPages" [perPage]="recordPerPage" (pager)="onPager($event)"
+                        [btnArray]="btnArray" (btnAction)="ButtonAction($event)" [collectionSize]="totalRecords"
+                        (recordPerPage)="onRecordPageChange($event)" link="users/add-user" fieldName="id"
+                        (search)="onPageSearch($event)" [isSearch]="isSearch"  (searchWithId)="SearchWithId($event)"></app-cm-table>
+                    </tab>
+                </tabset>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+</div>
+
+<ng-template #cmmodal let-modal>
+    <app-cm-modal></app-cm-modal>
+</ng-template>

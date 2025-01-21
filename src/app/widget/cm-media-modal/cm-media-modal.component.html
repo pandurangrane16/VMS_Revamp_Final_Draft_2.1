@@ -1,0 +1,111 @@
+<div class="modal-header bgTable" style="border-radius: 15px 15px 0 0!important;">
+    <h5 class="modal-title text-uppercase mr-5">{{type}}</h5>
+    <!-- <h5 class="modal-title text-uppercase mr-5">{{ this.id != null ? 'Edit User':'Add New User'}} </h5>  -->
+    <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close" (click)="passBack()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div *ngIf="type == 'Media Upload' || type == 'View Media'" class="spacing">
+    <table class="table table-striped table-bordered table-sm row-border hover" style="width: 100%;">
+        <tr>
+           
+            <th class="col-md-9">
+                File
+            </th>
+            <th class="col-md-3 text-center border-left">
+                Action
+            </th>
+           
+        </tr>
+        <tbody *ngIf="data.modalType == 'mediaupload'">
+            <tr *ngFor="let media of viewData" >
+                <td *ngIf="mediaType == 'Media'" colspan="2">
+                   <div class="row">
+                    <div class="col-md-9">
+                        {{media.displayName}}
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <button tooltip="Click to View" placement="top" delay="500" type="button"
+                            class="btn btn-inverse-primary btn-sm" (click)="ViewMedia(media.filePath, media.fileType)">View
+                            File</button>
+                    </div>
+                    </div>
+                </td>
+
+                <td *ngIf="mediaType == 'Text'" colspan="2">
+                <div class="row" >
+                    <div class="col-md-9">
+                        {{media.textContent}}
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <button tooltip="Click to View" placement="top" delay="500" type="button"
+                            class="btn btn-inverse-primary btn-sm" (click)="ViewMedia(media.fileName, 'Image')">View
+                            File</button>
+                    </div>
+                </div>
+                </td>
+            </tr>
+        </tbody>
+        <tbody *ngIf="data.modalType == 'playlistcreation'">
+            <tr *ngFor="let media of viewData" >
+                <td  *ngIf="mediaType == 'Image' || mediaType == 'Video'" colspan="2">
+                <div class="row">
+                    <div class="col-md-9">
+                        {{media.fileName}}
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <button tooltip="Click to View" placement="top" delay="500" type="button"
+                            class="btn btn-inverse-primary btn-sm" (click)="ViewMedia(media.filePath, media.fileType)">View
+                            File</button>
+                    </div>
+                </div>
+                </td>
+                <td  *ngIf="mediaType == 'Text'" colspan="2">
+                <div class="row" >
+                    <div class="col-md-9">
+                        {{media.textContent}}
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <button tooltip="Click to View" placement="top" delay="500" type="button"
+                            class="btn btn-inverse-primary btn-sm" (click)="ViewMedia(media.fileName, 'Image')">View
+                            File</button>
+                    </div>
+                </div>
+            </tr>
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="col-md-6">
+            <div *ngIf="isViewMedia && isImage" class="onlyBgImg">
+                <div class="col-12 mt-5 pr-1 pl-1">
+                    <div ngClass="col-12 px-xl-1'">
+                        <ng-template #tableListVms>
+                            <div class="chartsdiv pt-3">
+                                <img [src]="imgData" alt="image at full size" height="300px" width="300px"
+                                    style="overflow: auto" />
+                            </div>
+                        </ng-template>
+                        <ng-container *ngTemplateOutlet="tableListVms"></ng-container>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="isViewMedia && (isImage == false)" class="onlyBgImg">
+                <div class="col-12 mt-5 pr-1 pl-1">
+                    <div ngClass="col-12 px-xl-1'">
+                        <div class="chartsdiv pt-3">
+                            <!-- <img [src]="imgData" alt="image at full size" height="300px" width="300px"
+                                style="overflow: auto" /> -->
+
+                                <video
+                                width="100%"
+                                height="100%"
+                                autoplay
+                                [src]="imgData"
+                              ></video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

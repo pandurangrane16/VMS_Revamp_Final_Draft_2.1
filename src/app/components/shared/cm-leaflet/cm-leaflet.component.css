@@ -1,0 +1,26 @@
+/*custom-popup style*/
+::ng-deep .leaflet-popup-content-wrapper {
+    background: #222222!important;
+    color: #ffffff!important;
+    font-size: 12px!important;
+    line-height: 24px!important;
+    border-radius: 0px!important;
+  }
+  ::ng-deep .leaflet-popup-content-wrapper a {
+    color: #ffffff!important;
+  }
+  ::ng-deep .leaflet-popup-tip-container {
+    width: 50px;
+    height: 15px;
+  }
+  ::ng-deep .leaflet-popup-tip {
+    background: #222222!important;
+    border: none!important;
+    box-shadow: none!important;
+  }
+  ::ng-deep .leaflet-popup-content{
+    color: #ffffff!important;
+  }
+  ::ng-deep .leaflet-touch .leaflet-right .leaflet-draw-actions{
+    display: none!important;
+  }

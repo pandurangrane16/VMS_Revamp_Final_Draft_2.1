@@ -1,0 +1,59 @@
+<!-- <h1>{{title}}</h1> -->
+
+<div class="modal-header bgTable"  style="border-radius: 15px 15px 0 0!important;">
+    <h5 class="modal-title text-uppercase mr-5">{{title}}</h5> 
+    <!-- <h5 class="modal-title text-uppercase mr-5">{{ this.id != null ? 'Edit User':'Add New User'}} </h5>  -->
+    <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close" (click)="passBack()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+</div>
+        <!-- <div class="card border-0  pb-0 bgTable">
+           <div class="card-header text-white">{{title}}</div> -->
+          
+<form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="modal-body">
+    <div class="row">
+        <div class="mb-6 col">
+            <label class="form-label">Unit*</label>
+            <select formControlName="prmUnit" class="form-control-sm w-100 bg-dark text-light" (change)="UnitChange()">
+                <option value="0">--Select Unit--</option>
+                <option  *ngFor="let v of _configData.config_unit" value="{{v.key}}">{{v.value}}</option>
+              </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="mb-6 col">
+            <label class="form-label">Parameter*</label>
+            <select formControlName="prmKey" class="form-control-sm w-100 bg-dark text-light">
+                <option>--Select Parameter--</option>
+                <option *ngFor="let p of _parameterData" value="{{p.key}}">{{p.value}}</option>
+            </select>
+            <!-- <div *ngIf="f['apiUrl'].touched && f['apiUrl'].errors" class="invalid-feedback">
+                <div>{{getErrorMessage('apiUrl','API URL',false,"")}}</div>
+              </div> -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="mb-6 col">
+            <label class="form-label">Value*</label>
+            <input type="text" formControlName="prmValue" class="form-control" placeholder="Value" 
+            [ngClass]="{ 'is-invalid': f['prmValue'].touched && f['prmValue'].errors, 'is-valid': f['prmValue'].valid }"/>
+            <div *ngIf="f['prmValue'].touched && f['prmValue'].errors" class="invalid-feedback">
+                <div>{{getErrorMessage('prmValue','Value',true,"Invalid data available in Value")}}</div>
+              </div>
+        </div>
+    </div>
+</div>
+    <div class="modal-footer bg-light">
+        <button [disabled]="!form.valid" class="btn btn-primary" (click)="saveConfiguration()">
+            <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1" ></span>
+            Save
+        </button>
+        <a routerLink="/admin-dashboard" class="btn btn-link" (click)="passBack()">Cancel</a>
+    </div>
+</form>
+<div *ngIf="loading" class="text-center m-5">
+    <span class="spinner-border spinner-border-lg align-center"></span>
+</div>
+
+<!-- </div> -->

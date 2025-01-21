@@ -1,0 +1,183 @@
+<div class="p-4">
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-primary btn-rounded mb-1">
+                <i class="icon-arrow-left"></i>
+                Back To List
+            </button>
+
+            <div class="card">
+                <form [formGroup]="form" #mediaplaylistform="ngForm">
+                    <div class="card-body">
+                        {{ this.TilesjsonData|json}}          
+                        <!-- {{this.selectedMediaId|json}}             -->
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-4 form-group">
+                                    <label class="form-label">Select Controller</label>
+                                    <select [(ngModel)]="controllerName" class="form-control form-control-sm"
+                                        formControlName="controllerName">
+                                        <option [ngValue]="null" disabled>Choose Controller</option>
+                                        <option *ngFor="let type of _inputVmsData.data" [ngValue]="type.value">
+                                            {{type.displayName}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-4 form-group">
+                                    <label class="form-label">Media Name*</label>
+                                    <input type="text" formControlName="mediaName" [(ngModel)]="MediaName"
+                                        class="form-control" placeholder="Enter Media Name" />
+                                    <div class="invalid-feedback">
+                                        <div>{{getErrorMessage('mediaName','mediaName',true,"Invalid data available
+                                            in Media TextName")}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row" *ngIf="MediaName">
+                                    <div class="mb-3 col form-group">
+                                        <label class="form-label">Media Loop Count*</label>
+                                        <input type="text" formControlName="mediaLoopCount" [(ngModel)]="mediaLoopCount"
+                                            class="form-control" placeholder="Enter Media loop count" />
+                                        <div class="invalid-feedback">
+                                            <div>{{getErrorMessage('mediaLoopCount','mediaLoopCount',true,"Invalid data
+                                                available
+                                                in Media LoopCount")}}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-4 form-group">
+                                    <button *ngIf="MediaName && mediaLoopCount" ngClass="btn btn-secondary"
+                                        (click)="Showplaylist()" style="width: 20%;" formControlName="AddTiles"
+                                        class="form-control">Add Tiles</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngFor="let div of divs; let i = index">
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3 form-group">
+                                                <label class="form-label">Tile Number</label>
+                                                <input type="text" [readonly]="true" [(ngModel)]="currentNumber"
+                                                    value="{{currentNumber}}" formControlName="tileNo"
+                                                    class="form-control" placeholder="">
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3 form-group">
+                                                <label class="form-label">playlistLoopCount*</label>
+                                                <input type="text" formControlName="playlistLoopCount"
+                                                    class="form-control" [(ngModel)]="playlistLoopCount" placeholder=""
+                                                    [ngClass]="{ 'is-invalid': Playlistf['playlistLoopCount'].touched && Playlistf['playlistLoopCount'].errors}"
+                                                    width="15%" />
+                                                <div *ngIf="Playlistf['playlistLoopCount'].touched && Playlistf['playlistLoopCount'].errors , 'is-valid': Playlistf['playlistLoopCount'].valid "
+                                                    class="invalid-feedback">
+                                                    <div>
+                                                        {{getErrorMessage('playlistLoopCount','playlistLoopCount',true,"Invalid
+                                                        data
+                                                        available
+                                                        in playlistLoopCount")}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="row" *ngIf="ShowTiles">
+                                        <div class="col-md-4"> <button
+                                                *ngIf="MediaName && mediaLoopCount && playlistLoopCount"
+                                                ngClass="btn btn-secondary" (click)="ShowMediaPopup('Media')"
+                                                formControlName="addNewMedia" class="form-control">Add Media</button>
+                                        </div>
+
+                                        <div class="col-md-4"> <button
+                                                *ngIf="MediaName && mediaLoopCount && playlistLoopCount"
+                                                ngClass="btn btn-secondary" (click)="ShowMediaPopup('Text')"
+                                                formControlName="addNewMedia" class="form-control">Add Text</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row"    *ngIf="rows.length > 0 && MediaName && mediaLoopCount && playlistLoopCount">
+                                <div class="d-flex flex-column bd-highlight mb-3">
+                                    <div class="mb-3 col form-group">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>MediaId</th>
+                                                    <th>MediaName</th>
+                                                    <th>playOrder</th>
+                                                    <th>imageTextDuration</th>
+                                                    <th>videoLoopCount</th>
+                                                    <th>fontSize</th>
+                                                    <th>fontColor</th>
+                                                    <th>backgroundColor</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody >
+                                                <tr *ngFor="let row of rows; let i  = index" [formGroupName]="i">
+                                                    <td>{{ i + 1 }}</td>
+                                                    <td>{{ row.id }}</td>
+                                                    <td><input type="text" [readonly]="true" formControlName="medianame"
+                                                            [(ngModel)]="MediaName" value="{{row.filename}}"
+                                                            class="form-control" /></td>
+                                                    <td><input type="text" [readonly]="row.filtype ==='Image'"
+                                                            [ngClass]="{ 'is-invalid': Playlistf['playOrder'].touched && Playlistf['playOrder'].errors}"
+                                                            formControlName="playOrder" class="form-control" />
+                                                    </td>
+                                                    <td><input type="text" [readonly]="row.filtype ==='Image'"
+                                                            formControlName="imageTextDuration" class="form-control"
+                                                            [ngClass]="{ 'is-invalid': Playlistf['imageTextDuration'].touched && Playlistf['imageTextDuration'].errors}"
+                                                            placeholder="" /></td>
+                                                    <td><input type="text" [readonly]="row.filtype ==='Image'"
+                                                            formControlName="videoLoopCount" class="form-control"
+                                                            [ngClass]="{ 'is-invalid': Playlistf['videoLoopCount'].touched && Playlistf['videoLoopCount'].errors}"
+                                                            placeholder="" /></td>
+                                                    <td><input type="text" [readonly]="disabledTextType"
+                                                            formControlName="fontSize" class="form-control"
+                                                            [ngClass]="{ 'is-invalid': Playlistf['fontSize'].touched && Playlistf['fontSize'].errors}"
+                                                            placeholder="" /></td>
+                                                    <td><input type="text" [readonly]="disabledTextType"
+                                                            formControlName="fontColor" class="form-control"
+                                                            [ngClass]="{ 'is-invalid': Playlistf['fontColor'].touched && Playlistf['fontColor'].errors}"
+                                                            placeholder="" /></td>
+                                                    <td><input type="text" [readonly]="disabledTextType"
+                                                            formControlName="backgroundColor" class="form-control"
+                                                            [ngClass]="{ 'is-invalid': Playlistf['backgroundColor'].touched && Playlistf['backgroundColor'].errors}"
+                                                            placeholder="" /></td>
+                                                    <td><button type="button" class="btn btn-danger float-right"
+                                                            (click)="RemoveRow(row.id)">Remove</button>
+
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 col">
+                            <button ngClass="btn btn-secondary" *ngIf="ShowSaveBtn" (click)="OnSavePlaylistDetails()"
+                                style="width: 20%;" formControlName="SaveDetails" class="form-control">Save
+                                Details</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

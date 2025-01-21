@@ -1,0 +1,79 @@
+<div class="modal-header bgTable" style="border-radius: 15px 15px 0 0!important;">
+    <h5 class="modal-title text-uppercase mr-5">Publish Operation : Schedule </h5>
+    <!-- <h5 class="modal-title text-uppercase mr-5">{{ this.id != null ? 'Edit User':'Add New User'}} </h5>  -->
+    <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close" (click)="CloseModal()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-2 text-right">
+            <label> Playlist Name :  </label>
+        </div>
+        <div class="col-md-3">
+            {{playlistId}} 
+        </div>
+        <label class="text-right col-md-3 text-right">Select Publish Type : </label>
+        <div class="col-md-4">
+           
+            <select name="drpSelectType" id="drpSelectType" class="form-control" (change)="CronTypeChange()" [(ngModel)]="selectedType">
+                <option value="D">Daily</option>
+                <option value="W">Weekly</option>
+                <option value="M">Monthly</option>
+            </select>
+        </div>
+
+    </div>
+    <div class="row mt-2" *ngIf="monthsVisible">
+        <label class="col-md-2 text-right mt-2">Select Days : </label>
+        <div class="col-md-10">
+            <ng-multiselect-dropdown name="days" [settings]="dropdownSettings" [data]="days" [(ngModel)]="selectedDays" (onSelect)="onItemSelect($event,0)" (onSelectAll)="ChangeSelectedDays($event,0)" >
+                        </ng-multiselect-dropdown>
+        </div>
+    </div>
+    <div class="row" *ngIf="daysVisible">
+        <label class="col-md-2 text-right mt-2">Select Days : </label>
+        <div class="col-md-10">
+            <ng-multiselect-dropdown name="weekdays" [settings]="dropdownSettings" [data]="weekdays" [(ngModel)]="selectedWeekDays" (onSelect)="onItemSelect($event,1)" (onSelectAll)="ChangeSelectedDays($event,0)" style="position: relative;" >
+                        </ng-multiselect-dropdown>
+        </div>
+    </div>
+    <div class="row" *ngIf="hoursVisible">
+        <label class="col-md-2 text-right mt-2" style="padding-top: 20px">From Hours : </label>
+        <div class="col-md-4">
+            <ngb-timepicker [(ngModel)]="fromTimeHrs" [seconds]="true"
+               class="col-4" />
+        </div>
+        <label class="col-md-2 text-right mt-2" style="padding-top: 20px">To Hours : </label>
+        <div class="col-md-4">
+            <ngb-timepicker [(ngModel)]="toTimeHrs" [seconds]="true"
+               class="col-4" />
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4" *ngIf="selectedType == 'Y'">
+            <select name="drpSelectDay" id="drpSelectDay" class="form-control">
+                <option value="D">Daily</option>
+                <option value="W">Weekly</option>
+                <option value="M">Monthly</option>
+                <option value="Y">Yearly</option>
+            </select>
+        </div>
+    </div>
+
+  
+</div>
+<div class="modal-footer">
+<div class="row">
+    <div class="col-md-12 text-right">
+        <button type="button" class="btn btn-secondary mr-2">
+            Reset
+        </button>
+       
+        <button type="button" class="btn btn-primary" (click)="SubmitCron()">
+            Submit
+        </button>
+    </div>
+</div>
+</div>

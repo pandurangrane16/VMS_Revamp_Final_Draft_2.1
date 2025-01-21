@@ -1,0 +1,36 @@
+.card{
+    padding: 20px;
+}
+
+.video-player-wrapper {
+    max-width: 800px;
+    text-align: center;
+    margin: 0 auto;
+}
+.player-list {
+   margin: 0;
+   padding: 0;
+}
+.player-list li {
+   list-style: none;
+   padding: 15px 35px;
+   display: block;
+   background: #cccc;
+   cursor: pointer;
+   text-align: left;
+   margin-bottom: 1px;
+}
+li.selected {
+    background: #03A9F4 !important;
+}
+
+.node-cls {
+    border-style: solid;
+    float: left !important;;
+    transform: none !important;position: absolute!important;
+  }
+  ::ng-deep .modal-content  {
+    border-radius: 15px!important;
+  }
+
+  

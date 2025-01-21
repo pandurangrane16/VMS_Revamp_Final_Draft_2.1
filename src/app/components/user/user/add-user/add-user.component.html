@@ -1,0 +1,142 @@
+<div class="p-4">
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-primary btn-rounded mb-1" (click)="BackToList()">
+                <!-- <span class="spinner-border spinner-border-sm me-1" ></span> -->
+                <i class="icon-arrow-left"></i>
+                Back To List
+            </button>
+       
+    <div class="card">
+                <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3 col">
+                                <label class="form-label">First Name*</label>
+                                <input type="text" formControlName="userFName" class="form-control"
+                                    placeholder="First Name"
+                                    [ngClass]="{ 'is-invalid': f['userFName'].touched && f['userFName'].errors, 'is-valid': f['userFName'].valid }" />
+                                <div *ngIf="f['userFName'].touched && f['userFName'].errors" class="invalid-feedback">
+                                    <div>{{getErrorMessage('userFName','First Name',true,"Invalid data available in First Name")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 col">
+                                <label class="form-label">Last Name*</label>
+                                <input type="text" formControlName="userLName" class="form-control"
+                                    placeholder="Last Name"
+                                    [ngClass]="{ 'is-invalid': f['userLName'].touched && f['userLName'].errors, 'is-valid': f['userLName'].valid }" />
+                                <div *ngIf="f['userLName'].touched && f['userLName'].errors" class="invalid-feedback">
+                                    <div>{{getErrorMessage('userLName','Last Name',true,"Invalid data available in Last Name")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 col">
+                                <label class="form-label">UserName (Login ID)*</label>
+                                <input type="text" formControlName="username" class="form-control"
+                                    placeholder="UserName (Login ID)" (focusout)="ValidateUserName()"
+                                    [ngClass]="{ 'is-invalid': f['username'].touched && f['username'].errors, 'is-valid': f['username'].valid }" />
+                                <div *ngIf="f['username'].touched && f['username'].errors" class="invalid-feedback">
+                                    <div>{{getErrorMessage('username','UserName (Login ID)',true,"Invalid data available in UserName (Login ID)")}}
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col">
+                                    <label class="form-label">Password*</label>
+                                    <input type="password" formControlName="password" class="form-control"
+                                        placeholder="Password"
+                                        [ngClass]="{ 'is-invalid': f['username'].touched && f['password'].errors, 'is-valid': f['password'].valid }" />
+                                    <div *ngIf="f['password'].touched && f['password'].errors" class="invalid-feedback">
+                                        <div>{{getErrorMessage('password','Password',true,"Invalid data available in Password")}}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 col">
+                                    <label class="form-label">Confirm Password*</label>
+                                    <input type="confirmPassword" formControlName="confirmPassword" class="form-control"
+                                        placeholder="Re-Enter Password"
+                                        [ngClass]="{ 'is-invalid': f['confirmPassword'].touched && f['confirmPassword'].errors, 'is-valid': f['confirmPassword'].valid }" />
+                                    <div *ngIf="f['confirmPassword'].touched && f['confirmPassword'].errors"
+                                        class="invalid-feedback">
+                                        <div>{{getErrorMessage('confirmPassword','Confirm Password',true,"Invalid data available in Confirm Password")}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-9 col">
+                                    <label class="form-label">Select Role*</label>
+                                    <select class="form-control form-control-sm" formControlName="roleId"
+                                        [(ngModel)]="selectedRole"
+                                        [ngClass]="{'is-invalid': submitting && f['roleId'].errors}">
+                                        <option value="">Select Role</option>
+                                        <option *ngFor="let role of roles" value="{{role.id}}">{{role.roleName}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col">
+                                    <label class="form-label">Mobile No.*</label>
+                                    <input type="text" formControlName="mobileNo" class="form-control"
+                                        placeholder="Mobile No." maxlength="10" minlength="10" (focusout)="CheckMobileNo()"
+                                        [ngClass]="{ 'is-invalid': f['mobileNo'].touched && f['mobileNo'].errors, 'is-valid': f['mobileNo'].valid }" />
+                                    <div *ngIf="f['mobileNo'].touched && f['mobileNo'].errors" class="invalid-feedback">
+                                        <div>{{getErrorMessage('mobileNo','Mobile No.',false,"Invalid data available in  Mobile No.")}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3 col">
+                                    <label class="form-label">Email ID*</label>
+                                    <input type="text" formControlName="emailId" class="form-control"
+                                        placeholder="Email ID"
+                                        [ngClass]="{ 'is-invalid': f['emailId'].touched && f['emailId'].errors, 'is-valid': f['emailId'].valid }" />
+                                    <div *ngIf="f['emailId'].touched && f['emailId'].errors" class="invalid-feedback">
+                                        <div>{{getErrorMessage('emailId','Email ID',true,"Invalid data available in  Email ID")}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3 col">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Status*</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="switch active">
+                                                <input type="checkbox" formControlName="isActive" [(ngModel)]="active">
+                                                <div class="slider round"></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+
+                    </div>
+
+                    <div class="card-footer text-right">
+                                <button [disabled]="!form.valid" class="btn btn-primary mr-2">
+                                    <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                    Submit
+                                </button>
+
+                                <button [disabled]="!form.valid" class="btn btn-secondary" (click)="clearForm()">
+                                    <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                    Reset
+                                </button>
+
+                                <button type="button" class="btn btn-danger ml-2" (click)="DeleteUser()" *ngIf="id!=0">
+                                    <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                    Delete
+                                </button>
+                            
+                        </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

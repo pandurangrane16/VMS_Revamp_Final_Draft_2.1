@@ -1,0 +1,96 @@
+<nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row gradient-custom-2 aniamteBg">
+  <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center bg-dark ">
+    <a class="navbar-brand brand-logo" href="index.html"><img src="assets/images/logo.png" alt="logo" /></a>
+    <a class="navbar-brand brand-logo-mini" href="index.html"><img src="assets/images/logoSm.png" alt="logo" /></a>
+  </div>
+  <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+    <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+      <span class="icon-menu"></span>
+    </button>
+
+    <h5 class="ml-3 mt-2"> {{ global.CurrentPage}} </h5>
+    <!-- <ul class="navbar-nav mr-lg-2">
+        <li class="nav-item nav-search d-none d-lg-block">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="search">
+                <i class="icon-search"></i>
+              </span>
+            </div>
+            <input type="text" class="form-control" placeholder="Search Projects.." aria-label="search" aria-describedby="search">
+          </div>
+        </li>
+      </ul> -->
+    <ul class="navbar-nav navbar-nav-right">
+
+      <li class="nav-item dropdown d-flex">
+        <a class="nav-link count-indicator dropdown-toggle d-flex justify-content-center align-items-center"
+          id="messageDropdown" href="#" data-toggle="dropdown" (click)="GetNotifications()">
+          <i class="icon-bell mx-0"><span style="font-size: xx-small;">{{global.NotificationCount}}</span></i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list notification-panel"
+          aria-labelledby="messageDropdown">
+          <div class="row">
+            <div class="col-md-6">
+              <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+            </div>
+            <div class="col-md-6">
+              <button type="button" class="btn btn-link float-right" (click)="NotificationPanel()">View All</button>
+            </div>
+          </div>
+          <div>
+            <div *ngIf="Notifications == undefined">
+              <h6 class="preview-subject ellipsis font-weight-normal">No New Notifications
+              </h6>
+            </div>
+          </div>
+          <div *ngIf="Notifications != undefined">
+            <a *ngFor="let msg of Notifications " class="dropdown-item preview-item">
+              <div class="preview-item-content flex-grow">
+                <h6 class="preview-subject ellipsis font-weight-normal">{{msg.type}}
+                </h6>
+                <p class="font-weight-light text-muted mb-0">
+                  {{msg.description}}
+                </p>
+                <p style="font-size: xx-small;font-weight: bold;">{{msg.createdDate | date:'dd-MM-yyyy hh:mm:ss'}}
+                </p>
+              </div>
+            </a>
+          </div>
+          
+        </div>
+      </li>
+      <li class="nav-item dropdown mr-4 d-lg-flex d-none">
+        {{username}}
+      </li>
+      <li class="nav-item dropdown mr-2 d-lg-flex d-none">
+        <img src="assets/images/CMS-logo-w.png" alt="" style="width:130px; padding:5px 10px;">
+      </li>
+      <!-- <li class="nav-item dropdown mr-2 d-lg-flex d-none" >
+          <a class="dropdown-item preview-item" (click)="logout()" tooltip="Logout">
+            <img src="../../../../assets/images/logout-8.svg" height="25" width="25">
+        </a>
+        </li> -->
+      <li class="nav-item dropdown d-flex mr-4 ">
+        <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center"
+          id="notificationDropdown" href="#" data-toggle="dropdown">
+          <i class="icon-cog"></i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+          aria-labelledby="notificationDropdown">
+          <p class="mb-0 font-weight-normal float-left dropdown-header">Settings</p>
+          <a class="dropdown-item preview-item">
+            <i class="icon-bell"></i> Notification
+          </a>
+          <a class="dropdown-item preview-item" (click)="logout()">
+            <i class="icon-inbox"></i> Logout
+          </a>
+        </div>
+      </li>
+    </ul>
+    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+      data-toggle="offcanvas">
+      <span class="icon-menu"></span>
+    </button>
+  </div>
+</nav>

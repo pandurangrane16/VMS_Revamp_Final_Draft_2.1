@@ -1,0 +1,376 @@
+<div class="p-4">
+
+  <div class="row">
+    <div class="col-md-12">
+      <button class="btn btn-primary btn-rounded mb-1" (click)="BackToList()">
+        <!-- <span class="spinner-border spinner-border-sm me-1" ></span> -->
+        <i class="icon-arrow-left"></i>
+        Back To List
+      </button>
+
+      <div id="stepper1" class="bs-stepper card">
+        <div class="bs-stepper-header bg-light border-bottom">
+          <div class="step" data-target="#test-l-1">
+            <button class="step-trigger bg-light" disabled>
+              <span class="bs-stepper-circle">1</span>
+              <span class="bs-stepper-label">Playlist Info.</span>
+            </button>
+          </div>
+          <div class="step" data-target="#test-l-2">
+            <button class="step-trigger bg-light" disabled>
+              <span class="bs-stepper-circle">2</span>
+              <span class="bs-stepper-label">Block Configuration</span>
+            </button>
+          </div>
+          <div class="step" data-target="#test-l-3">
+            <button class="step-trigger bg-light" disabled>
+              <span class="bs-stepper-circle">3</span>
+              <span class="bs-stepper-label">Media Selection</span>
+            </button>
+          </div>
+          <div class="step" data-target="#test-l-4">
+            <button class="step-trigger bg-light" disabled>
+              <span class="bs-stepper-circle">4</span>
+              <span class="bs-stepper-label">Media Management</span>
+            </button>
+          </div>
+          <div class="step" data-target="#test-l-3">
+            <button class="step-trigger bg-light" disabled>
+              <span class="bs-stepper-circle">5</span>
+              <span class="bs-stepper-label">Finish</span>
+            </button>
+          </div>
+        </div>
+        <div class="bs-stepper-content pt-2 ">
+          <form (ngSubmit)="onSubmit()" autocomplete="off" [formGroup]="form">
+            <div id="test-l-1" class="content">
+              <div class="row">
+                <div class="col-md-3">
+                  <label class="form-label">Playlist Name*</label>
+                  <input type="text" (focusout)="ValidatePlaylistName(null)" formControlName="playlistName"
+                    class="form-control" placeholder="Playlist Name"
+                    [ngClass]="{ 'is-invalid': f['playlistName'].touched && f['playlistName'].errors, 'is-valid': f['playlistName'].valid }" />
+                  <div *ngIf="f['playlistName'].touched && f['playlistName'].errors" class="invalid-feedback">
+                    <div>{{getErrorMessage('playlistName','Playlist Name',true,"Invalid data available in Playlist
+                      Name")}}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">Height*</label>
+                  <input type="number" formControlName="height" class="form-control" maxlength="4" placeholder="Height"
+                    [ngClass]="{ 'is-invalid': f['height'].touched && f['height'].errors, 'is-valid': f['height'].valid }" />
+                  <div *ngIf="f['height'].touched && f['height'].errors" class="invalid-feedback">
+                    <div>{{getErrorMessage('height','Height',true,"Invalid data available in Height")}}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">Width*</label>
+                  <input type="number" formControlName="width" class="form-control" placeholder="Width"
+                    [ngClass]="{ 'is-invalid': f['width'].touched && f['width'].errors, 'is-valid': f['width'].valid }" />
+                  <div *ngIf="f['width'].touched && f['width'].errors" class="invalid-feedback">
+                    <div>{{getErrorMessage('width','Width',true,"Invalid data available in Width")}}</div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">Active/InActive*</label>
+                  <br>
+                  <label class="form-label switch active">
+                    <input type="checkbox" formControlName="isActive" [(ngModel)]="isActive"
+                      (change)="ActiveStatusChange()">
+                    <div class="slider round"></div>
+                  </label>
+                </div>
+              </div>
+              <br>
+              <br>
+              <div class="row">
+                <div class="col-md-12 text-right">
+                  <hr class="dashed">
+                  <button type="button" [disabled]="!form.valid" class="btn bgTable text-white btn-sm"
+                    (click)="StepNext(0)">Next <i class="icon-arrow-right"></i></button>
+                </div>
+              </div>
+            </div>
+
+          </form>
+          <div id="test-l-2" class="content mb-1">
+            <div class="row formrow align-items-center">
+              <div style="overflow: auto" class="col-lg-6 text-lg-right text-right buttonsdiv my-4 my-lg-0">
+                <div *ngIf="isView || isCopy" class="container-resize drag-boundary" [style.height.px]="heighttxt"
+                  [style.width.px]="widthtxt" [ngClass]="{
+                                  'top-b': !edge.top,
+                                  'bottom-b': !edge.bottom,
+                                  'left-b': !edge.left,
+                                  'right-b': !edge.right,
+                                  disableDiv: isView || isCopy
+                                }" #myBounds>
+                  <div *ngFor="let node of nodeDetails" ngResizable ngDraggable
+                    (movingOffset)="onMoving($event, node.id)" [preventDefaultEvent]="true"
+                    (rzResizing)="onResizing($event, node.id)" class="resizable-widget" style="
+                                    border-style: solid;
+                                    transform: none !important;
+                                    position: absolute !important;
+                                  " [rzMinWidth]="50" [rzMaxWidth]="node.maxWidth - node.left" [rzMinHeight]="50"
+                    [rzMaxHeight]="node.maxheight - node.top" [style.height.px]="node.height"
+                    [style.width.px]="node.width" [style.left.px]="node.left" [style.top.px]="node.top"
+                    [bounds]="myBounds" [inBounds]="inBounds">
+                    <h4 class="widget-header">{{ node.id }}</h4>
+                  </div>
+                </div>
+
+                <div *ngIf="!isView && !isCopy" class="container-resize drag-boundary" [style.height.px]="heighttxt"
+                  [style.width.px]="widthtxt" [ngClass]="{
+                                  'top-b': !edge.top,
+                                  'bottom-b': !edge.bottom,
+                                  'left-b': !edge.left,
+                                  'right-b': !edge.right,
+                                  disableDiv: isView
+                                }" #myBounds>
+                  <div *ngFor="let node of nodeDetails" ngResizable ngDraggable
+                    (movingOffset)="onMoving($event, node.id)" [preventDefaultEvent]="true"
+                    (rzResizing)="onResizing($event, node.id)" class="resizable-widget" style="
+                                    border-style: solid;
+                                    top: 0;
+                                    left: 0;
+                                    position: absolute;
+                                  " [rzMinWidth]="50" [rzMaxWidth]="node.maxWidth - node.left" [rzMinHeight]="50"
+                    [rzMaxHeight]="node.maxheight - node.top" [style.height.px]="node.height"
+                    [style.width.px]="node.width" [bounds]="myBounds" [inBounds]="inBounds">
+                    <h4 class="widget-header">{{ node.id }}</h4>
+                  </div>
+                </div>
+                <br />
+              </div>
+              <div class="col-lg-6 text-lg-right text-right buttonsdiv my-4 my-lg-0">
+                <div style="max-height: 400px; overflow: auto">
+                  <span></span>
+                  <table style="width: 100%" class="table">
+                    <thead class="thead-dark">
+                      <tr style="height: 20px">
+                        <th>Block No</th>
+                        <th>Height</th>
+                        <th>Width</th>
+                        <th>Left</th>
+                        <th>Top</th>
+                        <!-- <th>Select</th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let node of nodeDetails" style="height: 20px">
+                        <td>
+                          {{ node.id }}
+                        </td>
+                        <td>
+                          {{ node.height }}
+                        </td>
+                        <td>
+                          {{ node.width }}
+                        </td>
+                        <td>
+                          {{ node.left }}
+                        </td>
+                        <td>
+                          {{ node.top }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+
+
+              <div class="col-lg-12 text-lg-right text-right buttonsdiv">
+                <hr class="dashed">
+                <button type="button" class="btn btn-secondary mr-2" (click)="ResetForm(2)">Reset</button>
+                <button type="button" class="btn btn-primary " [disabled]="isCollide"
+                  (click)="StepNext(1)">Next</button>
+              </div>
+            </div>
+          </div>
+          <div id="test-l-3" class="content text-center">
+            <div class="row">
+              <div class="col-md-12" style="padding-left: 50px;padding-right: 50px;">
+                <input class="form-control mt-2 mb-2" type="text" [(ngModel)]="searchText" (input)="Search()"
+                  placeholder="Search Here" />
+              </div>
+            </div>
+            <div class="row  media-mng-dsn">
+              <div class="col-md-6">
+                <table class="table table-striped table-bordered table-sm hover tr-dsn">
+                  <thead class="thead-dark">
+                    <tr class="tr-dsn">
+                      <th colspan="3">
+                        <span style="font-size: large;">Media</span>
+                      </th>
+                    </tr>
+                    <tr class="tr-dsn">
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tr *ngFor="let m of mediaDetails" class="tr-dsn">
+                    <td>{{m.id}}</td>
+                    <td *ngIf="isView == true">{{m.fileName}}</td>
+                    <td *ngIf="isView == false">{{m.displayName}}</td>
+                    <td>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <button tooltip="Click to view" placement="top" delay="500" type="button"
+                            class="btn btn-inverse-primary btn-sm" (click)="ViewMedia(m)">
+                            <i class="icon-eye"></i>
+                          </button>
+                        </div>
+                        <div class="col-md-6 chkCls">
+                          <input tooltip="Check to select" class="form-check-input" (change)="MediaCheck(m, $event,0)"
+                            type="checkbox" [checked]="m.isChecked" id="defaultCheck1">
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div class="col-md-6">
+                <table class="table table-striped table-bordered table-sm hover tr-dsn">
+                  <thead class="thead-dark">
+                    <tr class="tr-dsn">
+                      <th colspan="3">
+                        <span style="font-size: large;">Text</span>
+                      </th>
+                    </tr>
+                    <tr class="tr-dsn">
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tr *ngFor="let t of textDetails" class="tr-dsn">
+                    <td>{{t.id}}</td>
+                    <td>{{t.textContent}}</td>
+                    <td>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <button tooltip="Click to view" placement="top" delay="500" type="button"
+                            class="btn btn-inverse-primary btn-sm" (click)="ViewMedia(t)">
+                            <i class="icon-eye"></i>
+                          </button>
+                        </div>
+                        <div class="col-md-6 chkCls">
+                          <input tooltip="Check to select" class="form-check-input" (change)="MediaCheck(t, $event,1)"
+                            type="checkbox" [checked]="t.isChecked" id="defaultCheck1">
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div class="row">
+              <hr class="dashed">
+              <div class="col-md-12 text-right">
+                <button type="button" class="btn btn-secondary mt-5 mr-2" (click)="ResetForm(3)">Reset</button>
+                <button type="button" class="btn btn-primary mt-5" (click)="StepNext(2)">Next</button>
+              </div>
+            </div>
+          </div>
+          <div id="test-l-4" class="content text-center">
+            <div class="row">
+              <div class="col-md-12">
+                <h3>Media Management</h3>
+                <hr>
+              </div>
+            </div>
+
+
+            <table class="table table-sm table-bordered table-striped text-center">
+              <thead>
+                <tr>
+                  <th>Sequence No</th>
+                  <th>File/Content Name</th>
+                  <th>Block Number</th>
+                  <th>Duration(Seconds)</th>
+                  <th>Party </th>
+                  <th>Tarrif</th>
+                  <th>Remove</th>
+                </tr>
+              </thead>
+              <tbody cdkDropList (cdkDropListDropped)="drop($event)" >
+                <tr cdkDrag cdkDragLockAxis="y" *ngFor="let m of dataSource; let i=index;">
+                  <td cdkDragHandle>{{i+1}}</td>
+                  <td cdkDragHandle>{{m.displayName}}</td>
+                  <td cdkDragHandle><input type="text" class="form-control" placeholder="Block Number"
+                      value="{{m.block}}" disabled="true" /></td>
+                  <td cdkDragHandle>
+                    <input type="number" class="form-control" placeholder="Duration" value="{{m.duration}}"
+                      [disabled]="m.fileType == 'Video'" #duration (keyup)="onDuration(duration.value,m, i)" />
+                  </td>
+                  <td cdkDragHandle>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <select class="form-control-sm" (change)="PartyChange(m, $event,i)" [(ngModel)]="m.party">
+                          <option value="0">Select Party</option>
+                          <option *ngFor="let prt of partyDetails" [value]="prt.id">{{prt.partyName}}</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6">
+                        <button type="button" class="btn btn-secondary mr-2" (click)="PartyAll(m)">To All</button>
+                      </div>
+                    </div>
+                  </td>
+                  <td cdkDragHandle>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <select class="form-control-sm" (change)="TarrifChange(m, $event,i)" [(ngModel)]="m.tarrif">
+                          <option value="0">Select Tarrif</option>
+                          <option *ngFor="let trf of tarrifDetails" [value]="trf.id">{{trf.tarrifType}}</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6">
+                        <button type="button" class="btn btn-secondary mr-2" (click)="TarrifAll(m)">To All</button>
+                      </div>
+                    </div>
+                  </td>
+                  <td cdkDragHandle>
+                    <button type="button" class="btn btn-inverse-primary btn-sm" [disabled]="isView"
+                      (click)="RemoveFromDt(m,i)">
+                      <i class="icon-trash"></i>
+                    </button>
+                  </td>
+                  <div *cdkDragPreview matchSize="true" class="container dragdrop-placeholder">
+                    {{m.fileName}}
+                  </div>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="row">
+
+              <div class="col-md-12 text-right">
+                <hr class="dashed">
+                <button type="button" [disabled]="isView || isCopy" class="btn btn-info mr-2"
+                  (click)="addNewBlock()">Add
+                  Block</button>
+                <button type="button" [disabled]="isView" class="btn btn-info  mr-2" (click)="addNewMedia()">Add
+                  Media</button>
+                <button type="button" [disabled]="isView" class="btn btn-secondary  mr-2"
+                  (click)="ResetForm(4)">Reset</button>
+                <button type="button" [disabled]="isView" class="btn btn-primary " (click)="StepNext(3)">Submit</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="bs-stepper-footer border-top text-right p-3">
+
+          <button type="button" class="btn btn-secondary" (click)="ResetForm(0)">Reset All</button>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

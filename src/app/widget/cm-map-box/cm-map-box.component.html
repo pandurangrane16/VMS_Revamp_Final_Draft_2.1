@@ -1,0 +1,21 @@
+
+<div class="dv-size">
+    <div class="modal-header">
+        <h4 class="modal-title">Map</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modalClose()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <app-cm-leaflet [zoneId]="this.zoneId" class="modal-xl" type='vms' (markerCoords)="GetMarkerData($event)"></app-cm-leaflet>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modalClose()">Close</button>
+        </div>
+    </div>
+

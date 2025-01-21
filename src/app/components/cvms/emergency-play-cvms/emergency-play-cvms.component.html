@@ -1,0 +1,36 @@
+<div class="p-4">
+    <div class="row">
+        <div class="col-xl-12 col-md-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <cm-multiselect-auto-complt [inputData]="_inputVmsData" [label]="label1"
+                                [dropdownSettings]="dropdownSettingsVms" (selectedItem)="getSelectedVms($event,1)"
+                                (deSelectedItem)="getSelectedVms($event,0)"></cm-multiselect-auto-complt>
+                        </div>
+                        <div class="col-md-4" style="padding-top: 25px;">
+                            <button class="btn btn-warning float-left" (click) ="getMediaPlayerList()">
+                                Get Media List
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <cm-multiselect-auto-complt [inputData]="_inputPlayerData" [label]="label2"
+                                [dropdownSettings]="dropdownSettingsVms" (selectedItem)="getSelectedVms($event,1)"
+                                (deSelectedItem)="getSelectedVms($event,0)"></cm-multiselect-auto-complt>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-success btn-rounded float-left">
+                                Submit Request
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

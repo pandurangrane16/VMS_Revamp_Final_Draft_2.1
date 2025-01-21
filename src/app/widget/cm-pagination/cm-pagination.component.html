@@ -1,0 +1,16 @@
+<div class="row">
+    <div class="col pgn">
+        <small class="float-left mr-2">Records Per Page</small>
+
+        <select class="form-control float-left" [(ngModel)]="selectedPageValue" (change)="onPageRecordsChange()" style="width:60px">
+            <option>10</option>
+            <option>20</option>
+            <option>50</option>
+            <option>100</option>
+        </select>
+    </div>
+    <div class="col text-right">
+        <ngb-pagination [collectionSize]="collectionSize" [(page)]="selectedValue" (pageChange)="onPageChange()" [maxSize]="5" [rotate]="true" [ellipses]="false"
+            [boundaryLinks]="true" class="float-right"></ngb-pagination>
+    </div>
+</div>

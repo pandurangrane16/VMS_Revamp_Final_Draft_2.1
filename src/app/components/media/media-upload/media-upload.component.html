@@ -1,0 +1,240 @@
+<div class="p-4">
+    <div class="row mb-3">
+
+        <div class="col-xl-12 stretch-card">
+
+            <div class="card border-0  pb-0">
+                <div class="form">
+                    <div class="card-header bgTable pb-0">
+                        <ul class="nav nav-tabs mb-0 border-0 mt-1" (click)="tabChange()" id="pills-tab" role="tablist"
+                            ngbNav #nav="ngbNav" [(activeId)]="active">
+                            <li class="nav-item" [ngbNavItem]="1">
+                                <a class="nav-link text-center " data-toggle="pill" href="#media-upload" role="tab"
+                                    aria-controls="media-upload" aria-selected="true" ngbNavLink> <i
+                                        class="icon-camera"></i> Media Upload</a>
+
+                                <ng-template ngbNavContent="activeNav">
+                                    <div>
+                                        <h4>Upload Media Files - Add Images or Videos </h4>
+                                        <hr>
+
+                                        <h5>Upload Set ID : {{uploadSetId}} </h5>
+                                        <h6><span style="color: red;"><b>Note : </b>File resolution should be
+                                                1920*1080.</span></h6>
+                                        <input type="file" #InputVar class="form-control file-upload-primary"
+                                            placeholder="Upload Image" (change)="save($event)" multiple="multiple">
+                                        <!-- <button class="btn btn-success btn-sm" [disabled]="!currentFile" (click)="upload()">
+                                                Upload
+                                              </button> -->
+
+                                        <br>
+                                        <!-- <div class="progress" *ngIf="progress">
+                                            <div class="progress-bar" [style.width]="progress + '%'">{{progress}}%</div> 
+                                        </div> -->
+
+                                        <!-- <div class="progress my-3" >
+                                              <div
+                                                class="progress-bar progress-bar-info"
+                                                role="progressbar"
+                                                attr.aria-valuenow="{{ progress }}"
+                                                aria-valuemin="0"
+                                                aria-valuemax="100"
+                                                [ngStyle]="{ width: progress + '%' }"
+                                              >
+                                                {{ progress }}%
+                                              </div>
+                                            </div> -->
+
+
+                                        <!-- <div class="alert alert-secondary" role="alert" *ngIf="message">{{ message }}</div> -->
+
+                                        <!-- <table>
+                                            <tr>
+                                                <th>Files</th>
+                                            </tr>
+                                            <tr *ngFor="let file of selectedFiles">
+                                                <td>
+                                                    {{file.name}}
+                                                </td>
+                                            </tr>
+                                        </table> -->
+                                        <div class="media-upload-table-container">
+                                            <table class="media-upload-table table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 246px">File Name</th>
+                                                        <!-- <th class="media-progress-bar" >Progress</th> -->
+                                                        <!-- <th style="width: 100px;">Status</th> -->
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let file of selectedFiles">
+                                                        <td colspan="2">
+                                                            {{file.name}}
+                                                        </td>
+
+                                                    </tr>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </li>
+
+                            <li class="nav-item" ngbNavItem="2">
+
+                                <a class="nav-link text-center " data-toggle="pill" href="#text-content" role="tab"
+                                    aria-controls="text-content" aria-selected="false" ngbNavLink> <i
+                                        class="icon-paper"></i> Text Content</a>
+                                <ng-template ngbNavContent>
+                                    <div>
+                                        <h5>Upload Set ID : {{uploadSetId}} </h5>
+                                        <table class="table table-bordered table-stripped">
+                                            <thead class="table-dark text-center">
+                                                <tr>
+
+                                                    <td>Font</td>
+                                                    <td width="300">Text Content</td>
+                                                    <td width="100">Fore Color</td>
+                                                    <td width="100">Back Color</td>
+                                                    <td width="100">Font Size</td>
+                                                    <td width="150">Font Style</td>
+                                                    <td width="150">Scrolling Direction</td>
+                                                    <td>Actions</td>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><select name="font" id="font" [(ngModel)]="fontName"
+                                                            class="form-control form-control-sm">
+                                                            <option value="{{_font.fontValue}}"
+                                                                *ngFor="let _font of _fontData" value="_font.fontValue">
+                                                                {{_font.fontName}}</option>
+                                                        </select></td>
+                                                    <td><input type="text" class="form-control form-control-sm"
+                                                            [(ngModel)]="textContent"></td>
+                                                    <td><input type="color" [(ngModel)]="foreColor"
+                                                            class="form-control form-control-color w-100"
+                                                            title="Choose your color"></td>
+                                                    <td><input type="color" [(ngModel)]="backColor"
+                                                            class="form-control form-control-color w-100"
+                                                            title="Choose your color"></td>
+                                                    <td><input type="text" [(ngModel)]="fontSize"
+                                                            class="form-control form-control-sm text-center"></td>
+                                                    <td><select name="font" id="font"
+                                                            class="form-control form-control-sm"
+                                                            [(ngModel)]="fontStyle">
+                                                            <option value="Normal">Normal</option>
+                                                            <option value="Bold">Bold</option>
+                                                            <option value="Italic">Italic</option>
+                                                        </select></td>
+                                                    <td><input type="text" class="form-control text-center"
+                                                            [(ngModel)]="scrollDirection"></td>
+                                                    <td class="text-center">
+                                                        <button type="button" (click)="AddTextData()"
+                                                            class="btn btn-sm btn-inverse-primary btn-rounded btn-icon">
+                                                            <i class="icon-circle-plus"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <table class="table table-bordered table-stripped">
+                                            <thead class="table-info text-center">
+                                                <tr>
+
+                                                    <td>Font</td>
+                                                    <td width="300">Text Content</td>
+                                                    <td width="100">Fore Color</td>
+                                                    <td width="100">Back Color</td>
+                                                    <td width="100">Font Size</td>
+                                                    <td width="150">Font Style</td>
+                                                    <td width="150">Scrolling Direction</td>
+                                                    <td width="100">Actions</td>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody class=" text-center">
+                                                <tr *ngFor="let _text of textData; let sr=index">
+                                                    <td>{{_text.font}}</td>
+                                                    <td>{{_text.textContent}}</td>
+                                                    <td>{{_text.foreColor}} </td>
+                                                    <td>{{_text.backColor}} </td>
+                                                    <td>{{_text.fontSize}} </td>
+                                                    <td>{{_text.fontStyle}} </td>
+                                                    <td>{{_text.scrollingDirection}} </td>
+                                                    <td class="text-center">
+                                                        <button type="button"
+                                                            class="btn btn-inverse-info btn-rounded btn-icon btn-sm">
+                                                            <i class="mdi mdi-file-check btn-icon-append"
+                                                                (click)="EditText(_text)"></i>
+                                                        </button> <button type="button"
+                                                            class="btn btn-inverse-danger btn-rounded btn-icon btn-sm">
+                                                            <i class="fa fa-trash btn-icon-append"
+                                                                (click)="RemoveText(sr)"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </ng-template>
+                            </li>
+
+                        </ul>
+
+                    </div>
+                    <div class="card-body p-0">
+                        <!-- <div class="tab-content" style="border-top: 1px solid #ccc;">
+                    <div class="tab-pane fade show active p-2">
+                  <div [ngbNavOutlet]="nav" class="mt-0 p-4"></div>
+                  </div>
+                  </div> -->
+
+                        <div [ngbNavOutlet]="nav" class="mt-0 p-4 pb-0" style="border-top: 1px solid #ccc;"></div>
+                        <div class="p-2 ml-3 mr-3 bg-light text-right" style="border-top: 1px solid #ccc;">
+                            <button type="button" class="btn btn-secondary btn-sm mr-3" (click)="Reset(0)">Reset
+                            </button>
+                            <button type="button" class="btn btn-primary btn-sm" (click)="RequestSubmit()">Save
+                            </button>
+
+                        </div>
+                    </div>
+                    <div class="card-footer bg-light text-right">
+                        <!-- <div class="tooltip-example">
+                            <div tooltip="tootip on left" placement="left" delay="500">tootip on left</div>
+                            <div tooltip="tootip on top" placement="top" delay="500">tootip on top</div>
+                            <div tooltip="tootip on bottom" placement="bottom" delay="500">tootip on bottom</div>
+                            <div tooltip="tootip on right" placement="right" delay="500">tootip on right</div>
+                          </div> -->
+                        <button type="button" tooltip="Reset All" placement="top" delay="500" class="btn btn-secondary"
+                            (click)="Reset(1)">Reset All</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-xl-12 stretch-card" id="listView">
+            <div class="card  border-0">
+                <div class="card-body p-2 bgTable" style="border-radius: 0 0;">
+
+                    <app-cm-table [headArr]="headerArr" [gridArr]="listOfMediaSet" [totalRecords]="totalRecords"
+                        [totalPages]="totalPages" [perPage]="recordPerPage" (pager)="onPager($event)"
+                        [btnArray]="btnArray" [collectionSize]="totalRecords"
+                        (recordPerPage)="onRecordPageChange($event)" link="masters/add-party" fieldName="id"
+                        (search)="onPageSearch($event)" (btnAction)="ButtonAction($event)" [isSearch]="isSearch"
+                        (searchWithId)="SearchWithId($event)">
+                    </app-cm-table>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

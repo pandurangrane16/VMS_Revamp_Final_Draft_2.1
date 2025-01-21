@@ -1,0 +1,49 @@
+<div class="modal-header bgTable" style="border-radius: 15px 15px 0 0!important;">
+    <h5 class="modal-title text-uppercase mr-5">{{type}}</h5>
+
+    <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close" (click)="passBack()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="spacing">
+    <table class="table table-striped table-bordered table-sm row-border hover" style="width: 100%;">
+        <tr>
+            <th class="col-md-4">
+                Media Id
+            </th>
+            <th class="col-md-4">
+                Media Name
+            </th>
+            <th class="col-md-4 text-center border-left">
+                Action
+            </th>
+        </tr>
+        <tbody>
+            <tr *ngFor="let media of listOfMedialist">
+                <td colspan="3">
+                    <div class="row">
+                        <div class="col-md-4">
+                            {{media.id}}
+                        </div>
+                        <div class="col-md-4" *ngIf="data.modalType.includes('mediaupload')">
+                            {{media.displayName}}
+                        </div>
+                        <div class="col-md-4" *ngIf="data.modalType.includes('textupload')">
+                            {{media.textContent}}
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <input class="form-check-input" [(ngModel)] ="media.checked" style="background-color: #FF5722;" type="checkbox"
+                                (change)="onCheckBoxChange(media)">
+                        </div>
+                    </div>
+                </td>
+            </tr>            
+        </tbody>
+        <tr>
+            <button type="button" class="button btn-success right-align"  (click)="Save()">Save Media</button>
+        </tr>
+
+
+    </table>
+
+</div>

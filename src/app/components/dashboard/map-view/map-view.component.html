@@ -1,0 +1,47 @@
+<div class="p-4">
+  <div class="bg-dark pl-2 pr-2 filterArea" id="filterArea">
+    <div class="row">
+
+      <div class="btn-group-sm  col-2 p-0 ml-3 mt-2" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-primary btn-rounded" id="btnList" (click)="toggle()">
+          <i class="{{buttonName}}"></i> {{viewName}}
+
+        </button>
+
+      </div>
+      <div class="col-md-2 col-lg-2 col-sm-12 form-group  mt-2">
+
+
+
+        <select class="form-control-sm w-100 bg-dark text-light" [(ngModel)]="status" (change)="ChangeFilter()">
+          <option value="0">Select Status</option>
+          <option value="1">Active</option>
+          <option value="2">InActive</option>
+        </select>
+
+
+      </div>
+      <div class="col-md-3 col-lg-3 col-sm-12 form-group  mt-2">
+        <select class="form-control-sm w-100 bg-dark text-light" [(ngModel)]="zoneId" (change)="ChangeFilter()">
+          <option value="0">Select Zone</option>
+          <option *ngFor="let zone of listOfZones" value="{{zone.id}}">{{zone.zoneName}}</option>
+        </select>
+
+      </div>
+
+      <div class="col-md-2 col-lg-2 col-sm-12"></div>
+      <div class="col text-right  mt-2 mb-1">
+        <button class="btn btn-danger btn-rounded btn-fw" id="publishBtn" (click)="openModal()"><i
+            class="icon-video mr-1"></i> Emergency Publish </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="map" #map id="map" style="height: 75vh;"
+  leaflet 
+  [leafletOptions]="options"> 
+</div>-->
+  <div style="height:60%; padding-bottom: 20px;">
+    <app-cm-leaflet type="map" [selectedFilter]="filters"></app-cm-leaflet>
+  </div>
+</div>

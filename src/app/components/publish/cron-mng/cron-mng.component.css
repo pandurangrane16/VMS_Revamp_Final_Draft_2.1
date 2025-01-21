@@ -1,0 +1,9 @@
+
+
+.scheduleCss{
+    padding: 55px;
+  }
+ 
+  ::ng-deep .dropdown-list{position: relative!important;}
+
+ 

@@ -1,0 +1,6 @@
+.main-div{
+    padding-top: 50px;
+}
+.sidebar-icon-only .sidebar .nav .nav-item:last-child .collapse{
+transform: translateY(-100%)!important;
+}

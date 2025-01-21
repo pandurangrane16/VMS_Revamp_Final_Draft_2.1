@@ -1,0 +1,88 @@
+<div class="p-4">
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-primary btn-rounded mb-1" (click)="BackToList()">
+                <!-- <span class="spinner-border spinner-border-sm me-1" ></span> -->
+                <i class="icon-arrow-left"></i>
+                Back To List
+            </button>
+
+    <div class="card">
+
+                <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3 col">
+                                <label class="form-label">Role Name*</label>
+                                <input type="text" formControlName="roleName" class="form-control"
+                                    placeholder="Role Name"
+                                    [ngClass]="{ 'is-invalid': f['roleName'].touched && f['roleName'].errors, 'is-valid': f['roleName'].valid }" />
+                                <div *ngIf="f['roleName'].touched && f['roleName'].errors" class="invalid-feedback">
+                                    <div>{{getErrorMessage('roleName','Role Name',true,"Invalid data available in Role Name")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-9 col">
+                                <label class="form-label">Description*</label>
+                                <input type="text" formControlName="description" class="form-control"
+                                    placeholder="Description"
+                                    [ngClass]="{ 'is-invalid': f['description'].touched && f['description'].errors, 'is-valid': f['description'].valid }" />
+                                <div *ngIf="f['description'].touched && f['description'].errors"
+                                    class="invalid-feedback">
+                                    <div>{{getErrorMessage('description','Description',true,"Invalid data available in Description")}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="mb-3 col">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Status*</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="switch active">
+                                            <input type="checkbox" formControlName="isActive" [(ngModel)]="active">
+                                            <div class="slider round"></div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-footer">
+                            <button *ngIf="id == 0" [disabled]="!form.valid" class="btn btn-primary mr-2">
+                                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                Next
+                            </button>
+
+                            <button *ngIf="id != 0" [disabled]="!form.valid" class="btn btn-primary mr-2" >
+                                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                Save
+                            </button>
+
+                            <button [disabled]="!form.valid" type="button" class="btn btn-secondary" (click)="clearForm()">
+                                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                Reset
+                            </button>
+
+                            <button [disabled]="!isEdit" type="button" class="btn btn-danger ml-2" (click)="removeRole()">
+                                <span class="me-1"></span>
+                                Remove
+                            </button>
+                            <button [disabled]="!isEdit" class="btn btn-success float-right" type="button" (click)="goToAccessConfig()">
+                                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                Access Configuration
+                            </button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

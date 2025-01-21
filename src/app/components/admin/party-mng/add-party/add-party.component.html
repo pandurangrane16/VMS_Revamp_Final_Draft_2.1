@@ -1,0 +1,132 @@
+<div class="p-4">
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-primary btn-rounded mb-1" (click)="BackToList()">
+                <!-- <span class="spinner-border spinner-border-sm me-1" ></span> -->
+                <i class="icon-arrow-left"></i>
+                Back To List
+            </button>
+       
+    <div class="card">
+        
+                <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3 col">
+                                <label class="form-label">Party Code*</label>
+                                <input type="text" formControlName="partyCode" class="form-control" placeholder="Party Code"
+                                    [ngClass]="{ 'is-invalid': f['partyCode'].touched && f['partyCode'].errors, 'is-valid': f['partyCode'].valid }" />
+                                <div *ngIf="f['partyCode'].touched && f['partyCode'].errors" class="invalid-feedback">
+                                    <div>{{getErrorMessage('partyCode','Party Code',true,"Invalid data available in Party Code")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 col">
+                                <label class="form-label">Party Name*</label>
+                                <input type="text" formControlName="partyName" class="form-control"
+                                    placeholder="Party Name"
+                                    [ngClass]="{ 'is-invalid': f['partyName'].touched && f['partyName'].errors, 'is-valid': f['partyName'].valid }" />
+                                <div *ngIf="f['partyName'].touched && f['partyName'].errors" class="invalid-feedback">
+                                    <div>{{getErrorMessage('partyName','Party Name',true,"Invalid data available in Party Name")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-9 col">
+                                <label class="form-label">Description*</label>
+                                <input type="text" formControlName="description" class="form-control"
+                                    placeholder="Description"
+                                    [ngClass]="{ 'is-invalid': f['description'].touched && f['description'].errors, 'is-valid': f['description'].valid }" />
+                                <div *ngIf="f['description'].touched && f['description'].errors"
+                                    class="invalid-feedback">
+                                    <div>{{getErrorMessage('description','Description',true,"Invalid data available in Description")}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col">
+                                <label class="form-label">Contact Number*</label>
+                                <input type="number" formControlName="contactNumber" class="form-control"
+                                placeholder="Contact Number" maxlength="10" 
+                                [ngClass]="{ 'is-invalid': f['contactNumber'].touched && f['contactNumber'].errors, 'is-valid': f['contactNumber'].valid }" />
+                                <div *ngIf="f['contactNumber'].touched && f['contactNumber'].errors" class="invalid-feedback">
+                                    <div>{{getErrorMessage('contactNumber','Contact Number',false,"Invalid data available in Contact Number")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 col">
+                                <label class="form-label">Address*</label>
+                                <input type="text" formControlName="address" class="form-control"
+                                placeholder="Address"
+                                [ngClass]="{ 'is-invalid': f['address'].touched && f['address'].errors, 'is-valid': f['address'].valid }" />
+                                <div *ngIf="f['address'].touched && f['address'].errors"
+                                    class="invalid-feedback">
+                                    <div>{{getErrorMessage('address','Address',true,"Invalid data available in Address")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 col">
+                                <label class="form-label">Zip Code*</label>
+                                <input type="text" class="form-control form-control-sm" placeholder="Zip Code"
+                                    id='zipCode' formControlName="zipCode" maxlength="6"
+                                    [ngClass]="{ 'is-invalid': f['zipCode'].touched && f['zipCode'].errors, 'is-valid': f['zipCode'].valid }"  />
+                                <div *ngIf="f['zipCode'].touched && f['zipCode'].errors" class="invalid-feedback">
+                                    <div>{{getErrorMessage('zipCode','Zip Code',true,"Invalid data available in Zip Code")}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col">
+                                <label class="form-label">GSTIN Number*</label>
+                                <input type="text" class="form-control form-control-sm" placeholder="GSTIN Number"
+                                    id='gstinNumber' formControlName="gstinNumber" maxlength="15" (focusout)="ValidateGSTINNumber()"
+                                    [ngClass]="{ 'is-invalid': f['gstinNumber'].touched && f['gstinNumber'].errors, 'is-valid': f['gstinNumber'].valid }"  />
+                                <div *ngIf="f['gstinNumber'].touched && f['gstinNumber'].errors" class="invalid-feedback">
+                                    <div>{{getErrorMessage('gstinNumber','GSTIN Number',true,"Invalid data available in GSTIN Number")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 col" style="padding-top: 30px;">
+                                <div class="row">
+                                   
+                                        <label class="form-label col-md-2 text-right">Status*</label>
+                                   
+                               
+                                    <div class="col-md-3">
+                                        <label class="switch active">
+                                            <input type="checkbox" formControlName="isActive" [(ngModel)]="active">
+                                            <div class="slider round"></div>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="card-footer text-right">
+
+                        
+                            <button [disabled]="!form.valid" class="btn btn-primary mr-2">
+                                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                Submit
+                            </button>
+                      
+                            <button [disabled]="!form.valid" class="btn btn-secondary" (click)="clearForm()">
+                                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                Reset
+                            </button>
+
+                            <button type="button" class="btn btn-danger ml-2" (click)="DeleteParty()" *ngIf="id!=0">
+                                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                Delete
+                            </button>
+                       
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,58 @@
+<div class="row">
+    <form [formGroup]="timeForm">
+        <div class="col-md-12">
+            <div class="btn-group" style="padding:5px;" ngbDropdown role="group"
+                aria-label="Button group with nested dropdown">
+                <select [disabled]="isFromComplete == 0 || isFromComplete == 1" class="form-control" aria-label=".form-select-sm example" formControlName="selectedYearG" (change)="ChangeDate(0)">
+                    <option selected value="0">--Select Year--</option>
+                    <option value="{{i}}" *ngFor="let i of years">{{i}}</option>
+                </select>
+            </div>
+            <div class="btn-group" style="padding:5px;" ngbDropdown role="group"
+                aria-label="Button group with nested dropdown">
+                <select class="form-control" aria-label=".form-select-sm example" formControlName="selectedMonthG" (change)="ChangeDate(1)">
+                    <option selected value="0">--Select Month--</option>
+                    <option *ngFor="let m of months" value="{{m.value}}">{{m.monthName}}</option>
+                </select>
+            </div>
+
+            <div class="btn-group" style="padding:5px;" ngbDropdown role="group"
+                aria-label="Button group with nested dropdown">
+                <select class="form-control" aria-label=".form-select-sm example" formControlName="selectedDayG" (change)="ChangeDate(2)">
+                    <option selected value="0">--Select Day--</option>
+                    <option *ngFor="let d of days" value="{{d}}">{{d}}</option>
+                </select>
+            </div>
+
+            <label>Time : </label>
+            <div class="btn-group" style="padding:5px;" ngbDropdown role="group"
+                aria-label="Button group with nested dropdown" >
+                <input type="text" class="form-control" formControlName="selectedTimeG" appBlockCopyPaste (keypress)="ValidateTime($event)"
+                    placeholder="HH:mm:ss (24 Hours)" (focusout)="ValidateAndSubmit()" />
+            </div>
+            <!-- <div class="btn-group" style="padding:5px;" ngbDropdown role="group"
+            aria-label="Button group with nested dropdown">
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                <option selected value="0">--Select Hour--</option>
+                <option *ngFor="let h of hours" value="{{h}}">{{h}}</option>
+            </select>
+        </div>
+
+        <div class="btn-group" style="padding:5px;" ngbDropdown role="group"
+            aria-label="Button group with nested dropdown">
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                <option selected value="0">--Select Minute--</option>
+                <option *ngFor="let mn of minutes" value="{{mn}}">{{mn}}</option>
+            </select>
+        </div>
+
+        <div class="btn-group" style="padding:5px;" ngbDropdown role="group"
+            aria-label="Button group with nested dropdown">
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                <option selected value="0">--Select Second--</option>
+                <option *ngFor="let sc of minutes" value="{{sc}}">{{sc}}</option>
+            </select>
+        </div> -->
+        </div>
+    </form>
+</div>

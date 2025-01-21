@@ -1,0 +1,72 @@
+<div class="p-4">
+    <div class="row">
+    <div class="col-xl-12 col-md-12 grid-margin">
+    
+        <div class="card">
+           <div class="card-body">
+   
+        <div class="row">
+            <div class="col-md-3">
+                <cm-multiselect-auto-complt [inputData]="_inputVmsData" [label]="label1"
+                    [dropdownSettings]="dropdownSettingsVms" (selectedItem)="getSelectedVms($event,1)"
+                    (deSelectedItem)="getSelectedVms($event,0)"></cm-multiselect-auto-complt>
+            </div>
+            <div class="col-md-3">
+                <label>Network Status</label>
+                <select class="form-control" [(ngModel)]="selectedStatus">
+                    <option value="0">All</option>
+                    <option value="1">Online</option>
+                    <option value="2">Offline</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label>From Date</label>
+                <div class="input-group">
+                   
+                    <input class="form-control" placeholder="yyyy-mm-dd" name="dp"
+                        [(ngModel)]="modelFromDate" [minDate]="minDate" ngbDatepicker
+                        #d1="ngbDatepicker" />
+                    <button class="btn btn-outline-primary border-primary"
+                        (click)="d1.toggle()" type="button">
+                        <i class="fa fa-calendar"></i></button>
+                </div>
+                </div>
+                <div class="col-md-3">
+                    <label>To Date</label>
+                <div class="input-group">
+                  
+                    <input class="form-control" placeholder="yyyy-mm-dd" name="dp2"
+                        [(ngModel)]="modelToDate" [minDate]="minDate" ngbDatepicker
+                        #d2="ngbDatepicker" />
+                    <button class="btn btn-outline-primary border-primary"
+                        (click)="d2.toggle()" type="button">
+                        <i class="fa fa-calendar"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="row text-right">
+            <div class="col-md-12 mb-1">
+                <button class="btn btn-primary mr-1" (click)="ActionSubmit(0)">
+                    Submit
+                </button>
+                <button *ngIf="listOfData != undefined" class="btn btn-danger mr-1" (click)="ActionSubmit(1)">
+                  <i class="fa fa-file-pdf-o"></i>  PDF
+                </button>
+                <button *ngIf="listOfData != undefined" class="btn btn-success" (click)="ActionSubmit(2)">
+                    <i class="fa fa-file-excel-o"></i> Excel
+                </button>
+            </div>
+        </div>
+        <div class="row" *ngIf="listOfData != undefined">
+            <div class="col-md-12" *ngIf="listOfData.length > 0">
+                <app-cm-table [headArr]="headerArr" [gridArr]="listOfData" [totalRecords]="totalRecords"
+                [totalPages]="totalPages" [perPage]="recordPerPage" (pager)="onPager($event)" 
+                [collectionSize]="totalRecords" (recordPerPage)="onRecordPageChange($event)"
+                fieldName="id" (search)="onPageSearch($event)" [isSearchBox]="false"></app-cm-table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>

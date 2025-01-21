@@ -1,0 +1,51 @@
+[  
+  {  
+    "id": 1,  
+    "location": "Location 1",  
+    "preview": "#",  
+    "img": "male"  
+  },  
+  {  
+    "id": 2,  
+    "location": "Location 2",  
+    "preview": "#",  
+    "img": "male" 
+  },  
+  {  
+    "id": 3,  
+    "location": "Location 3",  
+    "preview": "#",  
+    "img": "male"   
+  },  
+  {  
+    "id": 4,  
+    "location": "Location 4",  
+    "preview": "#",  
+    "img": "male"   
+  },  
+  {  
+    "id": 5,  
+    "location": "Location 5",  
+    "preview": "#",  
+    "img": "male" 
+  },  
+  {  
+    "id": 6,  
+    "location": "Location 6",  
+    "preview": "#",  
+    "img": "male"  
+  },  
+  {  
+    "id": 7,  
+    "location": "Location 7",  
+    "preview": "#",  
+    "img": "male" 
+  },  
+  {  
+    "id": 8,  
+    "location": "Location 8",  
+    "preview": "#",  
+    "img": "male"   
+  }  
+  
+]  

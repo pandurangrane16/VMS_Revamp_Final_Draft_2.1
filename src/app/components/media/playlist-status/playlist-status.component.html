@@ -1,0 +1,60 @@
+<div class="card">
+    <div class="p-4">
+        <div class="row mb-3">
+            <div class="row">
+                <div class="col-md-12 text-left" style="padding:15px;">
+                    <button class="btn btn-primary btn-rounded mb-1">
+                        <!-- <span class="spinner-border spinner-border-sm me-1" ></span> -->
+                        <i class="icon-arrow-left"></i>
+                        Back
+                    </button>
+                </div>
+            </div>
+            <div class="row" style="height: 350px;overflow: auto;">
+                <div class="col-md-12">
+                    <!-- <app-cm-table [headArr]="headerArr" [isSearch]="isSearch" [gridArr]="listOfPlaylist"
+                        [totalRecords]="totalRecords" [totalPages]="totalPages" [perPage]="recordPerPage"
+                        (pager)="onPager($event)" [collectionSize]="totalRecords"
+                        (recordPerPage)="onRecordPageChange($event)" link="users/add-user" fieldName="id"
+                        (search)="onPageSearch($event)"></app-cm-table> -->
+                     <div>
+                        <input class="form-control col-8 float-right mt-2 mb-2" type="text" [(ngModel)]="searchText" (input)="Search()"
+                        placeholder="Search With Playlist Name" />
+                     </div>   
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-sm row-border hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th class="text-center">Sr.No.</th>
+                                    <th class="text-center">Playlist ID</th>
+                                    <th class="text-center">Playlist Name</th>
+                                    <th class="text-center">Created Date</th>
+                                    <th class="text-center">Total Files</th>
+                                    <th class="text-center">Processed Files</th>
+                                    <!-- <th class="text-center">Completion</th> -->
+                                    <th class="text-center">Modified Date</th>
+                                    <th class="text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of filteredPlaylist;let i = index;">
+                                    <td class="text-center">{{i+1}}</td>
+                                    <td class="text-center">{{data.plId}}</td>
+                                    <td class="text-center">{{data.playlistName}}</td>
+                                    <td class="text-center">{{data.createdDate}}</td>
+                                    <td class="text-center">{{data.totalCount}}</td>
+                                    <td class="text-center">{{data.processCount}}</td>
+                                    <td class="text-center">{{data.updationDate}}</td>
+                                    <td class="text-center">
+                                            <span *ngIf="data.status == 1" class="badge badge-info">Processing</span>
+                                            <span *ngIf="data.status == 2" class="badge badge-success">Complete</span>
+                                            <span *ngIf="data.status == -1" class="badge badge-info">Processing</span>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

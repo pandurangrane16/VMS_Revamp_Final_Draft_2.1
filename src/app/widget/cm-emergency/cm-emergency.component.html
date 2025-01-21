@@ -1,0 +1,48 @@
+<div class="modal-header bgTable" style="border-radius: 15px 15px 0 0!important;">
+    <h5 class="modal-title text-uppercase mr-5">{{title}}</h5>
+    <!-- <h5 class="modal-title text-uppercase mr-5">{{ this.id != null ? 'Edit User':'Add New User'}} </h5>  -->
+    <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close" (click)="passBack()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="card">
+    <div class="card-body">
+    <div class="row">
+        <div class="col-md-4">
+            <cm-multiselect-auto-complt [inputData]="_inputVmsData" [label]="label1"
+                [dropdownSettings]="dropdownSettingsVms" (selectedItem)="getSelectedVms($event,1)"
+                (deSelectedItem)="getSelectedVms($event,0)"></cm-multiselect-auto-complt>
+        </div>
+        <div class="col-md-4">
+            <div class="mb-3">
+                <label for="formFile" class="form-label">File Upload</label>
+                <input class="form-control" type="file" id="formFile" (change)="readURL($event)">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-4">
+                <label for="formFile" class="form-label w-100">Duration </label>
+                <select class="form-control-sm" [(ngModel)]="unitType">
+                    <option value="second">Seconds</option>
+                    <option value="minute">Minutes</option>
+                    <option value="hour">Hours</option>
+                    <option value="day">Days</option>
+                </select>
+           </div>
+            <div class="col-md-8">
+                <label for="formFile" class="form-label w-100">&nbsp; </label>
+                <input type="text" class="form-control" [(ngModel)]="unitValue" placeholder="Duration Unit">
+            </div></div>
+        </div>
+    </div></div>
+    <div class="card-footer">
+    <div class="row">
+        <div class="col-md-12 text-right">
+            <button class="btn btn-primary" (click)="SaveEmergencyData()">
+                Submit
+            </button>
+        </div>
+    </div>
+</div></div>

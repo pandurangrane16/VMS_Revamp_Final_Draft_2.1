@@ -1,0 +1,27 @@
+
+<div class="p-4">
+    <div class="row">
+                             
+        <div class="col-md-12">
+          
+            <div class="card border-0  pb-0 bgTable">
+               
+              <div class="card-body p-2">
+                <button class="btn btn-success btn-rounded text-dark float-left" (click)="OpenModal(cmmodal)">
+                    <span class="spinner-border-sm me-1"></span>
+                    <i class="icon-plus"></i> Add New
+                </button>
+                <app-cm-table [headArr]="headerArr" [isSearch]="isSearch" [gridArr]="listOfPlaylist" [totalRecords]="totalRecords"
+                    [totalPages]="totalPages" [perPage]="recordPerPage" (pager)="onPager($event)" [btnArray]="btnArray"
+                    (btnAction)="ButtonAction($event)" [collectionSize]="totalRecords" (recordPerPage)="onRecordPageChange($event)" link="users/add-user"
+                    fieldName="id" (search)="onPageSearch($event)" (searchWithId)="SearchWithId($event)"></app-cm-table>
+                </div>
+                
+            </div>
+          </div>
+          </div>
+          </div>
+
+<ng-template #cmmodal let-modal>
+    <app-cm-modal></app-cm-modal>
+</ng-template>

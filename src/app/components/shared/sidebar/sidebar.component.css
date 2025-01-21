@@ -1,0 +1,13 @@
+:host{
+    background-color: #212529;
+    z-index: 9999;
+    top: 60px;
+    position: relative;
+    }
+.roted{
+    transform: rotate(90deg);
+}
+
+::ng-deep .sidebar-icon-only .sidebar .nav .nav-item.last-item .collapse{
+transform: translateY(-100%)!important;
+}
