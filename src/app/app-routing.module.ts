@@ -274,7 +274,7 @@ const routes: Routes = [
   
   { 
     path: "cvms/uploadMedia", 
-    component: MediaplayerComponent,
+    component: MediaUploadCvmsListComponent,
     data: { title: 'Upload Media' },
     canActivate: [AuthGuradService]
   },
