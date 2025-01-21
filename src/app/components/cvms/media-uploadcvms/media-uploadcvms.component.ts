@@ -105,6 +105,16 @@ fileName : string="";
 
 
   onSubmit() {
+    if(this.vmsIds == undefined || this.vmsIds.length < 1){
+      this.toast.error("Controller not selected");
+      return;
+    }
+    if (this.isFileTypeImage) {
+      if(this.selectedIds.length < 1){
+        this.toast.error("Media/Text not selected");
+        return;
+      }
+    }
     for (let i = 0; i < this.vmsIds.length; i++) {
       const element = this.vmsIds[i];
       if (this.isFileTypeImage) {
@@ -124,7 +134,7 @@ fileName : string="";
     console.log(media);
     let _vcmsuploadmediadata = new Vcmsuploadmedia();
     _vcmsuploadmediadata.controllerName = element;
-    _vcmsuploadmediadata.IpAddress = "172.19.32.51"
+    _vcmsuploadmediadata.IpAddress = this.vmsIds[0];
     if (media != null) {
       _vcmsuploadmediadata.medianame = media.displayName;
     }
@@ -133,7 +143,7 @@ fileName : string="";
     }
 
     _vcmsuploadmediadata.status = 0;
-    _vcmsuploadmediadata.AuditedBy = "Ashish S";
+    _vcmsuploadmediadata.AuditedBy = "System";
     _vcmsuploadmediadata.IsAudited = true;
     _vcmsuploadmediadata.AuditedTime = new Date();
     _vcmsuploadmediadata.Reason = "Upload Data for test";
