@@ -44,6 +44,7 @@ import { MediaUploadCvmsListComponent } from './components/cvms/media-upload-cvm
 import { EmergencyPlayCvmsComponent } from './components/cvms/emergency-play-cvms/emergency-play-cvms.component';
 import { MediaPlayerCvmsComponent } from './components/cvms/media-player-cvms/media-player-cvms.component';
 import { MediaplayerlistComponent } from './components/cvms/mediaplayerlist/mediaplayerlist.component';
+import { MedialiveplaylistComponent } from './components/cvms/medialiveplaylist/medialiveplaylist.component';
 
 const routes: Routes = [
   {
@@ -293,6 +294,12 @@ const routes: Routes = [
   },
   { 
     path: "cvms/livePlay", 
+    component: MedialiveplaylistComponent,
+    data: { title: 'Emergency Play' },
+    canActivate: [AuthGuradService]
+  },  
+  { 
+    path: "cvms/livePlaylist", 
     component: EmergencyPlayCvmsComponent,
     data: { title: 'Emergency Play' },
     canActivate: [AuthGuradService]

@@ -22,4 +22,13 @@ export class MediaschedulerserviceService {
         return this._httpService._postMethod(_data,'Vcms_API/api/MediaScheduler/PutMediaSchedulerMaster');
       }
 
+      getMediaschedulerByIpAddress(ipAdd: string) {
+        return this._httpService._getMethod('vcms_api/api/MediaScheduler/GetMediaSchedulerByIpAddress?_ipAddress=' + ipAdd);
+      }
+
+      getMediaschedulersList(type:number){
+        return this._httpService._getMethod('Vcms_API/api/MediaScheduler/GetMediaScheduler?type=' + type);
+      }
+
+
 }

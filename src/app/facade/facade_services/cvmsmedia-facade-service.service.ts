@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { MediaplayerserviceService } from '../services/vcms/mediaplayerservice.service';
-import { MediaschedulerserviceService } from '../services/vcms/mediaschedulerservice.service';
 import { MediauploadserviceService } from '../services/vcms/mediauploadservice.service';
 import { BehaviorSubject, Observable, forkJoin, of, take, tap } from 'rxjs';
 import { MedialiveplayService } from '../services/vcms/medialiveplay.service';
+import { MediaschedulerserviceService } from '../services/vcms/mediaschedulerservice.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +20,7 @@ export class CVMSMediaFacadeServiceService {
     return this._mediaplayer.getUploadMediaDetails(inputReq,type);
   }
 
-  SaveMediaPlayer(data:any){
-    console.log("*" + JSON.stringify(data) + "*");
+  SaveMediaPlayer(data:any){   
     return this._mediaplayer.SaveMedia(data);
   }
 
@@ -45,10 +44,13 @@ export class CVMSMediaFacadeServiceService {
   getMediaPlayerByIpAdd(ipAdd:string){
     return this._mediaplayer.getMediaPlayerByIpAddress(ipAdd);
   }
-  PlayEmergencyMedia(inputReq: string,data:any) {   
-    
-    return this._medialive.PlayEmergencyMedia(inputReq,data);
+  PlayEmergencyMedia(data:any) {       
+    return this._medialive.PlayEmergencyMedia(data);
   }
+  getMediaschedulersList(type:number) {       
+    return this._mediascheduler.getMediaschedulersList(type);
+  }
+
 }
 
 

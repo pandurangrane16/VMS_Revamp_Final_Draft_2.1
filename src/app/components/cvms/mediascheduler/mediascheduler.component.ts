@@ -6,6 +6,7 @@ import { AdminFacadeService } from 'src/app/facade/facade_services/admin-facade.
 import { CVMSMediaFacadeServiceService } from 'src/app/facade/facade_services/cvmsmedia-facade-service.service';
 import { CommonSelectList } from 'src/app/models/common/cmSelectList';
 import { InputRequest } from 'src/app/models/request/inputReq';
+import { Globals } from 'src/app/utils/global';
 
 @Component({
   selector: 'app-mediascheduler',
@@ -26,8 +27,10 @@ export class MediaschedulerComponent {
   minDate: any;
   maxDate: any;
   cronExpression: any;
+  
 
   constructor(private formBuilder: FormBuilder,
+    private global: Globals,
     private _router: Router,
     private _CVMSfacade: CVMSMediaFacadeServiceService,
     private adminFacade: AdminFacadeService,
@@ -38,6 +41,7 @@ export class MediaschedulerComponent {
     this.FileTypes = ['Image File', 'Media Text']
     this.BuildForm();
     this.GetVmsDetails();
+    this.global.CurrentPage = "Media Live Play List CVMS";
   }
 
   BuildForm() {
@@ -107,6 +111,9 @@ export class MediaschedulerComponent {
 
   OnSaveDetails() {
 
+  }
+  BacktoList() {
+    this._router.navigate(['cvms/uploadMedia']);
   }
 
 

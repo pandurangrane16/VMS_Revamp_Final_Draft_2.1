@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { date } from '@rxweb/reactive-form-validators';
 import { ToastrService } from 'ngx-toastr';
 import { AdminFacadeService } from 'src/app/facade/facade_services/admin-facade.service';
 import { CommonFacadeService } from 'src/app/facade/facade_services/common-facade.service';
@@ -74,6 +75,7 @@ export class EmergencyPlayCvmsComponent {
           disabled: false
         }
         this._inputVmsData = _data;
+        
       }
     });
   }
@@ -125,7 +127,6 @@ export class EmergencyPlayCvmsComponent {
     //let _vmsIpAdd = this.vmsIds[0];
 
     this.mediaFacade.getMediaPlayerByIpAdd(_vmsIpAdd).subscribe(res => {
-
       if (res != null) {
         if (res.length > 0) {
           let commonList: CommonSelectList[] = [];
@@ -141,9 +142,7 @@ export class EmergencyPlayCvmsComponent {
             data: commonList,
             disabled: false
           }
-          this._inputPlayerData = _data;          
-          
-          
+          this._inputPlayerData = _data;
         }
       }
     })
@@ -158,15 +157,25 @@ export class EmergencyPlayCvmsComponent {
 
     let MediaJson = {
       //"mediaPlayerId": this.columnid[0],
-      "mediaPlayerId": 1,
-      "mediaPlayerName": this.columnName[0]
+      "id": 0,
+      "vmsId": 0,
+      "ipAddress": Ipaddress,
+      "creationTime": new Date(),
+      "responseId": 0,
+      "requestData": {
+        "mediaPlayerId": 1,
+        "mediaPlayerName": this.columnName[0]
+      },
+      "responseData": null,
+      "status": 0
+      
     };
-    this.mediaFacade.PlayEmergencyMedia(Ipaddress, MediaJson).subscribe(data => {
+    this.mediaFacade.PlayEmergencyMedia(MediaJson).subscribe(data => {
       if (data == 0) {
         this.toast.error("Error occured while saving data for ");
       }
       else {
-        this.toast.success("Send Media successfully");
+        this.toast.success("Send Emergncy Media successfully");
       }      
       
     });
@@ -175,4 +184,9 @@ export class EmergencyPlayCvmsComponent {
     });   
     
   }
+
+  BacktoList() {
+    this._router.navigate(['cvms/livePlay']);
+  }
+
 }
