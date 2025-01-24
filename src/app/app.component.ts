@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
       this._router.navigate(['login']);
     }
     else {
-      this.ConnectSocket();
+      //this.ConnectSocket();
       let val = this._sessionService._getSessionValue("api_url");
       this._httpService._api_url = JSON.parse(JSON.stringify(val));
       

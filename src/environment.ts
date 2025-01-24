@@ -1,5 +1,5 @@
 export const environment = {
-    version:"2.1.1",
+    version:"2.1.0",
     production: false,
     user:"superadmin",
     password:"Cms$$2023#1",
@@ -10,7 +10,6 @@ export const environment = {
     SSE_Url : "https://172.19.32.51:8025/publish_api/notify",
     PreviewPath : "https://172.19.32.51:8025/mediaLists/playlists/",
     Socket_URL : "http://172.19.32.51:8030",
-
     //Vadodara UAT Server Settings
     // SSE_Url : "http://10.100.43.157:8026/publish_api/notify",
     // Socket_URL : "10.20.1.111:8028",
