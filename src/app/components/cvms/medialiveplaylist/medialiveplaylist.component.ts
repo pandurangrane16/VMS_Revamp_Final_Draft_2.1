@@ -99,7 +99,7 @@ export class MedialiveplaylistComponent {
       this._request.pageSize = this.recordPerPage;
       this._request.startId = this.startId;
       this._request.searchItem = this.searchText;
-      this.mediaFacade.getMediaschedulersList(this.tabno).subscribe(data => {
+      this.mediaFacade.getMediaschedulersList(this._request, this.tabno).subscribe(data => {
         if (data != null) {
           this.listOfMediaUpload = data.data;
           this.listOfMediaUpload.forEach((element: any) => {

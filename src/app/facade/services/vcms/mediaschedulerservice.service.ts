@@ -26,8 +26,8 @@ export class MediaschedulerserviceService {
         return this._httpService._getMethod('vcms_api/api/MediaScheduler/GetMediaSchedulerByIpAddress?_ipAddress=' + ipAdd);
       }
 
-      getMediaschedulersList(type:number){
-        return this._httpService._getMethod('Vcms_API/api/MediaScheduler/GetMediaScheduler?type=' + type);
+      getMediaschedulersList(_data: any,type:number){
+        return this._httpService._postMethod(_data,'Vcms_API/api/LivePlay/GetDetails?type=' + type);
       }
 
 

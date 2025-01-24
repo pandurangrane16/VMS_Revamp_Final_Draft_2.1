@@ -47,8 +47,8 @@ export class CVMSMediaFacadeServiceService {
   PlayEmergencyMedia(data:any) {       
     return this._medialive.PlayEmergencyMedia(data);
   }
-  getMediaschedulersList(type:number) {       
-    return this._mediascheduler.getMediaschedulersList(type);
+  getMediaschedulersList(_data: any,type:number) {       
+    return this._mediascheduler.getMediaschedulersList(_data,type);
   }
 
 }

@@ -154,18 +154,18 @@ export class EmergencyPlayCvmsComponent {
    
     this.columnid = this._inputPlayerData.data.map((item: any) => item.value);
     this.columnName = this._inputPlayerData.data.map((item: any) => item.displayName);
-
+    let media = {
+      "mediaPlayerId": 1,
+      "mediaPlayerName": this.columnName[0]
+    }
     let MediaJson = {
-      //"mediaPlayerId": this.columnid[0],
+      
       "id": 0,
       "vmsId": 0,
       "ipAddress": Ipaddress,
       "creationTime": new Date(),
       "responseId": 0,
-      "requestData": {
-        "mediaPlayerId": 1,
-        "mediaPlayerName": this.columnName[0]
-      },
+      "requestData": media,
       "responseData": null,
       "status": 0
       
