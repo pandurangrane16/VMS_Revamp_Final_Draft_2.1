@@ -106,6 +106,7 @@ import { CVMSMediaModalComponent } from './components/cvms/cvmsmedia-modal/cvmsm
 import { MediaUploadCvmsListComponent } from './components/cvms/media-upload-cvms-list/media-upload-cvms-list.component';
 import { EmergencyPlayCvmsComponent } from './components/cvms/emergency-play-cvms/emergency-play-cvms.component';
 import { MediaPlayerCvmsComponent } from './components/cvms/media-player-cvms/media-player-cvms.component';
+import { MediaplayerlistComponent } from './components/cvms/mediaplayerlist/mediaplayerlist.component';
 
 
 const config: SocketIoConfig = { url: environment.Socket_URL, options: {} };
@@ -178,6 +179,7 @@ const config: SocketIoConfig = { url: environment.Socket_URL, options: {} };
     MediaUploadCvmsListComponent,
     EmergencyPlayCvmsComponent,
     MediaPlayerCvmsComponent,
+    MediaplayerlistComponent,
     
   ],
   imports: [

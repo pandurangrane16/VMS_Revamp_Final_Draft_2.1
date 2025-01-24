@@ -12,8 +12,8 @@ export class MediaplayerserviceService {
     private _http: HttpClient) { }
 
 
-  getUploadMediaDetails() {
-    return this._httpService._getMethod('Vcms_API/api/Mediaplayer/GetMediaPlayer');
+  getUploadMediaDetails(inputReq :any,type : number) {
+    return this._httpService._postMethod(inputReq,'Vcms_API/api/Mediaplayer/GetMediaPlayer?type='+ type);
   }
   SaveMedia(_data: any) {
 

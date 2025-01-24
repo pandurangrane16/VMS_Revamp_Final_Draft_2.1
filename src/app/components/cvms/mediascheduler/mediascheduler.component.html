@@ -9,28 +9,98 @@
 
             <div class="card">
                 <form [formGroup]="form">
-                    
+
                     <div class="card-body">
                         <div class="row">
-                            <div class="mb-4 col form-group">
-                                <label class="form-label">Select Media Upload Type*</label>
-                                <select required [(ngModel)]="mediauploadtype" class="form-control form-control-sm"
-                                    (change)="onUploadTypeChange($event)" formControlName="mediatype">
-                                    <option [ngValue]="null" disabled>Choose your Upload Type</option>
-                                    <option *ngFor="let type of FileTypes" [ngValue]="type">{{type}}</option>
+                            <div class="mb-4 form-group">
+                                <label class="form-label">Select Controller</label>
+                                <select class="form-control form-control-sm" [(ngModel)]="SelectedControllerId"
+                                    (change)="getSelectedVms($event)" formControlName="VmsController">
+                                    <option [ngValue]="null" disabled>Choose Controller</option>
+                                    <option *ngFor="let type of inputVmsData.data" [ngValue]="type.value">
+                                        {{type.displayName}}</option>
                                 </select>
                             </div>
-                            <div class="mb-4 col form-group">
-                                <label class="form-label">Media Name*</label>
-                                <input type="text" formControlName="mediaName" [(ngModel)]="MediaName" class="form-control"
-                                  
-                                    placeholder="Enter Media Name" />                            </div>
 
                         </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-6 col-md-4 col">
+                                <div class="mb-4 col form-group">
+                                    <label class="form-label">Schedule Name*</label>
+                                    <input type="text" formControlName="schedulename" [(ngModel)]="name" class="form-control"
+                                        placeholder="Enter Schedule Name" />
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4 col">
+                                <div class="mb-4 col form-group">
+                                    <label class="form-label">Media Name*</label>
+                                    <input type="text" formControlName="mediaName" [(ngModel)]="MediaName"
+                                        class="form-control" placeholder="Enter Media Name" />
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4 col">
+                                <div class="mb-4 col form-group">
+                                    <label class="form-label">Cron Expression*</label>
+                                    <input type="text" formControlName="cronexpression" [(ngModel)]="cronExpression"
+                                        class="form-control" placeholder="cron Expression" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-1"></div>
+                            <label class="col-md-2 text-right mt-2">From Date: </label>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <input formControlName="globalFromDt" appBlockCopyPaste
+                                        (keypress)="keyPress($event)" class="form-control" placeholder="yyyy-mm-dd"
+                                        name="dp" [minDate]="minDate" ngbDatepicker #dFromDatePub="ngbDatepicker" />
+                                    <button class="btn btn-outline-primary border-primary"
+                                        (click)="dFromDatePub.toggle()" type="button">
+                                        <i class="fa fa-calendar"></i></button>
+                                </div>
+                            </div>
+                            <ngb-timepicker formControlName="globalFromTm" [seconds]="true" class="col-4 float-left"
+                                (focusout)="ValidateTime()" />
+
+                            <!-- <cm-datetimepicker [inputData]="fromTimeArr" type="from" fromYear="2020"
+                                        toYear="2030" class="col-md-8"
+                                        (selectedTime)="GetTime($event,0)"></cm-datetimepicker> -->
+
+
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-1"></div>
+
+                            <label class="col-md-2 text-right mt-2">To Date: </label>
+
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <input formControlName="globalFromDt" appBlockCopyPaste
+                                        (keypress)="keyPress($event)" class="form-control" placeholder="yyyy-mm-dd"
+                                        name="dp" [minDate]="minDate" ngbDatepicker #dFromDatePub="ngbDatepicker" />
+                                    <button class="btn btn-outline-primary border-primary"
+                                        (click)="dFromDatePub.toggle()" type="button">
+                                        <i class="fa fa-calendar"></i></button>
+                                </div>
+                            </div>
+
+                            <ngb-timepicker formControlName="globalFromTm" [seconds]="true" class="col-4 float-left"
+                                (focusout)="ValidateTime()" />
+
+                            <!-- <cm-datetimepicker [inputData]="fromTimeArr" type="from" fromYear="2020"
+                                        toYear="2030" class="col-md-8"
+                                        (selectedTime)="GetTime($event,0)"></cm-datetimepicker> -->
+
+
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col">
+                                <button ngClass="btn btn-secondary" (click)="OnSaveDetails()"
+                                    style="width: 20%;" formControlName="SaveDetails" class="form-control">Save
+                                    Details</button>
+                            </div>
+                        </div>
                     </div>
-
-                    
-
                 </form>
             </div>
         </div>

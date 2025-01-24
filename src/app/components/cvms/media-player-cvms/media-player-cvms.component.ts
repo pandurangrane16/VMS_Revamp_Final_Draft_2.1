@@ -7,13 +7,25 @@ import { getErrorMsg } from 'src/app/utils/utils';
 import { CVMSMediaModalComponent } from '../cvmsmedia-modal/cvmsmedia-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlaylistMedia, SelectedMediaVCMS } from 'src/app/models/vcms/selectedMedia';
+import { Mediaplayer } from 'src/app/models/vcms/mediaplayer';
+import { CVMSMediaFacadeServiceService } from 'src/app/facade/facade_services/cvmsmedia-facade-service.service';
+import { ToastrService } from 'ngx-toastr';
+import { event } from 'jquery';
+import { any } from 'core-js/fn/promise';
+import { Router } from '@angular/router';
+import { pipe } from 'rxjs';
+import { disable } from 'ol/rotationconstraint';
+
 
 @Component({
   selector: 'app-media-player-cvms',
   templateUrl: './media-player-cvms.component.html',
   styleUrls: ['./media-player-cvms.component.css']
 })
-export class MediaPlayerCvmsComponent {
+
+
+
+export class MediaPlayerCvmsComponent  {
 
   currentTile: number = -1;
   registrationForm: FormGroup;
@@ -27,18 +39,24 @@ export class MediaPlayerCvmsComponent {
   listOfMedialist: any = [];
   rows: any[];
   rowCount: number;
+  ShowSaveBtn:boolean = false;
+  vmsIds: any[] = [];
+  SelectedControllerId:any;
 
   constructor(private fb: FormBuilder,
+     private toast: ToastrService,
     private adminFacade: AdminFacadeService,
+    private _router: Router,
+    private _CVMSfacade: CVMSMediaFacadeServiceService,
     private modalService: NgbModal,) { }
 
   ngOnInit(): void {
-    this.registrationForm = this.fb.group({
+    this.registrationForm = this.fb.group({     
       name: '',
       mediaLoopCount: '0',
       tiles: this.fb.array([])
     });
-    this.GetVmsDetails();
+    this.GetVmsDetails();    
   }
 
   // Function to create a single user form group
@@ -60,6 +78,11 @@ export class MediaPlayerCvmsComponent {
       textStyle: [{}, Validators.required]
     });
   }
+  CreateFontFamily():FormGroup{
+    return this.fb.group({
+
+    })
+  }
 
   GetVmsDetails() {
     this.adminFacade.getVmss(this._request).subscribe(data => {
@@ -77,6 +100,7 @@ export class MediaPlayerCvmsComponent {
           data: commonList,
           disabled: false
         }
+        
         this._inputVmsData = _data;
       }
     });
@@ -85,6 +109,14 @@ export class MediaPlayerCvmsComponent {
   // Get the form array
   get userDetails(): FormArray {
     return this.registrationForm.get('tiles') as FormArray;
+  }
+  getPlaylist(userIndex: number): FormArray {
+    return (this.userDetails.at(userIndex).get('playlist') as FormArray);
+  }
+  
+
+  getFontList(userIndex:number):FormArray{
+    return (this.getPlaylist(userIndex).get('fontfamily') as FormArray);
   }
 
   getErrorMessage(_controlName: any, _controlLable: any, _isPattern: boolean = false, _msg: string) {
@@ -96,7 +128,9 @@ export class MediaPlayerCvmsComponent {
     let _tileDetails = new SelectedMediaVCMS();
     _tileDetails.tileNo = this.currentTile;
     this.selectedMediaPlaylist.push(_tileDetails);
+    
     this.userDetails.push(this.createUser());
+    
   }
 
   // Remove a user form group from the form array
@@ -111,9 +145,8 @@ export class MediaPlayerCvmsComponent {
       console.log(this.registrationForm.value);
     }
   }
-  getPlaylist(userIndex: number): FormArray {
-    return (this.userDetails.at(userIndex).get('playlist') as FormArray);
-  }
+  
+ 
   ShowMediaPopup(type: string,idx : number) {
     const modalRef = this.modalService.open(CVMSMediaModalComponent, { ariaLabelledBy: 'modal-basic-title', size: 'xl' });
     if (type == "Media") {
@@ -137,13 +170,12 @@ export class MediaPlayerCvmsComponent {
         this.selectedMediaId.push(selectedId);
         this.ShowTables(idx);
       })
-
-    }
-    //this.ShowSaveBtn = true;
+    }    
   }
 
   ShowTables(idx:number) {
     this.generateRows(idx);
+    this.ShowSaveBtn = true;
 
   }
   generateRows(idx:number) {
@@ -163,7 +195,7 @@ export class MediaPlayerCvmsComponent {
         "fontColor": "",
         "backgroundColor": ""
       }
-      _plMedia.imageTextDuration = this.selectedMediaId[0][i].imageTextDuration;
+      _plMedia.imageTextDuration = this.selectedMediaId[0][i].imageTextDuration;      
       _plMedia.mediaId = this.selectedMediaId[0][i].id;
       _plMedia.mediaName = this.selectedMediaId[0][i].fileName;
       _plMedia.playOrder = this.selectedMediaId[0][i].playOrder;
@@ -192,5 +224,48 @@ export class MediaPlayerCvmsComponent {
     const playlistArray = this.getPlaylist(userIndex);  // Get the specific playlist FormArray for the user
     playlistArray.removeAt(id);
     this.selectedMediaId.splice(id, 1);
+  }
+  getSelectedVms(eve: any){
+    const selectElement = eve.target as HTMLSelectElement;
+    const colindex = selectElement.value.indexOf(":");
+    if(colindex !== -1){
+      this.SelectedControllerId = selectElement.value.slice(colindex+1,selectElement.value.length).replace(/\s+/g,'');
+    }
+     
+
+  }
+  BacktoList(){
+    this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
+  }
+  
+  isNameValid(fieldname: string): boolean {
+  
+    const lowerCaseValue = fieldname.toLowerCase();     
+    return lowerCaseValue.includes('jpeg') || lowerCaseValue.includes('mp4') || lowerCaseValue.includes('jpg') || lowerCaseValue.includes('png')
+       
+  }
+
+  OnSavePlaylistDetails(): void {
+    let _vcmsmediplayerdata = new Mediaplayer();    
+     _vcmsmediplayerdata.IpAddress = this.SelectedControllerId;
+     _vcmsmediplayerdata.medianame = this.registrationForm.controls["name"].value;
+    _vcmsmediplayerdata.status = 0;
+    _vcmsmediplayerdata.AuditedBy = "System";
+    _vcmsmediplayerdata.IsAudited = true;
+    _vcmsmediplayerdata.AuditedTime = new Date();
+    _vcmsmediplayerdata.Reason = "Upload Data for MediaPlayer";
+    _vcmsmediplayerdata.createddate = new Date();
+    _vcmsmediplayerdata.RequestData = JSON.stringify(this.registrationForm.value);
+
+    this._CVMSfacade.SaveMediaPlayer(_vcmsmediplayerdata).subscribe(data => {
+      if (data == 0) {
+        this.toast.error("Error occured while saving data for " + _vcmsmediplayerdata.IpAddress);
+      }
+      else {
+
+        this.toast.success("Saved successfully for " + _vcmsmediplayerdata.IpAddress);
+      }
+    });
+    this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
   }
 }

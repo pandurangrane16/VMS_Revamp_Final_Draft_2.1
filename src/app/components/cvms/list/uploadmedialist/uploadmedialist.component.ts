@@ -15,9 +15,8 @@ import { Globals } from 'src/app/utils/global';
   styleUrls: ['./uploadmedialist.component.css']
 })
 export class UploadmedialistComponent {
-isSearch:boolean =false;
-  form: any = [];
-  
+  isSearch:boolean =false;
+  form: any = [];  
   searchText!: string;
   page: any;
   listOfUsers: any;

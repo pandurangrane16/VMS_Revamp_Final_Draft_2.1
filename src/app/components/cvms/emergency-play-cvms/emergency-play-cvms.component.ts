@@ -46,6 +46,8 @@ export class EmergencyPlayCvmsComponent {
   dropdownSettingsVms: any;
   _inputVmsData: any;
   _inputPlayerData: any;
+  columnName: string[] = [];
+  columnid:number[] = []; 
   ngOnInit(): void {
     this.GetVmsDetails();
     //this.getMedialistData();
@@ -78,7 +80,9 @@ export class EmergencyPlayCvmsComponent {
   getSelectedVms(eve: any, type: any) {
     if (eve.length > 0) {
       if (type == 1) {
+
         eve.forEach((vms: any) => {
+          this.vmsIds = [];
           this.vmsIds.push(vms.value);
         });
       }
@@ -97,8 +101,10 @@ export class EmergencyPlayCvmsComponent {
     else if (eve.length == 0)
       this.vmsIds = [];
     else {
-      if (type == 1)
+      if (type == 1) {
+        this.vmsIds = [];
         this.vmsIds.push(eve.value);
+      }
       else {
         var idx = 0;
         this.vmsIds.forEach(element => {
@@ -113,13 +119,17 @@ export class EmergencyPlayCvmsComponent {
 
   getMediaPlayerList() {
     //let _vmsIpAdd = this.vmsIds[0];
-    let _vmsIpAdd = "192.100.100.300";
+    //let _vmsIpAdd = "192.100.100.300";
     //let _vmsIpAdd = "172.19.10.67";
+    let _vmsIpAdd = "10.20.12.106";
+    //let _vmsIpAdd = this.vmsIds[0];
+
     this.mediaFacade.getMediaPlayerByIpAdd(_vmsIpAdd).subscribe(res => {
+
       if (res != null) {
-        if(res.length > 0){
+        if (res.length > 0) {
           let commonList: CommonSelectList[] = [];
-          res.forEach((ele:any) => {
+          res.forEach((ele: any) => {
             let _responseId = ele.responseId;
             let _data = JSON.parse(ele.requestData);
             var _commonSelect = new CommonSelectList();
@@ -131,29 +141,38 @@ export class EmergencyPlayCvmsComponent {
             data: commonList,
             disabled: false
           }
-          this._inputPlayerData = _data;
+          this._inputPlayerData = _data;          
+          
+          
         }
       }
     })
   }
   onSubmit() {
 
-    let Ipaddress = "172.19.32.51";    
-       
-      let MediaJson = {
-        "mediaPlayerId": 1,
-        "mediaPlayerName": "ashish"
-      };
-      this.mediaFacade.PlayEmergencyMedia(Ipaddress, MediaJson).subscribe(data => {
-        if (data == 0) {
-          this.toast.error("Error occured while saving data for ");
-        }
-        else {
-  
-          this.toast.success("Send Media successfully");
-        }
-      });
+    let Ipaddress = "172.19.32.51";
+    //let Ipaddress = this.vmsIds[0];
+   
+    this.columnid = this._inputPlayerData.data.map((item: any) => item.value);
+    this.columnName = this._inputPlayerData.data.map((item: any) => item.displayName);
+
+    let MediaJson = {
+      //"mediaPlayerId": this.columnid[0],
+      "mediaPlayerId": 1,
+      "mediaPlayerName": this.columnName[0]
+    };
+    this.mediaFacade.PlayEmergencyMedia(Ipaddress, MediaJson).subscribe(data => {
+      if (data == 0) {
+        this.toast.error("Error occured while saving data for ");
+      }
+      else {
+        this.toast.success("Send Media successfully");
+      }      
+      
+    });
+    this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this._router.navigate(['/cvms/livePlay']); 
+    });   
     
   }
-  
 }

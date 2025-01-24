@@ -74,7 +74,7 @@
                                         <td>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <button placement="top" delay="500"
+                                                    <button placement="top" delay="500" (click)="ViewMedia(m)"
                                                         type="button" class="btn btn-inverse-primary btn-sm">
                                                         <i class="icon-eye"></i>
                                                     </button>
@@ -88,13 +88,8 @@
                                         </td>
                                     </tr>
                                 </table>
-
-
-
                             </div>
                         </div>
-
-
                     </div>
 
                     <div class="card-footer text-right">
@@ -112,4 +107,19 @@
             </div>
         </div>
     </div>
+</div>
+<div class="modal" id="myModal" role="dialog" style="background-color: black">
+<div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+        <span><h5>{{fileName}}</h5></span>
+      <button type="button" #closebutton class="close" data-dismiss="modal" (click)="removeModal()">&times;</button>
+      <h4 class="modal-title"></h4>
+    </div>
+    <div class="modal-body">
+        <img [src]="url" *ngIf="format==='image' && url" height="200"> <br/>
+        <video [src]="url" *ngIf="format==='video' && url" height="200" controls></video> <br/>
+    </div>
+  </div>
+</div>
 </div>

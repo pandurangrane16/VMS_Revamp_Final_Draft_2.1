@@ -39,7 +39,8 @@ export class MediaUploadCvmsListComponent {
     { "Head": "ID", "FieldName": "id", "type": "number" },
     { "Head": "IP Address", "FieldName": "ipAddress", "type": "string" },
     { "Head": "Media Name", "FieldName": "mediaName", "type": "string" },
-    { "Head": "Response ID", "FieldName": "responseId", "type": "number" },
+    // { "Head": "Response ID", "FieldName": "responseId", "type": "number" },
+    // { "Head": "Response Data", "FieldName": "responsedata", "type": "string" },
     { "Head": "Status", "FieldName": "statusdesc", "type": "string" },
     { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
   ];

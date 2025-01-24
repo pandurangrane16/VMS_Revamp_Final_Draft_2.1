@@ -43,6 +43,7 @@ import { MediaschedulerComponent } from './components/cvms/mediascheduler/medias
 import { MediaUploadCvmsListComponent } from './components/cvms/media-upload-cvms-list/media-upload-cvms-list.component';
 import { EmergencyPlayCvmsComponent } from './components/cvms/emergency-play-cvms/emergency-play-cvms.component';
 import { MediaPlayerCvmsComponent } from './components/cvms/media-player-cvms/media-player-cvms.component';
+import { MediaplayerlistComponent } from './components/cvms/mediaplayerlist/mediaplayerlist.component';
 
 const routes: Routes = [
   {
@@ -280,7 +281,7 @@ const routes: Routes = [
   },
   { 
     path: "cvms/createMediaPlayerAndPlaylist", 
-    component: MediaPlayerCvmsComponent,
+    component: MediaplayerlistComponent,
     data: { title: 'Media Player' },
     canActivate: [AuthGuradService]
   },
@@ -294,6 +295,12 @@ const routes: Routes = [
     path: "cvms/livePlay", 
     component: EmergencyPlayCvmsComponent,
     data: { title: 'Emergency Play' },
+    canActivate: [AuthGuradService]
+  },  
+  { 
+    path: "cvms/MediaPlayerPlaylist", 
+    component: MediaPlayerCvmsComponent,
+    data: { title: 'Media Player' },
     canActivate: [AuthGuradService]
   },
   //Wild Card Route for 404 request 

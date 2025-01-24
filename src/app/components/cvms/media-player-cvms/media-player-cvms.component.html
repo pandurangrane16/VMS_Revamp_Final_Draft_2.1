@@ -1,6 +1,11 @@
 <div class="p-4">
-    <div class="row">
-
+    <div class="row col-2">
+        <button class="btn btn-primary btn-rounded mb-1" (click)="BacktoList()">            
+            <i class="icon-arrow-left"></i>
+            Back To List
+        </button>
+    </div>
+    <div class="row">        
         <div class="card">
             <div class="card-body">
                 <div class="row">
@@ -10,7 +15,7 @@
                                 <div class="col">
                                     <div class="mb-4 form-group">
                                         <label class="form-label">Select Controller</label>
-                                        <select class="form-control form-control-sm">
+                                        <select class="form-control form-control-sm" [(ngModel)]="SelectedControllerId" (change)="getSelectedVms($event)" formControlName="VmsController">
                                             <option [ngValue]="null" disabled>Choose Controller</option>
                                             <option *ngFor="let type of _inputVmsData.data" [ngValue]="type.value">
                                                 {{type.displayName}}</option>
@@ -22,7 +27,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-4 form-group">
                                         <label class="form-label">Media Name*</label>
-                                        <input type="text" formControlName="name" class="form-control"
+                                        <input type="text" formControlName="name" [(ngModel)]="MediaName" class="form-control"
                                             placeholder="Enter Media Name" />
                                         <div class="invalid-feedback">
                                             <div>{{getErrorMessage('name','name',true,"Invalid data
@@ -83,7 +88,7 @@
                                         <table class="table table-striped table-bordered table-sm row-border hover">
                                             <thead class="table-dark">
                                                 <tr>
-                                                    <th class="text-center">Media ID</th>
+                                                    <th class="text-center">#</th>
                                                     <th class="text-center">File/Text Name</th>
                                                     <th class="text-center">Play Order</th>
                                                     <th class="text-center">Duration</th>
@@ -91,31 +96,29 @@
                                                     <th class="text-center">Font Size</th>
                                                     <th class="text-center">Font Color</th>
                                                     <th class="text-center">Background Color</th>
+                                                    <th class="text-center">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody formArrayName="playlist">
                                                 <tr *ngFor="let row of getPlaylist(i).controls; let j = index"
-                                                    [formGroupName]="j">
-                                                    <td><input type="text" [readonly]="true" formControlName="mediaId" 
-                                                        class="form-control" /></td>
-
+                                                    [formGroupName]="j">                                                   
+                                                    <td>{{j+1}}</td>
                                                     <td><input type="text" [readonly]="true" formControlName="mediaName"
                                                             class="form-control" /></td>
-                                                    <td><input type="text" formControlName="playOrder"
-                                                            class="form-control" />
+                                                    <td><input type="text" formControlName="playOrder" class="form-control" />
                                                     </td>
-                                                    <td><input type="number" formControlName="imageTextDuration"
+                                                    <td><input type="number" formControlName="imageTextDuration" 
                                                             class="form-control" placeholder="" /></td>
-                                                    <td><input type="text" formControlName="videoLoopCount"
+                                                    <td><input type="text" formControlName="videoLoopCount" [readonly]="!isNameValid(row.get('mediaName')?.value)"
                                                             class="form-control" placeholder="" /></td>
-                                                    <td><input type="number" [readonly]="disabledTextType"
-                                                            formControlName="fontSize" class="form-control"
+                                                    <td><input type="number" formControlName="fontSize" [readonly]="isNameValid(row.get('mediaName')?.value)"
+                                                             class="form-control"
                                                             placeholder="" /></td>
-                                                    <td><input type="text" [readonly]="disabledTextType"
-                                                            formControlName="fontColor" class="form-control"
+                                                    <td><input type="text" formControlName="fontColor" [readonly]="isNameValid(row.get('mediaName')?.value)"
+                                                             class="form-control"
                                                             placeholder="" /></td>
-                                                    <td><input type="text" [readonly]="disabledTextType"
-                                                            formControlName="backgroundColor" class="form-control"
+                                                    <td><input type="text" formControlName="backgroundColor" [readonly]="isNameValid(row.get('mediaName')?.value)"
+                                                             class="form-control"
                                                             placeholder="" /></td>
                                                     <td><button type="button" class="btn btn-danger float-right"
                                                             (click)="RemoveRow(i,j)">Remove</button>
@@ -138,10 +141,17 @@
                                 </div>
                             </div>
                         </form>
-
-                        <pre>{{ registrationForm.value | json }}</pre>
+                        <PRE>{{this.registrationForm.value|json  }}</PRE>
+                        
                     </div>
 
+                </div>
+                <div class="row">
+                    <div class="mb-3 col">
+                        <button ngClass="btn btn-secondary" *ngIf="ShowSaveBtn" (click)="OnSavePlaylistDetails()"
+                            style="width: 20%;" formControlName="SaveDetails" class="form-control">Save
+                            Details</button>
+                    </div>
                 </div>
             </div>
         </div>

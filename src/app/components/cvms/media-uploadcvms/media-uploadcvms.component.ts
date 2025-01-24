@@ -16,8 +16,9 @@ import { data } from 'jquery';
 import { turn } from 'core-js/core/array';
 import { MediaFacadeService } from 'src/app/facade/facade_services/media-facade.service';
 import { check } from 'ngx-bootstrap-icons';
+import { FileServiceService } from 'src/app/facade/services/vcms/file-service.service';
 
-
+declare var $: any; 
 @Component({
   selector: 'app-media-uploadcvms',
   templateUrl: './media-uploadcvms.component.html',
@@ -55,12 +56,17 @@ export class MediaUploadcvmsComponent implements OnInit {
   isSearch: boolean = false;
   selectedMedia: any[] = [];
   selectedIds: number[] = [];
+  url: string = "";
+  format: string = "";
+  fileName: string = "";
+  
 
 
   get f() { return this.form.controls; }
 
   constructor(private adminFacade: AdminFacadeService,
     private _CVMSfacade: CVMSMediaFacadeServiceService,
+    private fileService: FileServiceService,
     private _media: MediaFacadeService,
     private toast: ToastrService,
     private formBuilder: FormBuilder,
@@ -91,11 +97,11 @@ export class MediaUploadcvmsComponent implements OnInit {
       mediatype: ['', ''],
     });
   }
-  BacktoList(){
+  BacktoList() {
     this._router.navigate(['cvms/uploadMedia']);
   }
 
-  
+
   ngOnInit(): void {
     this.GetVmsDetails();
     this.getMedialistData();
@@ -103,6 +109,16 @@ export class MediaUploadcvmsComponent implements OnInit {
 
 
   onSubmit() {
+    if(this.vmsIds == undefined || this.vmsIds.length < 1){
+      this.toast.error("Controller not selected");
+      return;
+    }
+    if (this.isFileTypeImage) {
+      if(this.selectedIds.length < 1){
+        this.toast.error("Media/Text not selected");
+        return;
+      }
+    }
     for (let i = 0; i < this.vmsIds.length; i++) {
       const element = this.vmsIds[i];
       if (this.isFileTypeImage) {
@@ -122,17 +138,16 @@ export class MediaUploadcvmsComponent implements OnInit {
     console.log(media);
     let _vcmsuploadmediadata = new Vcmsuploadmedia();
     _vcmsuploadmediadata.controllerName = element;
-    _vcmsuploadmediadata.IpAddress = "172.19.32.51"
-    if(media !=  null){
+    _vcmsuploadmediadata.IpAddress = this.vmsIds[0];
+    if (media != null) {
       _vcmsuploadmediadata.medianame = media.displayName;
     }
-    else
-    {
-      _vcmsuploadmediadata.medianame =this.form.controls.MediaTextName.value;
+    else {
+      _vcmsuploadmediadata.medianame = this.form.controls.MediaTextName.value;
     }
-   
+
     _vcmsuploadmediadata.status = 0;
-    _vcmsuploadmediadata.AuditedBy = "Ashish S";
+    _vcmsuploadmediadata.AuditedBy = "System";
     _vcmsuploadmediadata.IsAudited = true;
     _vcmsuploadmediadata.AuditedTime = new Date();
     _vcmsuploadmediadata.Reason = "Upload Data for test";
@@ -175,7 +190,7 @@ export class MediaUploadcvmsComponent implements OnInit {
     return ['media', 'text'];
   }
   onCheckBoxChange(event: any, data: any): void {
-    
+
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
       this.selectedIds.push(data.id);
@@ -210,7 +225,7 @@ export class MediaUploadcvmsComponent implements OnInit {
         this.toast.error("Failed to failed media details.", "Error", { positionClass: "toast-bottom-right" });
     }, (err) => { console.log(err) });
   }
-  
+
   onUploadTypeChange(value: any) {
 
     if (this.mediatype == 'text') {
@@ -292,7 +307,24 @@ export class MediaUploadcvmsComponent implements OnInit {
     }
 
   }
+  async ViewMedia(media: any) {
+    const fileType = this.fileService.checkFileType(media.filePath);
+    this.url = media.filePath;
+    this.fileName = media.displayName;
+    if (fileType == "image")
+      this.format = "image";
+    else
+      this.format = "video";
+    $('#myModal').modal('show');
+    $('.modal-backdrop').remove();
+    //const fileType = await fileTypeFromStream(media.filePath);
+  }
+  removeModal() {
+    $('#myModal').modal('hide');
 
+    // Remove the modal-backdrop class after the modal is closed
+    $('.modal-backdrop').remove();
+  }
 
   clearForm() {
 

@@ -16,8 +16,8 @@ export class CVMSMediaFacadeServiceService {
     private _medialive: MedialiveplayService
   ) { }
 
-  GetMediaPlayer() {
-    return this._mediaplayer.getUploadMediaDetails();
+  GetMediaPlayer(inputReq :any,type : number) {
+    return this._mediaplayer.getUploadMediaDetails(inputReq,type);
   }
 
   SaveMediaPlayer(data:any){
