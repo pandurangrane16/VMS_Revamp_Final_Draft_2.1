@@ -10,11 +10,11 @@ import { InputRequest } from 'src/app/models/request/inputReq';
 import { Globals } from 'src/app/utils/global';
 
 @Component({
-  selector: 'app-mediaplayerlist',
-  templateUrl: './mediaplayerlist.component.html',
-  styleUrls: ['./mediaplayerlist.component.css']
+  selector: 'app-mediascheduler-list',
+  templateUrl: './mediascheduler-list.component.html',
+  styleUrls: ['./mediascheduler-list.component.css']
 })
-export class MediaplayerlistComponent {
+export class MediaschedulerListComponent {
   minDate: any;
   modelFromDate: any;
   modelToDate: any;
@@ -34,8 +34,11 @@ export class MediaplayerlistComponent {
   closeResult!: string;
   _request: any = new InputRequest();
    
-  headerArr = [      
-      { "Head": "IP Address", "FieldName": "ipAddress", "type": "string" },      
+  headerArr = [
+      // { "Head": "ID", "FieldName": "id", "type": "number" },
+      { "Head": "IP Address", "FieldName": "ipAddress", "type": "string" },
+      { "Head": "ScheduleName", "FieldName": "requestData.name", "type": "string" }, 
+      { "Head": "Media Name", "FieldName": "requestData", "type": "string" },     
       { "Head": "Status", "FieldName": "statusdesc", "type": "string" },
       { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
     ];
@@ -50,7 +53,7 @@ export class MediaplayerlistComponent {
       public datepipe: DatePipe,
       private toast: ToastrService,
       public modalService: NgbModal) {
-      this.global.CurrentPage = "Media Player List CVMS";
+      this.global.CurrentPage = "Media Player Scheduler List CVMS";
     }
     OnTabChange(status: number) {
       this.tabno = status;
@@ -93,14 +96,14 @@ export class MediaplayerlistComponent {
       this.getMediaDetails();
     }
     OpenUploadMedia() {
-      this._router.navigate(['cvms/MediaPlayerPlaylist']);
+      this._router.navigate(['cvms/createMediaPlayerScheduler']);
     }
     getMediaDetails() {
       this._request.currentPage = this.pager;
       this._request.pageSize = this.recordPerPage;
       this._request.startId = this.startId;
       this._request.searchItem = this.searchText;
-      this.mediaFacade.GetMediaPlayer(this._request, this.tabno).subscribe(data => {
+      this.mediaFacade.getMediaschedulersList(this._request, this.tabno).subscribe(data => {
         if (data != null) {
           this.listOfMediaUpload = data.data;
           this.listOfMediaUpload.forEach((element: any) => {
@@ -143,6 +146,4 @@ export class MediaplayerlistComponent {
     }
 
     ButtonAction(actiondata: any) { }
-    
-  
 }

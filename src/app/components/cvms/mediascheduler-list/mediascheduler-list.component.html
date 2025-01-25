@@ -1,0 +1,29 @@
+
+<div class="p-4">
+    <div class="row">
+                             
+        <div class="col-md-12">
+          
+            <div class="card border-0  pb-0 bgTable">
+               
+              <div class="card-body p-2">
+                <button class="btn btn-success btn-rounded text-dark float-left"
+                (click)="OpenUploadMedia()">
+                    <span class="spinner-border-sm me-1"></span>
+                    <i class="icon-plus"></i> Create New Media Scheduler 
+                </button>
+                <app-cm-table [headArr]="headerArr" [gridArr]="listOfMediaUpload"
+                [totalRecords]="totalRecords" [totalPages]="totalPages"
+                [perPage]="recordPerPage" (pager)="onPager($event)" [btnArray]="btnArray"
+                (btnAction)="ButtonAction($event)" [collectionSize]="totalRecords"
+                (recordPerPage)="onRecordPageChange($event)" fieldName="id"
+                (search)="onPageSearch($event)" [isSearch]="isSearch"></app-cm-table>
+            </div>
+                
+        </div>
+      </div>
+      </div>
+      </div>
+<ng-template #cmmodal let-modal>
+    
+</ng-template>

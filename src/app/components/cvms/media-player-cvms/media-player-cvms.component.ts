@@ -52,12 +52,14 @@ export class MediaPlayerCvmsComponent  {
 
   ngOnInit(): void {
     this.registrationForm = this.fb.group({     
-      name: '',
-      mediaLoopCount: '0',
+      name: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
+      mediaLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
       tiles: this.fb.array([])
     });
     this.GetVmsDetails();    
   }
+
+  get f() { return this.registrationForm.controls; }
 
   // Function to create a single user form group
   createUser(): FormGroup {
@@ -279,80 +281,26 @@ export class MediaPlayerCvmsComponent  {
   // }
 
   OnSavePlaylistDetails(): void {
-  
-      // for (let i = 0; i < this.rowCount; i++) {
-      //   const playlistrow = {
-      //     ["playOrder"]: this.form.controls.playOrder.value != "" ? this.form.controls.playOrder.value : 0,
-      //     ["imageTextDuration"]: this.form.controls.imageTextDuration.value != 0 ? this.form.controls.imageTextDuration.value : 0,
-      //     ["mediaId"]: this.form.controls.rowMediaId.value != "" ? this.form.controls.rowMediaId.value : null,
-      //     ["mediaName"]: this.form.controls.mediaName.value != "" ? this.form.controls.mediaName.value : 0,
-      //     ["videoLoopCount"]: this.form.controls.videoLoopCount.value != "" ? this.form.controls.videoLoopCount.value : 0,
-      //     ["textStyle"]: {
-      //       ["fontSize"]: this.form.controls.fontSize.value != "" ? this.form.controls.fontSize.value : null,
-      //       ["fontColor"]: this.form.controls.fontColor.value != "" ? this.form.controls.fontColor.value : null,
-      //       ["backgroundColor"]: this.form.controls.backgroundColor.value != "" ? this.form.controls.backgroundColor.value : null,
-      //     }
-      //   }
-      // }
-  
-      let _tileCount = this.registrationForm.controls['tiles'].length;
-      for (var i = 0; i < _tileCount; i++) {
-        let _plCount = this.registrationForm.controls['tiles'].controls[i].controls["playlist"].length;
-        for (var j = 0; j < _plCount; j++) {
-          let _backGroundColor = this.registrationForm.controls['tiles'].controls[i].controls["playlist"].controls[j].controls["textStyle"].value.backgroundColor;
-          let fontSize = this.registrationForm.controls['tiles'].controls[i].controls["playlist"].controls[j].controls["textStyle"].value.fontSize;
-          let fontColor = this.registrationForm.controls['tiles'].controls[i].controls["playlist"].controls[j].controls["textStyle"].value.fontColor;
-          let _textStyle = {
-            "backgroundColor": _backGroundColor,
-            "fontSize": fontSize,
-            "fontColor": fontColor
-          }
-          this.patchTileValue(i, j, _textStyle);
-        }
-      }
-      //this.registrationForm.controls['tiles'].controls[0].controls["playlist"].controls[0].controls["textStyle"].value
-      this.registrationForm.controls['tiles'].controls[i].controls["playlist"].controls[0].controls["textStyle"].value
-      //this.PlaylistjsonData.push(playlistrow);
-      //console.log(JSON.stringify(this.jsonData))
-      // let _vcmsmediplayerdata = new Mediaplayer();
-      // _vcmsmediplayerdata.IpAddress = this.registrationForm.controls.controllerName.value //"172.19.32.51"
-      // _vcmsmediplayerdata.medianame = this.registrationForm.controls.mediaName.value;
-      // _vcmsmediplayerdata.status = 0;
-      // _vcmsmediplayerdata.AuditedBy = "Ashish S";
-      // _vcmsmediplayerdata.IsAudited = true;
-      // _vcmsmediplayerdata.AuditedTime = new Date();
-      // _vcmsmediplayerdata.Reason = "Upload Data for MediaPlayer";
-      // _vcmsmediplayerdata.createddate = new Date();
-      // _vcmsmediplayerdata.RequestData = JSON.stringify(this.TilesjsonData);
-  
-      // this._CVMSfacade.SaveMediaPlayer(_vcmsmediplayerdata).subscribe(data => {
-      //   if (data == 0) {
-      //     this.toast.error("Error occured while saving data for " + _vcmsmediplayerdata.IpAddress);
-      //   }
-      //   else {
-  
-      //     this.toast.success("Saved successfully for " + _vcmsmediplayerdata.IpAddress);
-      //   }
-      // });
-    }
-  
-    patchTileValue(i: number, j: number, _data: any) {
-      var _tile = this.registrationForm.controls['tiles'].controls[i].controls["playlist"].controls[j].controls["textStyle"]
-      //const tile = this.tiles.at(index);
-  
-      // Use patchValue to update only the 'name' field
-      _tile.patchValue({
-        fontSize: _data.fontSize,
-        fontColor: _data.fontColor,
-        backgroundColor: _data.backgroundColor
-      });
-    }
+    let _vcmsmediplayerdata = new Mediaplayer();    
+     _vcmsmediplayerdata.IpAddress = this.SelectedControllerId;
+     _vcmsmediplayerdata.medianame = this.registrationForm.controls["name"].value;
+    _vcmsmediplayerdata.status = 0;
+    _vcmsmediplayerdata.AuditedBy = "System";
+    _vcmsmediplayerdata.IsAudited = true;
+    _vcmsmediplayerdata.AuditedTime = new Date();
+    _vcmsmediplayerdata.Reason = "Upload Data for MediaPlayer";
+    _vcmsmediplayerdata.createddate = new Date();
+    _vcmsmediplayerdata.RequestData = JSON.stringify(this.registrationForm.value);
 
-    addPlaylist(index: number,ele:any) {
-      //var playlist = this.getPlForCreate(index);
-      //if(playlist == undefined)
-       var playlist = this.getPlaylist(index);
-      const playlistItem = this.createPlaylistItem(ele);
-      playlist.push(playlistItem);
-    }
+    this._CVMSfacade.SaveMediaPlayer(_vcmsmediplayerdata).subscribe(data => {
+      if (data == 0) {
+        this.toast.error("Error occured while saving data for " + _vcmsmediplayerdata.IpAddress);
+      }
+      else {
+
+        this.toast.success("Saved successfully for " + _vcmsmediplayerdata.IpAddress);
+      }
+    });
+    this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
+  }
 }

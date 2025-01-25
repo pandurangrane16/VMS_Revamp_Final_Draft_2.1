@@ -10,11 +10,11 @@ import { InputRequest } from 'src/app/models/request/inputReq';
 import { Globals } from 'src/app/utils/global';
 
 @Component({
-  selector: 'app-mediaplayerlist',
-  templateUrl: './mediaplayerlist.component.html',
-  styleUrls: ['./mediaplayerlist.component.css']
+  selector: 'app-medialiveplaylist',
+  templateUrl: './medialiveplaylist.component.html',
+  styleUrls: ['./medialiveplaylist.component.css']
 })
-export class MediaplayerlistComponent {
+export class MedialiveplaylistComponent {
   minDate: any;
   modelFromDate: any;
   modelToDate: any;
@@ -34,7 +34,8 @@ export class MediaplayerlistComponent {
   closeResult!: string;
   _request: any = new InputRequest();
    
-  headerArr = [      
+  headerArr = [
+      // { "Head": "ID", "FieldName": "id", "type": "number" },
       { "Head": "IP Address", "FieldName": "ipAddress", "type": "string" },      
       { "Head": "Status", "FieldName": "statusdesc", "type": "string" },
       { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
@@ -50,7 +51,8 @@ export class MediaplayerlistComponent {
       public datepipe: DatePipe,
       private toast: ToastrService,
       public modalService: NgbModal) {
-      this.global.CurrentPage = "Media Player List CVMS";
+      this.global.CurrentPage = "Media Live Play List CVMS";
+      
     }
     OnTabChange(status: number) {
       this.tabno = status;
@@ -82,25 +84,21 @@ export class MediaplayerlistComponent {
       this.searchText = search;
       this.getMediaDetails();
     }
-  
-    SearchWithId(_searchItem: any) {
-      this._commonFacade.setSession("ModelShow", JSON.stringify(_searchItem));
-      this._router.navigate(['users/add-user']);
-    }
+   
   
     ngOnInit(): void {
       this.tabno = 2;
       this.getMediaDetails();
     }
-    OpenUploadMedia() {
-      this._router.navigate(['cvms/MediaPlayerPlaylist']);
+    OpenLiveplayMedia() {
+      this._router.navigate(['cvms/livePlay']);
     }
     getMediaDetails() {
       this._request.currentPage = this.pager;
       this._request.pageSize = this.recordPerPage;
       this._request.startId = this.startId;
       this._request.searchItem = this.searchText;
-      this.mediaFacade.GetMediaPlayer(this._request, this.tabno).subscribe(data => {
+      this.mediaFacade.GetEmergencyMediaList(this.tabno,this._request).subscribe(data => {
         if (data != null) {
           this.listOfMediaUpload = data.data;
           this.listOfMediaUpload.forEach((element: any) => {
@@ -128,6 +126,7 @@ export class MediaplayerlistComponent {
             this.totalRecords = data.totalRecords;
           this.totalPages = this.totalRecords / this.pager;
           //this.getMediaByStatus(this.tabno);
+          this._router.navigate(['cvms/livePlaylist']);
         }
       })
     }
@@ -143,6 +142,4 @@ export class MediaplayerlistComponent {
     }
 
     ButtonAction(actiondata: any) { }
-    
-  
 }

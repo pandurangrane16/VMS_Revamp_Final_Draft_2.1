@@ -1,7 +1,7 @@
 <div class="p-4">
     <div class="row">
         <div class="col-md-12">
-            <button class="btn btn-primary btn-rounded mb-1">
+            <button class="btn btn-primary btn-rounded mb-1" (click)="BacktoList()">
                 <!-- <span class="spinner-border spinner-border-sm me-1" ></span> -->
                 <i class="icon-arrow-left"></i>
                 Back To List
@@ -28,21 +28,42 @@
                                 <div class="mb-4 col form-group">
                                     <label class="form-label">Schedule Name*</label>
                                     <input type="text" formControlName="schedulename" [(ngModel)]="name" class="form-control"
+                                    [ngClass]="{ 'is-invalid': f['schedulename'].touched && f['schedulename'].errors}"
                                         placeholder="Enter Schedule Name" />
+                                </div>
+                                <div *ngIf="f['schedulename'].touched && f['schedulename'].errors , 'is-valid': f['schedulename'].valid "
+                                    class="invalid-feedback">
+                                    <div>{{getErrorMessage('schedulename','schedulename',true,"Invalid data available
+                                        in Schedule Name")}}
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-4 col">
                                 <div class="mb-4 col form-group">
                                     <label class="form-label">Media Name*</label>
-                                    <input type="text" formControlName="mediaName" [(ngModel)]="MediaName"
+                                    <input type="text" formControlName="mediaplayername" [(ngModel)]="MediaName"
+                                    [ngClass]="{ 'is-invalid': f['mediaplayername'].touched && f['mediaplayername'].errors}"
                                         class="form-control" placeholder="Enter Media Name" />
+                                </div>
+                                <div *ngIf="f['mediaplayername'].touched && f['mediaplayername'].errors , 'is-valid': f['mediaplayername'].valid "
+                                    class="invalid-feedback">
+                                    <div>{{getErrorMessage('mediaplayername','mediaplayername',true,"Invalid data available
+                                        in mediaplayername")}}
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-4 col">
                                 <div class="mb-4 col form-group">
                                     <label class="form-label">Cron Expression*</label>
                                     <input type="text" formControlName="cronexpression" [(ngModel)]="cronExpression"
+                                    [ngClass]="{ 'is-invalid': f['cronexpression'].touched && f['cronexpression'].errors}"
                                         class="form-control" placeholder="cron Expression" />
+                                </div>
+                                <div *ngIf="f['cronexpression'].touched && f['cronexpression'].errors , 'is-valid': f['cronexpression'].valid "
+                                    class="invalid-feedback">
+                                    <div>{{getErrorMessage('cronexpression','cronexpression',true,"Invalid data available
+                                        in mediaplayername")}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -75,27 +96,22 @@
 
                             <div class="col-md-4">
                                 <div class="input-group">
-                                    <input formControlName="globalFromDt" appBlockCopyPaste
+                                    <input formControlName="globalToDt" appBlockCopyPaste
                                         (keypress)="keyPress($event)" class="form-control" placeholder="yyyy-mm-dd"
-                                        name="dp" [minDate]="minDate" ngbDatepicker #dFromDatePub="ngbDatepicker" />
+                                        name="dp" [minDate]="minDate" ngbDatepicker #dToDatePub="ngbDatepicker" />
                                     <button class="btn btn-outline-primary border-primary"
-                                        (click)="dFromDatePub.toggle()" type="button">
+                                        (click)="dToDatePub.toggle()" type="button">
                                         <i class="fa fa-calendar"></i></button>
                                 </div>
                             </div>
 
-                            <ngb-timepicker formControlName="globalFromTm" [seconds]="true" class="col-4 float-left"
+                            <ngb-timepicker formControlName="globalToTm" [seconds]="true" class="col-4 float-left"
                                 (focusout)="ValidateTime()" />
-
-                            <!-- <cm-datetimepicker [inputData]="fromTimeArr" type="from" fromYear="2020"
-                                        toYear="2030" class="col-md-8"
-                                        (selectedTime)="GetTime($event,0)"></cm-datetimepicker> -->
-
 
                         </div>
                         <div class="row">
                             <div class="mb-3 col">
-                                <button ngClass="btn btn-secondary" (click)="OnSaveDetails()"
+                                <button *ngIf="(f['cronexpression'].touched  && !f['cronexpression'].errors) && (f['schedulename'].touched && !f['schedulename'].errors) && (f['mediaplayername'].touched && !f['mediaplayername'].errors), 'is-valid': f['cronexpression'].valid " ngClass="btn btn-secondary" (click)="OnSaveDetails()"
                                     style="width: 20%;" formControlName="SaveDetails" class="form-control">Save
                                     Details</button>
                             </div>
