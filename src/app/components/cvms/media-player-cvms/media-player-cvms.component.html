@@ -28,8 +28,8 @@
                                 <div class="col-md-6">
                                     <div class="mb-4 form-group">
                                         <label class="form-label">Media Name*</label>
-                                        <input type="text" formControlName="name" [(ngModel)]="MediaName" class="form-control"
-                                            placeholder="Enter Media Name" />
+                                        <input type="text" formControlName="name" [(ngModel)]="MediaName"
+                                            class="form-control" placeholder="Enter Media Name" />
                                         <div class="invalid-feedback">
                                             <div>{{getErrorMessage('name','name',true,"Invalid data
                                                 available
@@ -43,7 +43,6 @@
                                         <div class="mb-3 col form-group">
                                             <label class="form-label">Media Loop Count*</label>
                                             <input type="text" formControlName="mediaLoopCount" class="form-control"
-                                            [ngClass]="{ 'is-invalid': f['mediaLoopCount'].touched && f['mediaLoopCount'].errors}"
                                                 placeholder="Enter Media loop count" />
                                             <div class="invalid-feedback">
                                                 <div>
