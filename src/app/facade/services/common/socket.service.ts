@@ -9,19 +9,19 @@ import { Observable, Observer, map, take } from 'rxjs';
   providedIn: 'root'
 })
 export class SocketService {
-  constructor(private socket: Socket) { }
+  // constructor(private socket: Socket) { }
 
-  sendMessage(msg:string){
-    console.log(msg)
-    this.socket.emit('message', msg);
-  }
+  // sendMessage(msg:string){
+  //   console.log(msg)
+  //   this.socket.emit('message', msg);
+  // }
 
 
-  getMessage(){
-  return  new Observable((observer: Observer<any>)=>{
-      this.socket.on('message', (message:string)=>{
-        observer.next(message)
-      })
-    })
-  }
+  // getMessage(){
+  // return  new Observable((observer: Observer<any>)=>{
+  //     this.socket.on('message', (message:string)=>{
+  //       observer.next(message)
+  //     })
+  //   })
+  // }
 }

@@ -147,16 +147,13 @@
                                                             [ngClass]="{ 'is-invalid': Playlistf['videoLoopCount'].touched && Playlistf['videoLoopCount'].errors}"
                                                             placeholder="" /></td>
                                                     <td><input type="text" [readonly]="disabledTextType"
-                                                            formControlName="fontSize" class="form-control"
-                                                            [ngClass]="{ 'is-invalid': Playlistf['fontSize'].touched && Playlistf['fontSize'].errors}"
+                                                            formControlName="textStyle.fontSize" class="form-control"
                                                             placeholder="" /></td>
                                                     <td><input type="text" [readonly]="disabledTextType"
                                                             formControlName="fontColor" class="form-control"
-                                                            [ngClass]="{ 'is-invalid': Playlistf['fontColor'].touched && Playlistf['fontColor'].errors}"
                                                             placeholder="" /></td>
                                                     <td><input type="text" [readonly]="disabledTextType"
                                                             formControlName="backgroundColor" class="form-control"
-                                                            [ngClass]="{ 'is-invalid': Playlistf['backgroundColor'].touched && Playlistf['backgroundColor'].errors}"
                                                             placeholder="" /></td>
                                                     <td><button type="button" class="btn btn-danger float-right"
                                                             (click)="RemoveRow(row.id)">Remove</button>

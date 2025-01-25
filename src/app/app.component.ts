@@ -86,15 +86,15 @@ export class AppComponent implements OnInit {
   }
 
   ConnectSocket(){
-    this.singlarService.getMessage().subscribe((msg: any) => {
-      console.log(msg);
-      if (msg.message.Type == "info")
-        this._toast.info(msg.message.Message);
-      else if (msg.message.Type == "err")
-        this._toast.error(msg.message.Message);
-      else if (msg.message.Type == "success")
-        this._toast.success(msg.message.Message); 
-    })
+    // this.singlarService.getMessage().subscribe((msg: any) => {
+    //   console.log(msg);
+    //   if (msg.message.Type == "info")
+    //     this._toast.info(msg.message.Message);
+    //   else if (msg.message.Type == "err")
+    //     this._toast.error(msg.message.Message);
+    //   else if (msg.message.Type == "success")
+    //     this._toast.success(msg.message.Message); 
+    // })
   }
 
 }

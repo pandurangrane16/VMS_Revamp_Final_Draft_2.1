@@ -28,7 +28,7 @@ import { disable } from 'ol/rotationconstraint';
 export class MediaPlayerCvmsComponent  {
 
   currentTile: number = -1;
-  registrationForm: FormGroup;
+  registrationForm: any;
   disabledTextType: boolean = false;
   _inputVmsData: any;
   MediaName: string;
@@ -67,15 +67,18 @@ export class MediaPlayerCvmsComponent  {
       playlist: this.fb.array([])
     });
   }
-
-  createPlaylist(): FormGroup {
+  createPlaylistItem(ele:any): FormGroup {
     return this.fb.group({
-      playOrder: ['', [Validators.required]],
-      imageTextDuration: ['0', [Validators.required]],
-      mediaId: ['0', Validators.required],
-      mediaName: ['', [Validators.required]],
-      videoLoopCount: ['0', [Validators.required]],
-      textStyle: [{}, Validators.required]
+      playOrder: [ele.playOrder, [Validators.required]],
+      imageTextDuration: [ele.imageTextDuration, [Validators.required]],
+      mediaId: [ele.mediaId, Validators.required],
+      mediaName: [ele.mediaName, [Validators.required]],
+      videoLoopCount: [ele.videoLoopCount, [Validators.required]],
+      textStyle: this.fb.group({
+        fontSize: [0],
+        fontColor: [''],
+        backgroundColor: [''],
+      }),
     });
   }
   CreateFontFamily():FormGroup{
@@ -110,15 +113,20 @@ export class MediaPlayerCvmsComponent  {
   get userDetails(): FormArray {
     return this.registrationForm.get('tiles') as FormArray;
   }
+  
   getPlaylist(userIndex: number): FormArray {
     return (this.userDetails.at(userIndex).get('playlist') as FormArray);
   }
-  
 
   getFontList(userIndex:number):FormArray{
     return (this.getPlaylist(userIndex).get('fontfamily') as FormArray);
   }
-
+  getPlForCreate(userIndex: number){
+    const tileFormGroup = this.userDetails.at(userIndex);
+    const playlistFormArray = tileFormGroup.get('playlist') as FormArray;
+    var _len = playlistFormArray.length;
+    return (playlistFormArray.at(_len) as FormArray);
+  }
   getErrorMessage(_controlName: any, _controlLable: any, _isPattern: boolean = false, _msg: string) {
     return getErrorMsg(this.registrationForm, _controlName, _controlLable, _isPattern, _msg);
   }
@@ -208,14 +216,15 @@ export class MediaPlayerCvmsComponent  {
     this.selectedMediaId = [];
     this.selectedMediaPlaylist[idx].playlist = _plMediaList;
     this.selectedMediaPlaylist[idx].playlist.forEach((ele: any) => {
-      playlistArray.push(this.fb.group({
-        playOrder: [ele.playOrder, [Validators.required]],
-        imageTextDuration: [ele.imageTextDuration, [Validators.required]],
-        mediaId: [ele.mediaId, Validators.required],
-        mediaName: [ele.mediaName, [Validators.required]],
-        videoLoopCount: [ele.videoLoopCount, [Validators.required]],
-        textStyle: [ele.textStyle, Validators.required]
-      }));
+      // playlistArray.push(this.fb.group({
+      //   playOrder: [ele.playOrder, [Validators.required]],
+      //   imageTextDuration: [ele.imageTextDuration, [Validators.required]],
+      //   mediaId: [ele.mediaId, Validators.required],
+      //   mediaName: [ele.mediaName, [Validators.required]],
+      //   videoLoopCount: [ele.videoLoopCount, [Validators.required]],
+      //   textStyle: [ele.textStyle, Validators.required]
+      // }));
+      this.addPlaylist(idx,ele);
     });
     console.log(this.selectedMediaPlaylist);
   }
@@ -245,27 +254,105 @@ export class MediaPlayerCvmsComponent  {
        
   }
 
+  // OnSavePlaylistDetails(): void {
+  //   let _vcmsmediplayerdata = new Mediaplayer();    
+  //    _vcmsmediplayerdata.IpAddress = this.SelectedControllerId;
+  //    _vcmsmediplayerdata.medianame = this.registrationForm.controls["name"].value;
+  //   _vcmsmediplayerdata.status = 0;
+  //   _vcmsmediplayerdata.AuditedBy = "System";
+  //   _vcmsmediplayerdata.IsAudited = true;
+  //   _vcmsmediplayerdata.AuditedTime = new Date();
+  //   _vcmsmediplayerdata.Reason = "Upload Data for MediaPlayer";
+  //   _vcmsmediplayerdata.createddate = new Date();
+  //   _vcmsmediplayerdata.RequestData = JSON.stringify(this.registrationForm.value);
+
+  //   this._CVMSfacade.SaveMediaPlayer(_vcmsmediplayerdata).subscribe(data => {
+  //     if (data == 0) {
+  //       this.toast.error("Error occured while saving data for " + _vcmsmediplayerdata.IpAddress);
+  //     }
+  //     else {
+
+  //       this.toast.success("Saved successfully for " + _vcmsmediplayerdata.IpAddress);
+  //     }
+  //   });
+  //   this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
+  // }
+
   OnSavePlaylistDetails(): void {
-    let _vcmsmediplayerdata = new Mediaplayer();    
-     _vcmsmediplayerdata.IpAddress = this.SelectedControllerId;
-     _vcmsmediplayerdata.medianame = this.registrationForm.controls["name"].value;
-    _vcmsmediplayerdata.status = 0;
-    _vcmsmediplayerdata.AuditedBy = "System";
-    _vcmsmediplayerdata.IsAudited = true;
-    _vcmsmediplayerdata.AuditedTime = new Date();
-    _vcmsmediplayerdata.Reason = "Upload Data for MediaPlayer";
-    _vcmsmediplayerdata.createddate = new Date();
-    _vcmsmediplayerdata.RequestData = JSON.stringify(this.registrationForm.value);
-
-    this._CVMSfacade.SaveMediaPlayer(_vcmsmediplayerdata).subscribe(data => {
-      if (data == 0) {
-        this.toast.error("Error occured while saving data for " + _vcmsmediplayerdata.IpAddress);
+  
+      // for (let i = 0; i < this.rowCount; i++) {
+      //   const playlistrow = {
+      //     ["playOrder"]: this.form.controls.playOrder.value != "" ? this.form.controls.playOrder.value : 0,
+      //     ["imageTextDuration"]: this.form.controls.imageTextDuration.value != 0 ? this.form.controls.imageTextDuration.value : 0,
+      //     ["mediaId"]: this.form.controls.rowMediaId.value != "" ? this.form.controls.rowMediaId.value : null,
+      //     ["mediaName"]: this.form.controls.mediaName.value != "" ? this.form.controls.mediaName.value : 0,
+      //     ["videoLoopCount"]: this.form.controls.videoLoopCount.value != "" ? this.form.controls.videoLoopCount.value : 0,
+      //     ["textStyle"]: {
+      //       ["fontSize"]: this.form.controls.fontSize.value != "" ? this.form.controls.fontSize.value : null,
+      //       ["fontColor"]: this.form.controls.fontColor.value != "" ? this.form.controls.fontColor.value : null,
+      //       ["backgroundColor"]: this.form.controls.backgroundColor.value != "" ? this.form.controls.backgroundColor.value : null,
+      //     }
+      //   }
+      // }
+  
+      let _tileCount = this.registrationForm.controls['tiles'].length;
+      for (var i = 0; i < _tileCount; i++) {
+        let _plCount = this.registrationForm.controls['tiles'].controls[i].controls["playlist"].length;
+        for (var j = 0; j < _plCount; j++) {
+          let _backGroundColor = this.registrationForm.controls['tiles'].controls[i].controls["playlist"].controls[j].controls["textStyle"].value.backgroundColor;
+          let fontSize = this.registrationForm.controls['tiles'].controls[i].controls["playlist"].controls[j].controls["textStyle"].value.fontSize;
+          let fontColor = this.registrationForm.controls['tiles'].controls[i].controls["playlist"].controls[j].controls["textStyle"].value.fontColor;
+          let _textStyle = {
+            "backgroundColor": _backGroundColor,
+            "fontSize": fontSize,
+            "fontColor": fontColor
+          }
+          this.patchTileValue(i, j, _textStyle);
+        }
       }
-      else {
+      //this.registrationForm.controls['tiles'].controls[0].controls["playlist"].controls[0].controls["textStyle"].value
+      this.registrationForm.controls['tiles'].controls[i].controls["playlist"].controls[0].controls["textStyle"].value
+      //this.PlaylistjsonData.push(playlistrow);
+      //console.log(JSON.stringify(this.jsonData))
+      // let _vcmsmediplayerdata = new Mediaplayer();
+      // _vcmsmediplayerdata.IpAddress = this.registrationForm.controls.controllerName.value //"172.19.32.51"
+      // _vcmsmediplayerdata.medianame = this.registrationForm.controls.mediaName.value;
+      // _vcmsmediplayerdata.status = 0;
+      // _vcmsmediplayerdata.AuditedBy = "Ashish S";
+      // _vcmsmediplayerdata.IsAudited = true;
+      // _vcmsmediplayerdata.AuditedTime = new Date();
+      // _vcmsmediplayerdata.Reason = "Upload Data for MediaPlayer";
+      // _vcmsmediplayerdata.createddate = new Date();
+      // _vcmsmediplayerdata.RequestData = JSON.stringify(this.TilesjsonData);
+  
+      // this._CVMSfacade.SaveMediaPlayer(_vcmsmediplayerdata).subscribe(data => {
+      //   if (data == 0) {
+      //     this.toast.error("Error occured while saving data for " + _vcmsmediplayerdata.IpAddress);
+      //   }
+      //   else {
+  
+      //     this.toast.success("Saved successfully for " + _vcmsmediplayerdata.IpAddress);
+      //   }
+      // });
+    }
+  
+    patchTileValue(i: number, j: number, _data: any) {
+      var _tile = this.registrationForm.controls['tiles'].controls[i].controls["playlist"].controls[j].controls["textStyle"]
+      //const tile = this.tiles.at(index);
+  
+      // Use patchValue to update only the 'name' field
+      _tile.patchValue({
+        fontSize: _data.fontSize,
+        fontColor: _data.fontColor,
+        backgroundColor: _data.backgroundColor
+      });
+    }
 
-        this.toast.success("Saved successfully for " + _vcmsmediplayerdata.IpAddress);
-      }
-    });
-    this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
-  }
+    addPlaylist(index: number,ele:any) {
+      //var playlist = this.getPlForCreate(index);
+      //if(playlist == undefined)
+       var playlist = this.getPlaylist(index);
+      const playlistItem = this.createPlaylistItem(ele);
+      playlist.push(playlistItem);
+    }
 }

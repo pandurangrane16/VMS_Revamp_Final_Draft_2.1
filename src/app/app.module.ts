@@ -215,7 +215,7 @@ const config: SocketIoConfig = { url: environment.Socket_URL, options: {} };
     NgMultiSelectDropDownModule,
     ToastModule,
     NgxBootstrapIconsModule.pick(allIcons),
-    SocketIoModule.forRoot(config),
+    //SocketIoModule.forRoot(config),
   ],
   exports: [TooltipDirective,BlockCopyPasteDirective],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },

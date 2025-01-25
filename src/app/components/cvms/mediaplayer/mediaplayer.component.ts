@@ -90,7 +90,7 @@ export class MediaplayerComponent implements OnInit {
   disabledImageType: boolean = true;
   disabledTextType: boolean = true;
   ShowSaveBtn: boolean = false;
-  
+
 
   tileNo: number = 0;
   TileJson: any = {};
@@ -100,7 +100,7 @@ export class MediaplayerComponent implements OnInit {
   PlaylistjsonData: any[] = []; // Initial empty JSON array
   divs: any[] = [];
   rowMediaName: string;
-  rowMediaId:number;
+  rowMediaId: number;
 
   constructor(private formBuilder: FormBuilder,
     private toast: ToastrService,
@@ -201,8 +201,8 @@ export class MediaplayerComponent implements OnInit {
       addNewMedia: ['', ''],
       SaveDetails: ['', ''],
       AddTiles: ['', ''],
-      rowMediaName:['', ''],
-      rowMediaId:['', ''],
+      rowMediaName: ['', ''],
+      rowMediaId: ['', ''],
     });
   }
 
@@ -275,28 +275,28 @@ export class MediaplayerComponent implements OnInit {
     this.rows = []; // Clear existing rows
     this.rowCount = 0;
     this.rowCount = this.selectedMediaId.length;
-    
+
     for (let i = 0; i <= this.rowCount; i++) {
       //this.rows.push({ id: i + 1, filename: JSON.stringify(this.selectedMediaId[i].fileName), filtype: JSON.stringify(this.selectedMediaId[i].fileType) });
-      this.rows.push({ filename: this.selectedMediaId[i].fileName,id: this.selectedMediaId[i].id});
+      this.rows.push({ filename: this.selectedMediaId[i].fileName, id: this.selectedMediaId[i].id });
     }
-    
-    
+
+
   }
   RemoveRow(id: number): void {
     this.rows = this.rows.filter(row => row.id !== id);
     this.selectedMediaId = this.selectedMediaId.filter(row => row.id !== id);
-   
+
     this.rowCount--;
-    
+
   }
   ShowTables() {
     this.generateRows();
-   
+
   }
 
   ShowMediaPopup(type: string) {
-  
+
     const modalRef = this.modalService.open(CVMSMediaModalComponent, { ariaLabelledBy: 'modal-basic-title', size: 'xl' });
     if (type == "Media") {
       this.mediauploadtype = "media";
@@ -308,7 +308,7 @@ export class MediaplayerComponent implements OnInit {
         //console.log(this.selectedMediaId);
         this.ShowTables();
       })
-      
+
     }
     else {
       let _reqdata = { "action": "view", urls: [], modalType: "textupload", content: this.listOfMedialist };
@@ -319,11 +319,11 @@ export class MediaplayerComponent implements OnInit {
         this.selectedMediaId.push(selectedId);
         this.ShowTables();
       })
-      
+
     }
     this.ShowSaveBtn = true;
   }
-  createJosn() {    
+  createJosn() {
     this.PlaylistjsonData = [];
     const Tiles = {
       ["name"]: this.form.controls.mediaName.value != "" ? this.form.controls.mediaName.value : null,
@@ -335,7 +335,7 @@ export class MediaplayerComponent implements OnInit {
       }]
     }
     this.TilesjsonData.push(Tiles);
-    
+
   }
 
 
@@ -344,29 +344,47 @@ export class MediaplayerComponent implements OnInit {
     return getErrorMsg(this.form, _controlName, _controlLable, _isPattern, _msg);
   }
 
-  
+
 
 
   OnSavePlaylistDetails(): void {
 
-    for (let i = 0; i < this.rowCount; i++) {
-      const playlistrow = {
-        ["playOrder"]: this.form.controls.playOrder.value != "" ? this.form.controls.playOrder.value : 0,        
-        ["imageTextDuration"]: this.form.controls.imageTextDuration.value != 0 ? this.form.controls.imageTextDuration.value : 0,
-        ["mediaId"]: this.form.controls.rowMediaId.value != "" ? this.form.controls.rowMediaId.value : null,
-        ["mediaName"]: this.form.controls.mediaName.value != "" ? this.form.controls.mediaName.value : 0,
-        ["videoLoopCount"]: this.form.controls.videoLoopCount.value != "" ? this.form.controls.videoLoopCount.value : 0,
-        ["textStyle"]: {
-          ["fontSize"]: this.form.controls.fontSize.value != "" ? this.form.controls.fontSize.value : null,
-          ["fontColor"]: this.form.controls.fontColor.value != "" ? this.form.controls.fontColor.value : null,
-          ["backgroundColor"]: this.form.controls.backgroundColor.value != "" ? this.form.controls.backgroundColor.value : null,
-        }
-      }
-      this.PlaylistjsonData.push(playlistrow);
+    // for (let i = 0; i < this.rowCount; i++) {
+    //   const playlistrow = {
+    //     ["playOrder"]: this.form.controls.playOrder.value != "" ? this.form.controls.playOrder.value : 0,
+    //     ["imageTextDuration"]: this.form.controls.imageTextDuration.value != 0 ? this.form.controls.imageTextDuration.value : 0,
+    //     ["mediaId"]: this.form.controls.rowMediaId.value != "" ? this.form.controls.rowMediaId.value : null,
+    //     ["mediaName"]: this.form.controls.mediaName.value != "" ? this.form.controls.mediaName.value : 0,
+    //     ["videoLoopCount"]: this.form.controls.videoLoopCount.value != "" ? this.form.controls.videoLoopCount.value : 0,
+    //     ["textStyle"]: {
+    //       ["fontSize"]: this.form.controls.fontSize.value != "" ? this.form.controls.fontSize.value : null,
+    //       ["fontColor"]: this.form.controls.fontColor.value != "" ? this.form.controls.fontColor.value : null,
+    //       ["backgroundColor"]: this.form.controls.backgroundColor.value != "" ? this.form.controls.backgroundColor.value : null,
+    //     }
+    //   }
+    // }
 
+    let _tileCount = this.form.controls['tiles'].length;
+    for (var i = 0; i < _tileCount; i++) {
+      let _plCount = this.form.controls['tiles'].controls[i].controls["playlist"].length;
+      for (var j = 0; j < _plCount; j++) {
+        let _backGroundColor = this.form.controls['tiles'].controls[i].controls["playlist"].controls[j].controls["textStyle"].value.backgroundColor;
+        let fontSize = this.form.controls['tiles'].controls[i].controls["playlist"].controls[j].controls["textStyle"].value.fontSize;
+        let fontColor = this.form.controls['tiles'].controls[i].controls["playlist"].controls[j].controls["textStyle"].value.fontColor;
+        let _textStyle = {
+          "backgroundColor": _backGroundColor,
+          "fontSize": fontSize,
+          "fontColor": fontColor
+        }
+        this.patchTileValue(i, j, _textStyle);
+      }
     }
+    let _textStyle: TextStyle;
+    //this.registrationForm.controls['tiles'].controls[0].controls["playlist"].controls[0].controls["textStyle"].value
+    this.form.controls['tiles'].controls[i].controls["playlist"].controls[0].controls["textStyle"].value
+    //this.PlaylistjsonData.push(playlistrow);
     //console.log(JSON.stringify(this.jsonData))
-    let _vcmsmediplayerdata = new Mediaplayer();    
+    let _vcmsmediplayerdata = new Mediaplayer();
     _vcmsmediplayerdata.IpAddress = this.form.controls.controllerName.value //"172.19.32.51"
     _vcmsmediplayerdata.medianame = this.form.controls.mediaName.value;
     _vcmsmediplayerdata.status = 0;
@@ -385,6 +403,18 @@ export class MediaplayerComponent implements OnInit {
 
         this.toast.success("Saved successfully for " + _vcmsmediplayerdata.IpAddress);
       }
-    });        
+    });
+  }
+
+  patchTileValue(i: number, j: number, _data: any) {
+    var _tile = this.form.controls['tiles'].controls[i].controls["playlist"].controls[j].controls["textStyle"]
+    //const tile = this.tiles.at(index);
+
+    // Use patchValue to update only the 'name' field
+    _tile.patchValue({
+      fontSize: _data.fontSize,
+      fontColor: _data.fontColor,
+      backgroundColor: _data.backgroundColor
+    });
   }
 }

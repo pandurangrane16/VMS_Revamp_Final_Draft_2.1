@@ -17,7 +17,7 @@ export class ChatAppComponent {
 
   sendMessage(): void {
     console.log(this.model.msg)
-    this.messageService.sendMessage(this.model.msg)
+    //this.messageService.sendMessage(this.model.msg)
     this.model.msg = "";
   };
 
