@@ -6,7 +6,9 @@ import { AdminFacadeService } from 'src/app/facade/facade_services/admin-facade.
 import { CVMSMediaFacadeServiceService } from 'src/app/facade/facade_services/cvmsmedia-facade-service.service';
 import { CommonSelectList } from 'src/app/models/common/cmSelectList';
 import { InputRequest } from 'src/app/models/request/inputReq';
+import { Mediascheduler } from 'src/app/models/vcms/mediascheduler';
 import { Globals } from 'src/app/utils/global';
+import { getErrorMsg } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-mediascheduler',
@@ -27,8 +29,10 @@ export class MediaschedulerComponent {
   minDate: any;
   maxDate: any;
   cronExpression: any;
-  
+  submitting: boolean = false;
 
+  get f() { return this.form.controls; }
+  
   constructor(private formBuilder: FormBuilder,
     private global: Globals,
     private _router: Router,
@@ -41,7 +45,7 @@ export class MediaschedulerComponent {
     this.FileTypes = ['Image File', 'Media Text']
     this.BuildForm();
     this.GetVmsDetails();
-    this.global.CurrentPage = "Media Live Play List CVMS";
+    this.global.CurrentPage = "Create Media Scheduler CVMS";
   }
 
   BuildForm() {
@@ -50,9 +54,9 @@ export class MediaschedulerComponent {
       globalFromTm: ["", Validators.required],
       globalToDt: ["", Validators.required],
       globalToTm: ["", Validators.required],
-      schedulename: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],      
-      medianame:['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
-      cronexpression:['','']
+      schedulename: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
+      mediaplayername: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
+      cronexpression: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
     });
   }
 
@@ -83,9 +87,12 @@ export class MediaschedulerComponent {
         globalFromTm: "",
         globalToTm: ""
       })
-    } 
+    }
   }
-  
+
+ getErrorMessage(_controlName: any, _controlLable: any, _isPattern: boolean = false, _msg: string) {
+    return getErrorMsg(this.form, _controlName, _controlLable, _isPattern, _msg);
+  }
 
   GetVmsDetails() {
     this.adminFacade.getVmss(this._request).subscribe(data => {
@@ -111,9 +118,44 @@ export class MediaschedulerComponent {
 
   OnSaveDetails() {
 
+    if(this.SelectedControllerId == undefined || this.SelectedControllerId.length < 1){
+      this._toast.error("No controller selected. Please select at least one controller to proceed.");
+      return;
+    }    
+
+    let _vcmsmedischedulerdata = new Mediascheduler();
+
+    let _requestTextData = {
+      mediaPlayerId: 1,
+      mediaPlayerName: this.form.controls["mediaplayername"].value,
+      name: this.form.controls["schedulename"].value,
+      fromdate: this.form.controls["globalFromDt"].value,
+      todate: this.form.controls["globalToDt"].value,
+      cronExpression:  this.form.controls["cronexpression"].value,
+    }
+    _vcmsmedischedulerdata.IpAddress = this.SelectedControllerId;
+    _vcmsmedischedulerdata.RequestData = JSON.stringify(_requestTextData);
+    _vcmsmedischedulerdata.CreationTime = new Date();
+    _vcmsmedischedulerdata.IsAudited = true;
+    _vcmsmedischedulerdata.AuditedBy = "System";
+    _vcmsmedischedulerdata.AuditedTime = new Date();
+    _vcmsmedischedulerdata.status = 0;
+    _vcmsmedischedulerdata.Reason = "Create Media Scheduler";
+
+
+    this._CVMSfacade.SaveMediaScheduler(_vcmsmedischedulerdata).subscribe(data => {
+      if (data == 0) {
+        this._toast.error("Error occured while saving data for " + _vcmsmedischedulerdata.IpAddress);
+      }
+      else {
+
+        this._toast.success("Saved successfully for " + _vcmsmedischedulerdata.IpAddress);
+      }
+    });
+    this._router.navigate(['cvms/MediaPlayerSchedulerList']);
   }
   BacktoList() {
-    this._router.navigate(['cvms/uploadMedia']);
+    this._router.navigate(['cvms/MediaPlayerSchedulerList']);
   }
 
 

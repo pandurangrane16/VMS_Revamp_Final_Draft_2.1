@@ -36,6 +36,10 @@ export class CVMSMediaFacadeServiceService {
    
     return this._mediupload.SaveMediaupload(data);
   }
+  SaveMediaScheduler(data:any){
+    
+    return this._mediascheduler.SaveMediascheduler(data);
+  }
 
   UpdateMediaUpload(data:any){
     return this._mediupload.UpdateMediaupload(data);
@@ -47,6 +51,10 @@ export class CVMSMediaFacadeServiceService {
   PlayEmergencyMedia(data:any) {       
     return this._medialive.PlayEmergencyMedia(data);
   }
+  GetEmergencyMediaList(unit:number,data:any) {       
+    return this._medialive.GetEmergencyMediaList(unit,data);
+  }
+
   getMediaschedulersList(_data: any,type:number) {       
     return this._mediascheduler.getMediaschedulersList(_data,type);
   }

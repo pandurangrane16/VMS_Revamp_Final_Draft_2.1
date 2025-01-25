@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe,NgIf,NgFor } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -27,6 +27,7 @@ export class EmergencyPlayCvmsComponent {
     public datepipe: DatePipe,
     private toast: ToastrService,
     public modalService: NgbModal,
+    
     private adminFacade: AdminFacadeService) {
     this.global.CurrentPage = "CVMS Emergency Play";
     this.dropdownSettingsVms = {
@@ -49,10 +50,14 @@ export class EmergencyPlayCvmsComponent {
   _inputPlayerData: any;
   columnName: string[] = [];
   columnid:number[] = []; 
+  showsave:boolean=false;
+
+
   ngOnInit(): void {
     this.GetVmsDetails();
     //this.getMedialistData();
   }
+  
   GetVmsDetails() {
     this._request.currentPage = 0;
     this._request.pageSize = 0;
@@ -61,6 +66,7 @@ export class EmergencyPlayCvmsComponent {
 
     this.adminFacade.getVmss(this._request).subscribe(data => {
       if (data != null) {
+       
         let commonList: CommonSelectList[] = [];
         data.data.forEach((ele: any) => {
           if (ele.vmdType == 2) {
@@ -120,6 +126,11 @@ export class EmergencyPlayCvmsComponent {
   }
 
   getMediaPlayerList() {
+    if(this.vmsIds == undefined || this.vmsIds.length < 1){
+      this.toast.error("No controller selected. Please select at least one controller to proceed.");
+      return;
+    }  
+    
     //let _vmsIpAdd = this.vmsIds[0];
     //let _vmsIpAdd = "192.100.100.300";
     //let _vmsIpAdd = "172.19.10.67";
@@ -129,6 +140,7 @@ export class EmergencyPlayCvmsComponent {
     this.mediaFacade.getMediaPlayerByIpAdd(_vmsIpAdd).subscribe(res => {
       if (res != null) {
         if (res.length > 0) {
+          this.showsave = true;
           let commonList: CommonSelectList[] = [];
           res.forEach((ele: any) => {
             let _responseId = ele.responseId;
@@ -143,32 +155,36 @@ export class EmergencyPlayCvmsComponent {
             disabled: false
           }
           this._inputPlayerData = _data;
+          
         }
       }
     })
   }
   onSubmit() {
 
+    if(this.vmsIds == undefined || this.vmsIds.length < 1){
+      this.toast.error("No controller selected. Please select at least one controller to proceed.");
+      return;
+    }  
     let Ipaddress = "172.19.32.51";
     //let Ipaddress = this.vmsIds[0];
    
     this.columnid = this._inputPlayerData.data.map((item: any) => item.value);
     this.columnName = this._inputPlayerData.data.map((item: any) => item.displayName);
-    let media = {
+    
+    let liveplaymedia = {
       "mediaPlayerId": 1,
       "mediaPlayerName": this.columnName[0]
     }
-    let MediaJson = {
-      
-      "id": 0,
-      "vmsId": 0,
-      "ipAddress": Ipaddress,
-      "creationTime": new Date(),
-      "responseId": 0,
-      "requestData": media,
-      "responseData": null,
-      "status": 0
-      
+    let MediaJson = {      
+      id: 0,
+      vmsId: 0,
+      ipAddress: Ipaddress,
+      creationTime: new Date(),
+      responseId: 0,
+      requestData: JSON.stringify(liveplaymedia),
+      responseData: null,
+      status: 0      
     };
     this.mediaFacade.PlayEmergencyMedia(MediaJson).subscribe(data => {
       if (data == 0) {
@@ -180,13 +196,13 @@ export class EmergencyPlayCvmsComponent {
       
     });
     this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this._router.navigate(['/cvms/livePlay']); 
+      this._router.navigate(['/cvms/livePlaylist']); 
     });   
     
   }
 
   BacktoList() {
-    this._router.navigate(['cvms/livePlay']);
+    this._router.navigate(['cvms/livePlaylist']);
   }
 
 }

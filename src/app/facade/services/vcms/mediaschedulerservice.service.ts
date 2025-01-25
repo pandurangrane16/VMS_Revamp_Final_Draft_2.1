@@ -14,7 +14,7 @@ export class MediaschedulerserviceService {
        getMediaschedulerDetails(_data: any) {
         return this._httpService._getMethod('Vcms_API/api/MediaUpload/GetDetails'+_data);
       }
-      SaveMediascheduler(_data: any) {
+      SaveMediascheduler(_data: any) {        
         return this._httpService._postMethod(_data,'Vcms_API/api/MediaScheduler/SaveMediaSchedulerMaster');
       }
      
@@ -27,7 +27,7 @@ export class MediaschedulerserviceService {
       }
 
       getMediaschedulersList(_data: any,type:number){
-        return this._httpService._postMethod(_data,'Vcms_API/api/LivePlay/GetDetails?type=' + type);
+        return this._httpService._postMethod(_data,'Vcms_API/api/MediaScheduler/GetMediaScheduler?type=' + type);
       }
 
 

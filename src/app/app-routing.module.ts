@@ -45,6 +45,7 @@ import { EmergencyPlayCvmsComponent } from './components/cvms/emergency-play-cvm
 import { MediaPlayerCvmsComponent } from './components/cvms/media-player-cvms/media-player-cvms.component';
 import { MediaplayerlistComponent } from './components/cvms/mediaplayerlist/mediaplayerlist.component';
 import { MedialiveplaylistComponent } from './components/cvms/medialiveplaylist/medialiveplaylist.component';
+import { MediaschedulerListComponent } from './components/cvms/mediascheduler-list/mediascheduler-list.component';
 
 const routes: Routes = [
   {
@@ -287,29 +288,36 @@ const routes: Routes = [
     canActivate: [AuthGuradService]
   },
   { 
+    path: "cvms/MediaPlayerPlaylist", 
+    component: MediaPlayerCvmsComponent,
+    data: { title: 'Media Player' },
+    canActivate: [AuthGuradService]
+  },
+  { 
     path: "cvms/createMediaPlayerScheduler", 
     component: MediaschedulerComponent,
     data: { title: 'Media Scheduler' },
     canActivate: [AuthGuradService]
   },
   { 
-    path: "cvms/livePlay", 
-    component: MedialiveplaylistComponent,
-    data: { title: 'Emergency Play' },
+    path: "cvms/MediaPlayerSchedulerList", 
+    component: MediaschedulerListComponent,
+    data: { title: 'Media Scheduler' },
     canActivate: [AuthGuradService]
-  },  
+  },
   { 
-    path: "cvms/livePlaylist", 
+    path: "cvms/livePlay", 
     component: EmergencyPlayCvmsComponent,
     data: { title: 'Emergency Play' },
     canActivate: [AuthGuradService]
   },  
   { 
-    path: "cvms/MediaPlayerPlaylist", 
-    component: MediaPlayerCvmsComponent,
-    data: { title: 'Media Player' },
+    path: "cvms/livePlaylist", 
+    component: MedialiveplaylistComponent,
+    data: { title: 'Emergency Play' },
     canActivate: [AuthGuradService]
-  },
+  },  
+  
   //Wild Card Route for 404 request 
   { path: '**',  
   component: PageNotFoundComponent}, 

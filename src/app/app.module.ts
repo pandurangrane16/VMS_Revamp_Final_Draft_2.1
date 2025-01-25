@@ -108,6 +108,7 @@ import { EmergencyPlayCvmsComponent } from './components/cvms/emergency-play-cvm
 import { MediaPlayerCvmsComponent } from './components/cvms/media-player-cvms/media-player-cvms.component';
 import { MediaplayerlistComponent } from './components/cvms/mediaplayerlist/mediaplayerlist.component';
 import { MedialiveplaylistComponent } from './components/cvms/medialiveplaylist/medialiveplaylist.component';
+import { MediaschedulerListComponent } from './components/cvms/mediascheduler-list/mediascheduler-list.component';
 
 
 
@@ -182,7 +183,8 @@ const config: SocketIoConfig = { url: environment.Socket_URL, options: {} };
     EmergencyPlayCvmsComponent,
     MediaPlayerCvmsComponent,
     MediaplayerlistComponent,
-    MedialiveplaylistComponent,   
+    MedialiveplaylistComponent,
+    MediaschedulerListComponent,   
     
   ],
   imports: [

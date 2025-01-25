@@ -110,12 +110,12 @@ export class MediaUploadcvmsComponent implements OnInit {
 
   onSubmit() {
     if(this.vmsIds == undefined || this.vmsIds.length < 1){
-      this.toast.error("Controller not selected");
+      this.toast.error("No controller selected. Please select at least one controller to proceed.");
       return;
     }
     if (this.isFileTypeImage) {
       if(this.selectedIds.length < 1){
-        this.toast.error("Media/Text not selected");
+        this.toast.error("No Media/Text not selected.Please select at least one Media to proceed.");
         return;
       }
     }

@@ -52,12 +52,14 @@ export class MediaPlayerCvmsComponent  {
 
   ngOnInit(): void {
     this.registrationForm = this.fb.group({     
-      name: '',
-      mediaLoopCount: '0',
+      name: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
+      mediaLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
       tiles: this.fb.array([])
     });
     this.GetVmsDetails();    
   }
+
+  get f() { return this.registrationForm.controls; }
 
   // Function to create a single user form group
   createUser(): FormGroup {
@@ -246,6 +248,9 @@ export class MediaPlayerCvmsComponent  {
   }
 
   OnSavePlaylistDetails(): void {
+
+   
+
     let _vcmsmediplayerdata = new Mediaplayer();    
      _vcmsmediplayerdata.IpAddress = this.SelectedControllerId;
      _vcmsmediplayerdata.medianame = this.registrationForm.controls["name"].value;

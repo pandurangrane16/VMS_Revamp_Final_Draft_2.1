@@ -18,6 +18,7 @@ export class MediauploadserviceService {
       return this._httpService._postMethod(_data,'Vcms_API/api/MediaUpload/SaveMediaUploadMaster');
     }
    
+   
     UpdateMediaupload(_data: any) {
       return this._httpService._postMethod(_data,'Vcms_API/api/MediaUpload/PutMediaUploadMaster');
     }

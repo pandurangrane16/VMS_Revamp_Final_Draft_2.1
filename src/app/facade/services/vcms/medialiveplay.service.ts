@@ -11,10 +11,11 @@ export class MedialiveplayService {
     private _httpService: HttpService
   ) { }
 
-  PlayEmergencyMedia(data: any) {
-    // return this._httpService._postMethod(data, 'Vcms_API/api/VMSComm/PlayEmergencyMedia?ipAddress=' + inputReq);
-    return this._httpService._postMethod(data, 'Vcms_API/api/LivePlay/SaveLivePlayMaster');
-    
+  PlayEmergencyMedia(data: any) {    
+    return this._httpService._postMethod(data, 'Vcms_API/api/LivePlay/SaveLivePlayMaster');    
+  }
+  GetEmergencyMediaList(type:number,data:any) {       
+     return this._httpService._postMethod(data,'Vcms_API/api/LivePlay/GetDetails?type=' + type);
   }
 
 }
