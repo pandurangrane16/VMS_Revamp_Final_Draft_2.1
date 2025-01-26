@@ -15,7 +15,7 @@
                                 <div class="col">
                                     <div class="mb-4 form-group">
                                         <label class="form-label">Select Controller</label>
-                                        <select *ngIf="_inputVmsData != undefined" class="form-control form-control-sm"
+                                        <select *ngIf="_inputVmsData != undefined" [(ngModel)]="SelectedControllerId" class="form-control form-control-sm"
                                             (change)="getSelectedVms($event)">
                                             <option [ngValue]="null" disabled>Choose Controller</option>
                                             <option *ngFor="let type of _inputVmsData.data" [ngValue]="type.value">
@@ -29,6 +29,7 @@
                                     <div class="mb-4 form-group">
                                         <label class="form-label">Media Name*</label>
                                         <input type="text" formControlName="name" [(ngModel)]="MediaName"
+                                        [ngClass]="{ 'is-invalid': f['name'].touched && f['name'].errors}"
                                             class="form-control" placeholder="Enter Media Name" />
                                         <div class="invalid-feedback">
                                             <div>{{getErrorMessage('name','name',true,"Invalid data
@@ -43,6 +44,7 @@
                                         <div class="mb-3 col form-group">
                                             <label class="form-label">Media Loop Count*</label>
                                             <input type="text" formControlName="mediaLoopCount" class="form-control"
+                                             [ngClass]="{ 'is-invalid': f['mediaLoopCount'].touched && f['mediaLoopCount'].errors}"
                                                 placeholder="Enter Media loop count" />
                                             <div class="invalid-feedback">
                                                 <div>

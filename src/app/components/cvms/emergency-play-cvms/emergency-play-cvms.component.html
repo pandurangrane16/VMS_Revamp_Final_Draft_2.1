@@ -10,6 +10,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
+                       
                         <div class="col-md-4">
                             <cm-multiselect-auto-complt [inputData]="_inputVmsData" [label]="label1"
                                 [dropdownSettings]="dropdownSettingsVms" (selectedItem)="getSelectedVms($event,1)"
@@ -24,8 +25,8 @@
                     <div class="row">
                         <div class="col-md-4">
                             <cm-multiselect-auto-complt [inputData]="_inputPlayerData" [label]="label2"
-                                [dropdownSettings]="dropdownSettingsVms" (selectedItem)="getSelectedVms($event,1)"
-                                (deSelectedItem)="getSelectedVms($event,0)"></cm-multiselect-auto-complt>
+                                [dropdownSettings]="dropdownSettingsVms" (selectedItem)="getSelectedPlayer($event,2)"
+                                (deSelectedItem)="getSelectedPlayer($event,0)"></cm-multiselect-auto-complt>
                         </div>
                     </div>
                     <div class="row">

@@ -83,11 +83,6 @@
                             <ngb-timepicker formControlName="globalFromTm" [seconds]="true" class="col-4 float-left"
                                 (focusout)="ValidateTime()" />
 
-                            <!-- <cm-datetimepicker [inputData]="fromTimeArr" type="from" fromYear="2020"
-                                        toYear="2030" class="col-md-8"
-                                        (selectedTime)="GetTime($event,0)"></cm-datetimepicker> -->
-
-
                         </div>
                         <div class="row mb-2">
                             <div class="col-md-1"></div>
@@ -111,7 +106,7 @@
                         </div>
                         <div class="row">
                             <div class="mb-3 col">
-                                <button *ngIf="(f['cronexpression'].touched  && !f['cronexpression'].errors) && (f['schedulename'].touched && !f['schedulename'].errors) && (f['mediaplayername'].touched && !f['mediaplayername'].errors), 'is-valid': f['cronexpression'].valid " ngClass="btn btn-secondary" (click)="OnSaveDetails()"
+                                <button *ngIf="(f['globalToDt'].touched  && !f['globalToDt'].errors) && (f['cronexpression'].touched  && !f['cronexpression'].errors) && (f['schedulename'].touched && !f['schedulename'].errors) && (f['mediaplayername'].touched && !f['mediaplayername'].errors), 'is-valid': f['cronexpression'].valid " ngClass="btn btn-secondary" (click)="OnSaveDetails()"
                                     style="width: 20%;" formControlName="SaveDetails" class="form-control">Save
                                     Details</button>
                             </div>
