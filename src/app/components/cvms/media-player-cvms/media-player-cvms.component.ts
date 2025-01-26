@@ -242,7 +242,7 @@ export class MediaPlayerCvmsComponent {
 
   isNameValid(medianame: string): boolean {
     const fileType = this.fileService.checkFileType(medianame.toLowerCase());
-    console.log(fileType);
+    
     if (fileType == "image")
     {
       return true;
