@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { json } from '@rxweb/reactive-form-validators';
 import { ToastrService } from 'ngx-toastr';
 import { CommonFacadeService } from 'src/app/facade/facade_services/common-facade.service';
 import { CVMSMediaFacadeServiceService } from 'src/app/facade/facade_services/cvmsmedia-facade-service.service';
@@ -35,7 +36,8 @@ export class MediaplayerlistComponent {
   _request: any = new InputRequest();
    
   headerArr = [      
-      { "Head": "IP Address", "FieldName": "ipAddress", "type": "string" },      
+      { "Head": "Controller Name", "FieldName": "ipAddress", "type": "string" },      
+      { "Head": "Media Name", "FieldName": "name", "type": "string" },   
       { "Head": "Status", "FieldName": "statusdesc", "type": "string" },
       { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
     ];
@@ -104,6 +106,12 @@ export class MediaplayerlistComponent {
         if (data != null) {
           this.listOfMediaUpload = data.data;
           this.listOfMediaUpload.forEach((element: any) => {
+           
+
+            let _data = JSON.parse(element.requestData);
+            element.schedulename = _data.name;
+            element.mediaPlayerName = _data.mediaPlayerName;
+            element.name = _data.name;;
             if (element.creationTime != null) {
               var _d = new Date(element.creationTime);
               var _dateStr = this.datepipe.transform(_d, "dd-MM-yyyy HH:mm:ss");

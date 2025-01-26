@@ -36,7 +36,7 @@ export class MediaschedulerListComponent {
 
   headerArr = [
     // { "Head": "ID", "FieldName": "id", "type": "number" },
-    { "Head": "IP Address", "FieldName": "ipAddress", "type": "string" },
+    { "Head": "Controller Name", "FieldName": "ipAddress", "type": "string" },
     { "Head": "ScheduleName", "FieldName": "schedulename", "type": "string" },
     { "Head": "Media Name", "FieldName": "mediaPlayerName", "type": "string" },
     //{ "Head": "From Date", "FieldName": "fromdate", "type": "string" },
