@@ -55,7 +55,7 @@ export class MediaschedulerListComponent {
     public datepipe: DatePipe,
     private toast: ToastrService,
     public modalService: NgbModal) {
-    this.global.CurrentPage = "Media Player Scheduler List CVMS";
+    this.global.CurrentPage = "Media Scheduler List CVMS";
   }
   OnTabChange(status: number) {
     this.tabno = status;

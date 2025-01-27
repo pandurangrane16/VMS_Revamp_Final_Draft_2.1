@@ -13,6 +13,7 @@
                         <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
                             <div class="row">
                                 <div class="col">
+                                  
                                     <div class="mb-4 form-group">
                                         <label class="form-label">Select Controller</label>
                                         <select *ngIf="_inputVmsData != undefined" [(ngModel)]="SelectedControllerId" class="form-control form-control-sm"
@@ -191,8 +192,7 @@
                                         Tile</button>
                                 </div>
                             </div>
-                        </form>
-                        <PRE>{{this.registrationForm.value|json  }}</PRE>
+                        </form>                       
 
                     </div>
 

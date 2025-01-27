@@ -51,7 +51,7 @@ export class MediaPlayerCvmsComponent {
   constructor(private fb: FormBuilder,
     private toast: ToastrService,
     private global: Globals,
-    private _media:MediaFacadeService,
+    private _media: MediaFacadeService,
     private adminFacade: AdminFacadeService,
     private _router: Router,
     private _CVMSfacade: CVMSMediaFacadeServiceService,
@@ -69,6 +69,7 @@ export class MediaPlayerCvmsComponent {
     this.GetVmsDetails();
   }
   get f() { return this.registrationForm.controls; }
+
   // Function to create a single user form group
   createUser(): FormGroup {
     return this.fb.group({
@@ -92,7 +93,7 @@ export class MediaPlayerCvmsComponent {
     });
   }
 
-  
+
   GetVmsDetails() {
     this.adminFacade.getVmss(this._request).subscribe(data => {
       if (data != null) {
@@ -154,10 +155,8 @@ export class MediaPlayerCvmsComponent {
   onSubmit(): void {
     if (this.registrationForm.valid) {
       console.log(this.registrationForm.value);
-
     }
   }
-
 
   ShowMediaPopup(type: string, idx: number) {
     const modalRef = this.modalService.open(CVMSMediaModalComponent, { ariaLabelledBy: 'modal-basic-title', size: 'xl' });
@@ -191,6 +190,7 @@ export class MediaPlayerCvmsComponent {
   }
   generateRows(idx: number) {
     //console.log(JSON.stringify(this.selectedMediaId))
+
     this.rows = []; // Clear existing rows
     this.rowCount = 0;
     this.rowCount = this.selectedMediaId[0].length;
@@ -234,50 +234,50 @@ export class MediaPlayerCvmsComponent {
     const colindex = selectElement.value.indexOf(":");
     if (colindex !== -1) {
       this.SelectedControllerId = selectElement.value.slice(colindex + 1, selectElement.value.length).replace(/\s+/g, '');
-    } 
+    }
   }
   BacktoList() {
     this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
   }
 
   isNameValid(medianame: string): boolean {
-    const fileType = this.fileService.checkFileType(medianame.toLowerCase());
-    
-    if (fileType == "image")
-    {
+    const fileType = this.fileService.checkFileType(medianame);
+
+    if (fileType == "image") {
       return true;
-    }   
-    else if (fileType == "video")
-    {
-       return false;
     }
-    else
-    {
+    else if (fileType == "video") {
       return false;
     }
-
-    //const lowerCaseValue = fieldname.toLowerCase();
-    //this.getMedialistData(plid);
-    //lowerCaseValue.includes('jpeg') || lowerCaseValue.includes('mp4') || lowerCaseValue.includes('jpg') || lowerCaseValue.includes('png')
+    else {
+      return true;
+    }
   }
 
-  getMedialistData(plid:number) {
-    this._media.getSelectedMedia(plid).subscribe(res => {
-      console.log(res);      
-      if (res != null && res.length > 0) {
-        this.listOfMedialist = res;
-      }
-      else
-        this.toast.error("Failed to failed media details.", "Error", { positionClass: "toast-bottom-right" });
-    }, (err) => { console.log(err) });
-  }
+  // getMedialistData(plid: number): boolean {
+  //   this._media.GetMediaDetails(plid).subscribe(res => {
+  //     if (res != null && res.length > 0) {
+       
+  //       if(res[0].fileType == 'Video'){
+  //           return false;
+  //       }
+  //       else if(res[0].fileType == 'Image'){
+  //         return true;        
+  //       }       
+  //     }
+  //     else
+  //       this.toast.error("Failed to failed media details.", "Error", { positionClass: "toast-bottom-right" });
+  //     return true;
+  //   }, (err) => { console.log(err) });
+  //   return true;
+  // }
 
   OnSavePlaylistDetails(): void {
 
-    if(this.SelectedControllerId == undefined || this.SelectedControllerId.length < 1){
+    if (this.SelectedControllerId == undefined || this.SelectedControllerId.length < 1) {
       this.toast.error("No controller selected. Please select at least one controller to proceed.");
       return;
-    }   
+    }
     let _tileCount = this.registrationForm.controls['tiles'].length;
     for (var i = 0; i < _tileCount; i++) {
       let _plCount = this.registrationForm.controls['tiles'].controls[i].controls["playlist"].length;
