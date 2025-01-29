@@ -102,7 +102,7 @@ export class MediaschedulerComponent {
           if (ele.vmdType == 2) {
             var _commonSelect = new CommonSelectList();
             _commonSelect.displayName = ele.description;
-            _commonSelect.value = ele.ipAddress;
+            _commonSelect.value = ele.ipAddress;            
             commonList.push(_commonSelect);
           }
         });
@@ -138,7 +138,7 @@ export class MediaschedulerComponent {
       name: this.form.controls["schedulename"].value,
       fromdate: globalFromDate,
       todate: globalToDate,
-      cronExpression:  this.form.controls["cronexpression"].value,
+      cronExpression:  ""//this.form.controls["cronexpression"].value,
     }
     _vcmsmedischedulerdata.IpAddress = this.SelectedControllerId;
     _vcmsmedischedulerdata.RequestData = JSON.stringify(_requestTextData);
@@ -157,9 +157,13 @@ export class MediaschedulerComponent {
       else {
 
         this._toast.success("Saved successfully for " + _vcmsmedischedulerdata.IpAddress);
+        this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this._router.navigate(['cvms/MediaPlayerSchedulerList']);
+        }); 
       }
     });
-    this._router.navigate(['cvms/MediaPlayerSchedulerList']);
+    
+    
   }
   BacktoList() {
     this._router.navigate(['cvms/MediaPlayerSchedulerList']);

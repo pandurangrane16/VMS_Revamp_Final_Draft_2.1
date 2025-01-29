@@ -5,10 +5,9 @@
                 <!-- <span class="spinner-border spinner-border-sm me-1" ></span> -->
                 <i class="icon-arrow-left"></i>
                 Back To List
-            </button>
-
+            </button>          
             <div class="card">
-               
+
                 <form *ngIf="!loading" [formGroup]="form" #mediaform="ngForm" (ngSubmit)="onSubmit()">
                     <div class="card-body">
                         <div class="row">
@@ -26,22 +25,21 @@
                                 </select>
                             </div>
 
-                            <!-- <div class="mb-4 col form-group">
-                                <label class="form-label">Media Name*</label>
-                                <input type="text" formControlName="mediaName" ngModel class="form-control"
-                                    [ngClass]="{ 'is-invalid': f['mediaName'].touched && f['mediaName'].errors, 'is-valid': f['mediaName'].valid }"
-                                    placeholder="Enter Media Name" />
-                                <div *ngIf="f['mediaName'].touched && f['mediaName'].errors" class="invalid-feedback">
-                                    <div>{{getErrorMessage('mediaName','mediaName',true,"Invalid data available in Media
-                                        Name")}}
-                                    </div>
-                                </div>
-                            </div> -->
-
                         </div>
                         <div class="row">
-
-                            <div class="mb-3 col form-group" *ngIf="isFileTypeText">
+                            <div class="mb-4 col-6 form-group" *ngIf="isFileTypeText">
+                                <label class="form-label">Media Name*</label>
+                                <input type="text" formControlName="mediaName" [(ngModel)]="MediaName"
+                                    (input)="limitInput()" class="form-control"
+                                    [ngClass]="{ 'is-invalid': f['mediaName'].touched && f['mediaName'].errors, 'is-valid': f['mediaName'].valid }"
+                                    placeholder="Enter Media Name (Max 30 chars)" />
+                                <div *ngIf="f['mediaName'].touched && f['mediaName'].errors" class="invalid-feedback">
+                                    <div>{{getErrorMessage('mediaName','mediaName',true,"Invalid data available in Media
+                                        Name or Media Name greater than 30 chars) ")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 col-6 form-group" *ngIf="isFileTypeText">
                                 <label class="form-label">Media Text *</label>
                                 <input type="text" formControlName="MediaTextName" class="form-control"
                                     [ngClass]="{ 'is-invalid': f['MediaTextName'].touched && f['MediaTextName'].errors}"
@@ -69,7 +67,7 @@
                                         </tr>
                                     </thead>
                                     <tr *ngFor="let m of listOfMedialist" class="tr-dsn">
-                                        <td>{{m.id}}</td>                                        
+                                        <td>{{m.id}}</td>
                                         <td>{{m.displayName}}</td>
                                         <td>
                                             <div class="row">
@@ -80,7 +78,7 @@
                                                     </button>
                                                 </div>
                                                 <div class="col-md-6 chkCls">
-                                                    <input  class="form-check-input" style="background-color: #FF5722;"
+                                                    <input class="form-check-input" style="background-color: #FF5722;"
                                                         (change)="onCheckBoxChange($event,m)" type="checkbox"
                                                         [checked]="m.isChecked" id="defaultCheck1">
                                                 </div>
@@ -109,17 +107,20 @@
     </div>
 </div>
 <div class="modal" id="myModal" role="dialog" style="background-color: black">
-<div class="modal-dialog modal-dialog-centered" role="document">
-  <div class="modal-content">
-    <div class="modal-header">
-        <span><h5>{{fileName}}</h5></span>
-      <button type="button" #closebutton class="close" data-dismiss="modal" (click)="removeModal()">&times;</button>
-      <h4 class="modal-title"></h4>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>
+                    <h5>{{fileName}}</h5>
+                </span>
+                <button type="button" #closebutton class="close" data-dismiss="modal"
+                    (click)="removeModal()">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <img [src]="url" *ngIf="format==='image' && url" height="200"> <br />
+                <video [src]="url" *ngIf="format==='video' && url" height="200" controls></video> <br />
+            </div>
+        </div>
     </div>
-    <div class="modal-body">
-        <img [src]="url" *ngIf="format==='image' && url" height="200"> <br/>
-        <video [src]="url" *ngIf="format==='video' && url" height="200" controls></video> <br/>
-    </div>
-  </div>
-</div>
 </div>

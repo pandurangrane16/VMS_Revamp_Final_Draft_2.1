@@ -46,6 +46,7 @@ export class MediaPlayerCvmsComponent {
   ShowSaveBtn: boolean = false;
   vmsIds: any[] = [];
   SelectedControllerId: any;
+  
 
 
   constructor(private fb: FormBuilder,
@@ -81,7 +82,7 @@ export class MediaPlayerCvmsComponent {
   createPlaylistItem(ele: any): FormGroup {
     return this.fb.group({
       playOrder: [ele.playOrder, [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
-      imageTextDuration: [ele.imageTextDuration, [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
+      imageTextDuration: [ele.imageTextDuration, [Validators.required]],
       mediaId: [ele.mediaId, Validators.required],
       mediaName: [ele.mediaName, [Validators.required]],
       videoLoopCount: [ele.videoLoopCount, [Validators.required]],
@@ -315,11 +316,14 @@ export class MediaPlayerCvmsComponent {
         else {
 
           this.toast.success("Saved successfully for " + _vcmsmediplayerdata.IpAddress);
+          
+          this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
+          }); 
+          
         }
-      });
-      this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
+      });     
     }
-
   }
 
   patchTileValue(i: number, j: number, _data: any) {
@@ -340,5 +344,11 @@ export class MediaPlayerCvmsComponent {
     var playlist = this.getPlaylist(index);
     const playlistItem = this.createPlaylistItem(ele);
     playlist.push(playlistItem);
+  }
+
+  checkValue(event:any) {
+    if (event.target.value <= 0) {
+      event.target.value = 1;
+    }
   }
 }

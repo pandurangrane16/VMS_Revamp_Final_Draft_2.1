@@ -1,7 +1,10 @@
     {
-        "api_url": "https://172.19.32.51:8025/",       
+        "api_url": "https://172.19.32.51:8025/",
         "swagger_url": "https://172.19.32.51:8025/user_api/swagger",
-        "networkReportPath" : "https://172.19.32.51:8025/MediaLists/",
+        "networkReportPath": "https://172.19.32.51:8025/MediaLists/",
+        "SSE_Url": "https://172.19.32.51:8025/publish_api/notify",
+        "PreviewPath": "https://172.19.32.51:8025/mediaLists/playlists/",
+        "Socket_URL": "http://172.19.32.51:8030",
         "config_unit": [
             {
                 "key": "admin",

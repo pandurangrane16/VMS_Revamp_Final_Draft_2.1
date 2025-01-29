@@ -67,7 +67,9 @@ export class CmMdAuditComponent implements OnInit {
       if (res != null) {
         //console.log(res);
         this.blockWise = res;
-        this.plPreviewSrc = environment.PreviewPath + this.data.plMaster.id + "/" + this.data.plMaster.id + "_Final.mp4";
+        
+        let __basePreview = this._session.getPreviewPath();
+        this.plPreviewSrc = __basePreview + this.data.plMaster.id + "/" + this.data.plMaster.id + "_Final.mp4";
         // for (var i = 0; i < blocks.length; i++) {
         //   if ((blocks[i].blId = res[i].blId)) {
         //     blocks[i].src = res[i].medias[0].mediaPath;

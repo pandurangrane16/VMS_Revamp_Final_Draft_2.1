@@ -45,6 +45,7 @@ export class EmergencyPlayCvmsComponent {
   label1: string = "Select Controller";
   label2: string = "Select Media Player";
   vmsIds: any[] = [];
+  vmsId: any[] = [];
   playersIds: any[] = [];
   dropdownSettingsVms: any;
   _inputVmsData: any;
@@ -73,7 +74,7 @@ export class EmergencyPlayCvmsComponent {
           if (ele.vmdType == 2) {
             var _commonSelect = new CommonSelectList();
             _commonSelect.displayName = ele.description;
-            _commonSelect.value = ele.ipAddress;
+            _commonSelect.value = ele.ipAddress + "|" + ele.id;
             commonList.push(_commonSelect);
           }
         });
@@ -155,7 +156,11 @@ export class EmergencyPlayCvmsComponent {
     else {
       if (type == 1) {
         this.vmsIds = [];
-        this.vmsIds.push(eve.value);
+        let  inputVal = eve.value.split('|');
+        let ipaddress = inputVal[0];
+        let vmsid = inputVal[1];
+        this.vmsIds.push(ipaddress);
+        this.vmsId.push(vmsid);        
       }
       else {
         var idx = 0;
@@ -173,8 +178,7 @@ export class EmergencyPlayCvmsComponent {
     if(this.vmsIds == undefined || this.vmsIds.length < 1){
       this.toast.error("No controller selected. Please select at least one controller to proceed.");
       return;
-    }  
-    
+    }      
       
     let _vmsIpAdd = this.vmsIds[0];  
     this._inputPlayerData = [];
@@ -222,7 +226,7 @@ export class EmergencyPlayCvmsComponent {
     }
     let MediaJson = {      
       id: 0,
-      vmsId: 0,
+      vmsId: Number.parseInt(this.vmsId[0]),
       ipAddress: Ipaddress,
       creationTime: new Date(),
       responseId: 0,
@@ -237,12 +241,13 @@ export class EmergencyPlayCvmsComponent {
       }
       else {
         this.toast.success("Send Emergncy Media successfully");
+        this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this._router.navigate(['/cvms/livePlaylist']); 
+        });   
       }      
       
     });
-    this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this._router.navigate(['/cvms/livePlaylist']); 
-    });   
+   
     
   }
 
