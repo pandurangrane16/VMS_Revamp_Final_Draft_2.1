@@ -39,7 +39,7 @@
                                 </button>
                             </div>
                         </div>
-                        
+
                         <hr>
                         <div class="bs-stepper-content">
                             <div id="test-l-1" class="content">
@@ -149,14 +149,14 @@
                                                     Regular Schedule
                                                 </label>
                                             </div>
-                                            <div class="col-md-2">
+                                            <!-- <div class="col-md-2">
                                                 <input class="form-check-input mt-2" type="radio"
                                                     name="flexRadioDefault" id="flexRadioDefault2"
                                                     (click)="RadioChange(1)" [checked]="IsCustom">
                                                 <label class="form-check-label mt-1" for="flexRadioDefault2">
                                                     Custom Schedule
                                                 </label>
-                                            </div>
+                                            </div> -->
                                             <!-- <div class="col-md-3 text-right" *ngIf="IsCustom">
                                                 <button class="btn-outline-primary btn" 
                                                     (click)="CustomScheduled('All')">Common Schedule</button>
@@ -246,10 +246,16 @@
                                                                     value="{{selectedPlaylist[i].playlistName}}" />
                                                             </td>
                                                             <td>
-                                                                <input type="text" *ngIf="!item.isSchedule" [disabled]="true" style="color: red;font-weight:bold;"
-                                                                    formControlName="scheduleMsg" class="form-control" />
-                                                                <input type="text" *ngIf="item.isSchedule" [disabled]="true" style="color: green;font-weight:bold;"
-                                                                    formControlName="scheduleMsg" class="form-control" />
+                                                                <input type="text" *ngIf="!item.isSchedule"
+                                                                    [disabled]="true"
+                                                                    style="color: red;font-weight:bold;"
+                                                                    formControlName="scheduleMsg"
+                                                                    class="form-control" />
+                                                                <input type="text" *ngIf="item.isSchedule"
+                                                                    [disabled]="true"
+                                                                    style="color: green;font-weight:bold;"
+                                                                    formControlName="scheduleMsg"
+                                                                    class="form-control" />
                                                             </td>
                                                             <td style="display: flex; justify-content:space-around;">
 
