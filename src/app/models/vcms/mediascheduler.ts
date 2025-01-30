@@ -10,5 +10,6 @@ export class Mediascheduler {
     Reason!:string;  
     resposnedata:string;
     resposneid:number;
+    VmsId!:number;   
     
 }

@@ -10,4 +10,5 @@ export class Mediaplayer {
     Reason!:string;
     createddate!:Date;  
     AuditedTime!:Date;    
+    VmsId!:number;   
 }

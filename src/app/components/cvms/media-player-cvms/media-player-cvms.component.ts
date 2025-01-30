@@ -103,7 +103,7 @@ export class MediaPlayerCvmsComponent {
           if (ele.vmdType == 2) {
             var _commonSelect = new CommonSelectList();
             _commonSelect.displayName = ele.description;
-            _commonSelect.value = ele.ipAddress;
+            _commonSelect.value = ele.ipAddress + "|" + ele.id;
             commonList.push(_commonSelect);
           }
         });
@@ -234,7 +234,8 @@ export class MediaPlayerCvmsComponent {
     const selectElement = eve.target as HTMLSelectElement;
     const colindex = selectElement.value.indexOf(":");
     if (colindex !== -1) {
-      this.SelectedControllerId = selectElement.value.slice(colindex + 1, selectElement.value.length).replace(/\s+/g, '');
+      this.SelectedControllerId =  selectElement.value.slice(colindex + 1, selectElement.value.length).replace(/\s+/g, '').split("|");     
+      
     }
   }
   BacktoList() {
@@ -299,7 +300,8 @@ export class MediaPlayerCvmsComponent {
     if (this.registrationForm.valid) {
 
       let _vcmsmediplayerdata = new Mediaplayer();
-      _vcmsmediplayerdata.IpAddress = this.SelectedControllerId;
+      _vcmsmediplayerdata.VmsId =  Number.parseInt(this.SelectedControllerId[1]);
+      _vcmsmediplayerdata.IpAddress = this.SelectedControllerId[0];
       _vcmsmediplayerdata.medianame = this.registrationForm.controls["name"].value;
       _vcmsmediplayerdata.status = 0;
       _vcmsmediplayerdata.AuditedBy = "System";

@@ -65,7 +65,7 @@ export class MediaschedulerComponent {
     const selectElement = eve.target as HTMLSelectElement;
     const colindex = selectElement.value.indexOf(":");
     if (colindex !== -1) {
-      this.SelectedControllerId = selectElement.value.slice(colindex + 1, selectElement.value.length).replace(/\s+/g, '');
+      this.SelectedControllerId =  selectElement.value.slice(colindex + 1, selectElement.value.length).replace(/\s+/g, '').split("|");           
     }
   }
   keyPress(event: KeyboardEvent) {
@@ -102,7 +102,7 @@ export class MediaschedulerComponent {
           if (ele.vmdType == 2) {
             var _commonSelect = new CommonSelectList();
             _commonSelect.displayName = ele.description;
-            _commonSelect.value = ele.ipAddress;            
+            _commonSelect.value = ele.ipAddress + "|" + ele.id;            
             commonList.push(_commonSelect);
           }
         });
@@ -140,7 +140,8 @@ export class MediaschedulerComponent {
       todate: globalToDate,
       cronExpression:  ""//this.form.controls["cronexpression"].value,
     }
-    _vcmsmedischedulerdata.IpAddress = this.SelectedControllerId;
+    _vcmsmedischedulerdata.IpAddress = this.SelectedControllerId[0];
+    _vcmsmedischedulerdata.VmsId =  Number.parseInt(this.SelectedControllerId[1]);
     _vcmsmedischedulerdata.RequestData = JSON.stringify(_requestTextData);
     _vcmsmedischedulerdata.CreationTime = new Date();
     _vcmsmedischedulerdata.IsAudited = true;
