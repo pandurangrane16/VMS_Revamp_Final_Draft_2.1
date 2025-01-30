@@ -18,4 +18,8 @@ export class MediaAuditService {
     updateMediaSetDetails(body:any) {
       return this._httpService._postMethod(body,"Media_API/api/MediaMaster/UpdateMediaUpload");
     }
+
+    GetMediaDetails(mediaId:number){
+      return this._httpService._getMethod("media_api/api/MediaMaster/GetMediaDetails?id=" + mediaId);
+    }
 }

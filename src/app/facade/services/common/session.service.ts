@@ -24,4 +24,10 @@ export class SessionService {
   setNetworkReportXlsPath(data:any) {
     sessionStorage.setItem("networkReportViewX", data);
   }
+  setPreviewPath(data:any) {
+    sessionStorage.setItem("PreviewPath", data);
+  }
+  getPreviewPath() {
+    return sessionStorage.getItem("PreviewPath");
+  }
 }

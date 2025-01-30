@@ -13,9 +13,10 @@
                         <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
                             <div class="row">
                                 <div class="col">
+                                  
                                     <div class="mb-4 form-group">
                                         <label class="form-label">Select Controller</label>
-                                        <select *ngIf="_inputVmsData != undefined" class="form-control form-control-sm"
+                                        <select *ngIf="_inputVmsData != undefined" [(ngModel)]="SelectedControllerId" class="form-control form-control-sm"
                                             (change)="getSelectedVms($event)">
                                             <option [ngValue]="null" disabled>Choose Controller</option>
                                             <option *ngFor="let type of _inputVmsData.data" [ngValue]="type.value">
@@ -29,6 +30,7 @@
                                     <div class="mb-4 form-group">
                                         <label class="form-label">Media Name*</label>
                                         <input type="text" formControlName="name" [(ngModel)]="MediaName"
+                                        [ngClass]="{ 'is-invalid': f['name'].touched && f['name'].errors}"
                                             class="form-control" placeholder="Enter Media Name" />
                                         <div class="invalid-feedback">
                                             <div>{{getErrorMessage('name','name',true,"Invalid data
@@ -43,6 +45,7 @@
                                         <div class="mb-3 col form-group">
                                             <label class="form-label">Media Loop Count*</label>
                                             <input type="text" formControlName="mediaLoopCount" class="form-control"
+                                             [ngClass]="{ 'is-invalid': f['mediaLoopCount'].touched && f['mediaLoopCount'].errors}" 
                                                 placeholder="Enter Media loop count" />
                                             <div class="invalid-feedback">
                                                 <div>
@@ -62,32 +65,32 @@
                                 <div *ngFor="let user of userDetails.controls; let i = index">
                                     <div [formGroupName]="i">
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="tileNo">Tile No : </label>
-                                                    <input id="tileNo" formControlName="tileNo" class="form-control" />
+                                                    <input id="tileNo" formControlName="tileNo" min="1"  class="form-control" />
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="playlistLoopCount">Playlist Loop Count</label>
-                                                    <input id="playlistLoopCount" formControlName="playlistLoopCount"
+                                                    <input id="playlistLoopCount" type="number" formControlName="playlistLoopCount" min="1" (input)="checkValue($event)"
                                                         class="form-control" />
                                                 </div>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-3">
                                                 <button ngClass="btn btn-secondary" (click)="ShowMediaPopup('Media',i)"
                                                     class="form-control">Add
                                                     Media</button>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-3">
                                                 <button ngClass="btn btn-secondary" (click)="ShowMediaPopup('Text',i)"
                                                     class="form-control">Add
                                                     Text</button>
                                             </div>
                                         </div>
                                         <div class="row" style="background-color: black; color: white;">
-                                            <div class="col-md-8">
+                                            <div class="col-md-6">
                                                 <div class="row">
                                                     <div class="col-md-2 text-center">
                                                         #
@@ -95,18 +98,18 @@
                                                     <div class="col-md-3 text-center">
                                                         File/Text Name
                                                     </div>
-                                                    <div class="col-md-1 text-center">
+                                                    <div class="col-md-2 text-center">
                                                         Play Order
                                                     </div>
                                                     <div class="col-md-2 text-center">
                                                         Duration
                                                     </div>
-                                                    <div class="col-md-2 text-center">
+                                                    <div class="col-md-3 text-center">
                                                         Loop Count
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-6">
                                                 <div class="row">
                                                     <div class="col-md-3 text-center">
                                                         Font Size
@@ -122,46 +125,49 @@
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </div>
                                         <div formArrayName="playlist">
                                             <div class="row" *ngFor="let row of getPlaylist(i).controls; let j = index"
                                                 [formGroupName]="j">
-                                                <div class="col-md-8">
+                                                <div class="col-md-6">
                                                     <div class="row">
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-2 text-center">
                                                             {{j+1}}
                                                         </div>
+                                                        <div class="col-md-3" [hidden]="true">
+                                                            <input type="text" 
+                                                                formControlName="mediaId" class="form-control" />
+                                                        </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" [readonly]="true"
+                                                            <input type="text" [readonly]="true" 
                                                                 formControlName="mediaName" class="form-control" />
                                                         </div>
-                                                        <div class="col-md-1">
-                                                            <input type="text" formControlName="playOrder"
+                                                        <div class="col-md-2 text-center">
+                                                            <input type="number" formControlName="playOrder" min="1"  (input)="checkValue($event)"
                                                                 class="form-control" />
                                                         </div>
-                                                        <div class="col-md-2">
-                                                            <input type="number" formControlName="imageTextDuration"
+                                                        <div class="col-md-2 text-center">
+                                                            <input type="number" formControlName="imageTextDuration" min="1"  (input)="checkValue($event)"
                                                                 class="form-control" placeholder="" />
                                                         </div>
-                                                        <div class="col-md-2">
-                                                            <input type="text" formControlName="videoLoopCount"
+                                                         <div class="col-md-3">
+                                                            <input type="number" formControlName="videoLoopCount" min="1" (input)="checkValue($event)" [readonly]="!isNameValid(row.get('mediaName')?.value)"
                                                                 class="form-control" placeholder="" />
-                                                        </div>
+                                                      </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4" formGroupName="textStyle">
+                                                <div class="col-md-6" formGroupName="textStyle">
                                                     <div class="row">
-                                                        <div class="col-md-3">
-                                                            <input type="number" formControlName="fontSize"
+                                                        <div class="col-md-3 text-center">
+                                                            <input type="number" formControlName="fontSize" (input)="checkValue($event)" [readonly]="isNameValid(row.get('mediaName')?.value)"
                                                                 class="form-control" placeholder="" />
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" formControlName="fontColor"
+                                                            <input type="text" formControlName="fontColor"  [readonly]="isNameValid(row.get('mediaName')?.value)"
                                                                 class="form-control" placeholder="" />
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" formControlName="backgroundColor"
+                                                            <input type="text" formControlName="backgroundColor" [readonly]="isNameValid(row.get('mediaName')?.value)"
                                                                 class="form-control" placeholder="" />
                                                         </div>
                                                         <div class="col-md-3">
@@ -186,15 +192,14 @@
                                         Tile</button>
                                 </div>
                             </div>
-                        </form>
-                        <PRE>{{this.registrationForm.value|json  }}</PRE>
+                        </form>                       
 
                     </div>
 
                 </div>
                 <div class="row">
                     <div class="mb-3 col">
-                        <button ngClass="btn btn-secondary" *ngIf="ShowSaveBtn" (click)="OnSavePlaylistDetails()"
+                        <button ngClass="btn btn-secondary" *ngIf="ShowSaveBtn" (click)=" OnSavePlaylistDetails()"
                             style="width: 20%;" formControlName="SaveDetails" class="form-control">Save
                             Details</button>
                     </div>

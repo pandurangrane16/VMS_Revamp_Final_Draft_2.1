@@ -16,9 +16,9 @@ export class MediaFacadeService {
   constructor(private _mediaUploadService: MediaUploadService,
     private _playlistService: PlaylistService,
     private _adminFacade: AdminFacadeService,
-    private _mediaAudit : MediaAuditService,
-    private _plAudit : PlAuditService,
-    private _plProcess : PlaylistStatusService) { }
+    private _mediaAudit: MediaAuditService,
+    private _plAudit: PlAuditService,
+    private _plProcess: PlaylistStatusService) { }
   getMediaUploadDetails(data: any) {
     return this._mediaUploadService.getuploaddetails(data);
   }
@@ -70,44 +70,48 @@ export class MediaFacadeService {
   getTarrifData(data: any) {
     return this._adminFacade.getTarrifs(data);
   }
-  addPlaylistMedia(data: any,type :number) {
-    return this._playlistService.addPlaylistMedia(data,type);
+  addPlaylistMedia(data: any, type: number) {
+    return this._playlistService.addPlaylistMedia(data, type);
   }
   addBlockDetails(data: any) {
     return this._playlistService.AddBlockDetails(data);
   }
-  getBlockDetailsByPlID(plid:number){
+  getBlockDetailsByPlID(plid: number) {
     return this._playlistService.GetBlockDetailsByPlid(plid);
   }
-  getSelectedMedia(plid:number){
+  getSelectedMedia(plid: number) {
     return this._playlistService.GetSelectedMediaData(plid);
   }
-  getSelectedText(plid:number){
+  getSelectedText(plid: number) {
     return this._playlistService.GetSelectedTextData(plid);
   }
-  getPlBlData(plid:number){
+  getPlBlData(plid: number) {
     return this._playlistService.GetPlBlData(plid);
   }
-  getMediaUpload(data:any,status:number) {
-    return this._mediaUploadService.getMediaUploadDetails(data,status);
+  getMediaUpload(data: any, status: number) {
+    return this._mediaUploadService.getMediaUploadDetails(data, status);
   }
-  getMediaBySetID(data:any) {
+  getMediaBySetID(data: any) {
     return this._mediaUploadService.getMediaByUploadSetId(data);
   }
   updateMediaSetDetails(data: any) {
     return this._mediaAudit.updateMediaSetDetails(data);
   }
-  updatePlaylistData(data:any){
+  updatePlaylistData(data: any) {
     return this._playlistService.updatePlaylistMaster(data);
   }
-  GetMediaBlockWise(plId:number) {
+  GetMediaBlockWise(plId: number) {
     return this._plAudit.GetMediaByBlockWise(plId);
   }
-  ValidatePlaylistName(plName:string) {
+  ValidatePlaylistName(plName: string) {
     return this._playlistService.ValidatePlaylistName(plName);
   }
   GetPlaylistProcessStatus() {
     return this._plProcess.GetPlaylistProcessStatus();
+  }
+
+  GetMediaDetails(mediaId: number) {
+    return this._mediaAudit.GetMediaDetails(mediaId);
   }
 
   // for file upload progress
@@ -157,5 +161,5 @@ export class MediaFacadeService {
   getProcess() {
     return this.textProcess.asObservable();
   }
-  
+
 }

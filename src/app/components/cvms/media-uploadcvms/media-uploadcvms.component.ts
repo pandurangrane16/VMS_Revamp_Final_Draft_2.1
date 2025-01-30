@@ -17,6 +17,7 @@ import { turn } from 'core-js/core/array';
 import { MediaFacadeService } from 'src/app/facade/facade_services/media-facade.service';
 import { check } from 'ngx-bootstrap-icons';
 import { FileServiceService } from 'src/app/facade/services/vcms/file-service.service';
+import { mediaAudit } from 'src/app/models/media/PlaylistMaster';
 
 declare var $: any; 
 @Component({
@@ -41,6 +42,7 @@ export class MediaUploadcvmsComponent implements OnInit {
   RequestData: JSON;
   label1: string = "Select Controller";
   vmsIds: any[] = [];
+  vmsId: any[] = [];
   dropdownSettingsVms: any;
   _inputVmsData: any;
   pager: number = 0;
@@ -59,6 +61,7 @@ export class MediaUploadcvmsComponent implements OnInit {
   url: string = "";
   format: string = "";
   fileName: string = "";
+  MediaName:string="";
   
 
 
@@ -91,9 +94,11 @@ export class MediaUploadcvmsComponent implements OnInit {
   BuildForm() {
     this.form = this.formBuilder.group({
       //MediaTextName: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
-      MediaTextName: ['', ''],
+      //MediaTextName: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
       MediaFileName: ['', ''],
-      mediaName: ['', ''],
+      MediaTextName:['', ''],
+      mediaName:['', ''],
+      //mediaName: ['', [Validators.required,Validators.maxLength(30) ,Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
       mediatype: ['', ''],
     });
   }
@@ -123,8 +128,7 @@ export class MediaUploadcvmsComponent implements OnInit {
       const element = this.vmsIds[i];
       if (this.isFileTypeImage) {
         for (let j = 0; j < this.selectedIds.length; j++) {
-          const media = this.selectedMedia[j];
-          //console.log(JSON.stringify(media));
+          const media = this.selectedMedia[j];         
           this.AddUpdateMedia(element, media);
         }
       } else {
@@ -135,18 +139,20 @@ export class MediaUploadcvmsComponent implements OnInit {
   }
 
   AddUpdateMedia(element?: any, media?: any) {
-    console.log(media);
+   
     let _vcmsuploadmediadata = new Vcmsuploadmedia();
     _vcmsuploadmediadata.controllerName = element;
     _vcmsuploadmediadata.IpAddress = this.vmsIds[0];
+    _vcmsuploadmediadata.VmsId =  Number.parseInt(this.vmsId[0]);
     if (media != null) {
       _vcmsuploadmediadata.medianame = media.displayName;
     }
     else {
-      _vcmsuploadmediadata.medianame = this.form.controls.MediaTextName.value;
+      _vcmsuploadmediadata.medianame = this.form.controls.mediaName.value;
     }
 
     _vcmsuploadmediadata.status = 0;
+    
     _vcmsuploadmediadata.AuditedBy = "System";
     _vcmsuploadmediadata.IsAudited = true;
     _vcmsuploadmediadata.AuditedTime = new Date();
@@ -165,7 +171,7 @@ export class MediaUploadcvmsComponent implements OnInit {
     else {
       let _requestTextData = {
         type: this.form.controls.mediatype.value,
-        id: 0,
+        id: media.id,
         name: media.fileName,
         file: media.uploadSetId + '/' + media.fileName
       }
@@ -178,12 +184,12 @@ export class MediaUploadcvmsComponent implements OnInit {
         this.toast.error("Error occured while saving data for " + _vcmsuploadmediadata.controllerName);
       }
       else {
-
         this.toast.success("Saved successfully for " + _vcmsuploadmediadata.controllerName);
+        this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this._router.navigate(['cvms/uploadMedia']);
+        }); 
       }
-      this._router.navigate(['cvms/uploadMedia']);
     });
-
   }
 
   getFileType() {
@@ -258,7 +264,7 @@ export class MediaUploadcvmsComponent implements OnInit {
           if (ele.vmdType == 2) {
             var _commonSelect = new CommonSelectList();
             _commonSelect.displayName = ele.description;
-            _commonSelect.value = ele.ipAddress;
+            _commonSelect.value = ele.ipAddress + "|" + ele.id;            
             commonList.push(_commonSelect);
           }
         });
@@ -274,8 +280,8 @@ export class MediaUploadcvmsComponent implements OnInit {
   getSelectedVms(eve: any, type: any) {
     if (eve.length > 0) {
       if (type == 1) {
-        eve.forEach((vms: any) => {
-          this.vmsIds.push(vms.value);
+        eve.forEach((vms: any) => {         
+          this.vmsIds.push(vms.value);          
         });
       }
       else {
@@ -292,9 +298,15 @@ export class MediaUploadcvmsComponent implements OnInit {
     }
     else if (eve.length == 0)
       this.vmsIds = [];
+    
     else {
+      let  inputVal = eve.value.split('|');
+      let ipaddress = inputVal[0];
+      let vmsid = inputVal[1];
+
       if (type == 1)
-        this.vmsIds.push(eve.value);
+        this.vmsIds.push(ipaddress),
+        this.vmsId.push(vmsid);
       else {
         var idx = 0;
         this.vmsIds.forEach(element => {
@@ -325,7 +337,11 @@ export class MediaUploadcvmsComponent implements OnInit {
     // Remove the modal-backdrop class after the modal is closed
     $('.modal-backdrop').remove();
   }
-
+  limitInput(){
+    if(this.MediaName.length > 30){
+      this.MediaName = this.MediaName.substring(0,30);
+    }
+  }
   clearForm() {
 
     this.form.reset();

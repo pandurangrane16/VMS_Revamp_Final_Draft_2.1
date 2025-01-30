@@ -15,4 +15,5 @@ export class VmsMaster {
     isActive!: boolean;
     isDeleted!: boolean;
     createdBy!: string;
+    vmdType!:number;
 }

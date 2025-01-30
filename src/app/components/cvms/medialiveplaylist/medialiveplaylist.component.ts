@@ -36,7 +36,7 @@ export class MedialiveplaylistComponent {
    
   headerArr = [
       // { "Head": "ID", "FieldName": "id", "type": "number" },
-      { "Head": "IP Address", "FieldName": "ipAddress", "type": "string" },      
+      { "Head": "Controller Name", "FieldName": "ipAddress", "type": "string" },      
       { "Head": "Status", "FieldName": "statusdesc", "type": "string" },
       { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
     ];

@@ -13,8 +13,5 @@ export class Vcmsuploadmedia {
     AuditedBy!:string;
     Reason!:string;
     AuditedTime!:Date;
-
-
-
-   
+    VmsId!:number;   
 }

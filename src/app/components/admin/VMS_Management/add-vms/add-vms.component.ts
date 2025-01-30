@@ -205,6 +205,7 @@ export class AddVmsComponent implements OnInit {
     _vmsMaster.description = this.form.controls.description.value;
     _vmsMaster.height = this.form.controls.height.value;
     _vmsMaster.width = this.form.controls.width.value;
+    _vmsMaster.vmdType = this.form.controls.vmdType.value;
     _vmsMaster.latitude = this.form.controls.latitude.value;
     _vmsMaster.longitude = this.form.controls.longitude.value;
     _vmsMaster.ipAddress = this.form.controls.ipAddress.value;

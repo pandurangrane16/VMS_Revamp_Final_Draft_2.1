@@ -102,7 +102,7 @@ export class MediaschedulerComponent {
           if (ele.vmdType == 2) {
             var _commonSelect = new CommonSelectList();
             _commonSelect.displayName = ele.description;
-            _commonSelect.value = ele.ipAddress;
+            _commonSelect.value = ele.ipAddress;            
             commonList.push(_commonSelect);
           }
         });
@@ -124,14 +124,21 @@ export class MediaschedulerComponent {
     }    
 
     let _vcmsmedischedulerdata = new Mediascheduler();
+    let pubFromDt = this.form.controls["globalFromDt"].value;
+    let pubToDt = this.form.controls["globalToDt"].value;
+    let pubFromTime = this.form.controls["globalFromTm"].value;
+    let pubToTime = this.form.controls["globalToTm"].value;        
+    let globalFromDate = pubFromDt.year + ("0" + pubFromDt.month).slice(-2) + ("0" + pubFromDt.day).slice(-2) + ("0" + pubFromTime.hour).slice(-2) + ("0" + pubFromTime.minute).slice(-2) + ("0" + pubFromTime.second).slice(-2);
+    let globalToDate = pubToDt.year + ("0" + pubToDt.month).slice(-2) + ("0" + pubToDt.day).slice(-2) + ("0" + pubToTime.hour).slice(-2) + ("0" + pubToTime.minute).slice(-2) + ("0" + pubToTime.second).slice(-2);
+
 
     let _requestTextData = {
       mediaPlayerId: 1,
       mediaPlayerName: this.form.controls["mediaplayername"].value,
       name: this.form.controls["schedulename"].value,
-      fromdate: this.form.controls["globalFromDt"].value,
-      todate: this.form.controls["globalToDt"].value,
-      cronExpression:  this.form.controls["cronexpression"].value,
+      fromdate: globalFromDate,
+      todate: globalToDate,
+      cronExpression:  ""//this.form.controls["cronexpression"].value,
     }
     _vcmsmedischedulerdata.IpAddress = this.SelectedControllerId;
     _vcmsmedischedulerdata.RequestData = JSON.stringify(_requestTextData);
@@ -150,9 +157,13 @@ export class MediaschedulerComponent {
       else {
 
         this._toast.success("Saved successfully for " + _vcmsmedischedulerdata.IpAddress);
+        this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this._router.navigate(['cvms/MediaPlayerSchedulerList']);
+        }); 
       }
     });
-    this._router.navigate(['cvms/MediaPlayerSchedulerList']);
+    
+    
   }
   BacktoList() {
     this._router.navigate(['cvms/MediaPlayerSchedulerList']);

@@ -77,18 +77,17 @@ export class CVMSMediaModalComponent implements OnInit {
       if(this.selectedMedia.length < 1){
         this.toast.error("No Media/Text not selected.Please select at least one Media to proceed.");
         return;
-      }
-    
+      }   
 
-     this.selectedMedia.forEach((element: any) => {
+     this.selectedMedia.forEach((element: any) => {     
       if (element != null) {
         var _ele = {
           id: element.id,
           fileName: element.displayName,
           isChecked: true,
-          currentTile : this._currentTile
-        }
-        //this.passBack();
+          currentTile : this._currentTile,
+          fileType:element.fileType,
+        }        
       }
     }); 
     
