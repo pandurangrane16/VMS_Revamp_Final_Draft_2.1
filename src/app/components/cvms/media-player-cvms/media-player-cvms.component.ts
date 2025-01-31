@@ -160,10 +160,11 @@ export class MediaPlayerCvmsComponent {
   }
 
   ShowMediaPopup(type: string, idx: number) {
+    let ipAddress = this.SelectedControllerId[0];
     const modalRef = this.modalService.open(CVMSMediaModalComponent, { ariaLabelledBy: 'modal-basic-title', size: 'xl' });
     if (type == "Media") {
       this.mediauploadtype = "media";
-      let _reqdata = { "action": "view", urls: [], modalType: "mediaupload", content: this.listOfMedialist, _crrTile: this.currentTile };
+      let _reqdata = { "action": "view", urls: [], modalType: "mediaupload", content: this.listOfMedialist, _crrTile: this.currentTile,"ipAddress":ipAddress };
       modalRef.componentInstance.data = _reqdata;
       modalRef.componentInstance.selectedId.subscribe((selectedId: any) => {
         //console.log(selectedId);
@@ -173,7 +174,7 @@ export class MediaPlayerCvmsComponent {
 
     }
     else {
-      let _reqdata = { "action": "view", urls: [], modalType: "textupload", content: this.listOfMedialist, _crrTile: this.currentTile };
+      let _reqdata = { "action": "view", urls: [], modalType: "textupload", content: this.listOfMedialist, _crrTile: this.currentTile,"ipAddress":ipAddress };
       this.mediauploadtype = "text";
       modalRef.componentInstance.data = _reqdata;
       modalRef.componentInstance.selectedId.subscribe((selectedId: any) => {
@@ -209,7 +210,7 @@ export class MediaPlayerCvmsComponent {
       }
       _plMedia.imageTextDuration = this.selectedMediaId[0][i].imageTextDuration;
       _plMedia.mediaId = this.selectedMediaId[0][i].id;
-      _plMedia.mediaName = this.selectedMediaId[0][i].fileName;
+      _plMedia.mediaName = this.selectedMediaId[0][i].displayname;
       _plMedia.playOrder = this.selectedMediaId[0][i].playOrder;
       _plMedia.videoLoopCount = this.selectedMediaId[0][i].videoLoopCount;
       _plMedia.textStyle = _textStyle;
@@ -249,10 +250,10 @@ export class MediaPlayerCvmsComponent {
       return true;
     }
     else if (fileType == "video") {
-      return false;
+      return true;
     }
     else {
-      return true;
+      return false;
     }
   }
 
@@ -316,7 +317,6 @@ export class MediaPlayerCvmsComponent {
           this.toast.error("Error occured while saving data for " + _vcmsmediplayerdata.IpAddress);
         }
         else {
-
           this.toast.success("Saved successfully for " + _vcmsmediplayerdata.IpAddress);
           
           this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {

@@ -18,7 +18,11 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: SessionService) { }
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     const authToken = this.authService._getSessionValue("access_token");
-    if (authToken != undefined) {
+    let isNotHeader = this.authService._getSessionValue("isNotHeader");
+    if (isNotHeader == "1") {
+      return next.handle(req);
+    }
+    else if (authToken != undefined) {
       req = req.clone({
         setHeaders: {
           Authorization: "Bearer " + authToken
@@ -31,5 +35,5 @@ export class AuthInterceptor implements HttpInterceptor {
     }
   }
 
- 
+
 }

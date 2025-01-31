@@ -6,6 +6,7 @@ import { MediaAuditService } from '../services/media/media-audit.service';
 import { PlAuditService } from '../services/media/pl-audit.service';
 import { PlaylistStatusService } from '../services/media/playlist-status.service';
 import { BehaviorSubject } from 'rxjs';
+import { MediauploadserviceService } from '../services/vcms/mediauploadservice.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class MediaFacadeService {
   fileSizeUnit: number = 1024;
   public isApiSetup = false;
   constructor(private _mediaUploadService: MediaUploadService,
+    private _mdUploadCvms: MediauploadserviceService,
     private _playlistService: PlaylistService,
     private _adminFacade: AdminFacadeService,
     private _mediaAudit: MediaAuditService,
@@ -160,6 +162,17 @@ export class MediaFacadeService {
 
   getProcess() {
     return this.textProcess.asObservable();
+  }
+
+  getMediaUploadCVMS(ipAddress: string, type: string) {
+    return this._mdUploadCvms.getMdUploadForMdPlayer(ipAddress, type);
+  }
+
+  getTextDataCVMS(ipAddress:string,port:string,_token:string){
+    return this._mdUploadCvms.getTextDataForMdPlayer(ipAddress,port,_token);
+  }
+  getTokenByIpAddress(ipAddress:string){
+    return this._mdUploadCvms.getTokenByIpAddress(ipAddress);
   }
 
 }
