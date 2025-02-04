@@ -209,7 +209,7 @@ export class MediaPlayerCvmsComponent {
         "backgroundColor": ""
       }
       _plMedia.imageTextDuration = this.selectedMediaId[0][i].mediaDetails.imageTextDuration;
-      _plMedia.mediaId = this.selectedMediaId[0][i].responseId;
+      _plMedia.mediaId = this.selectedMediaId[0][i].resposneId;
       _plMedia.mediaName = this.selectedMediaId[0][i].mediaDetails.displayname;
       _plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
       _plMedia.videoLoopCount = this.selectedMediaId[0][i].mediaDetails.videoLoopCount;
