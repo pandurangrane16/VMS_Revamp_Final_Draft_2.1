@@ -59,7 +59,9 @@ export class CVMSMediaFacadeServiceService {
     return this._mediascheduler.getMediaschedulersList(_data,type);
   }
 
-
+  GenerateToken(ipAdd:string) {
+    return this._mediupload.generateToken(ipAdd);
+  }
 
 
 

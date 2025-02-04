@@ -32,4 +32,8 @@ export class MediauploadserviceService {
   getTokenByIpAddress(ipAddress:string) {
     return this._httpService._getMethod("vcms_api/api/VMSComm/GetCacheByIpAddress?ipAdd="+ipAddress);
   }
+
+  generateToken(ipAdd:string) {
+    return this._httpService._postMethod(undefined,"vcms_api/api/VMSComm/GenerateToken?_ipaddress="+ipAdd);
+  }
 }
