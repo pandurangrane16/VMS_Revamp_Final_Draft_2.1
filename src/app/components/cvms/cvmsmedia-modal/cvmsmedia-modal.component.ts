@@ -3,6 +3,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { json } from '@rxweb/reactive-form-validators';
 import { forEach } from 'core-js/core/array';
 import { ToastrService } from 'ngx-toastr';
+import { CVMSMediaFacadeServiceService } from 'src/app/facade/facade_services/cvmsmedia-facade-service.service';
 import { MediaFacadeService } from 'src/app/facade/facade_services/media-facade.service';
 import { SessionService } from 'src/app/facade/services/common/session.service';
 
@@ -31,7 +32,8 @@ export class CVMSMediaModalComponent implements OnInit {
     private modal: NgbModal,
     private _media: MediaFacadeService,
     private toast: ToastrService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private cvmsService:CVMSMediaFacadeServiceService
   ) {
 
 
@@ -51,9 +53,9 @@ export class CVMSMediaModalComponent implements OnInit {
       }, (err) => { console.log(err) });
     }
     else {
-      this._media.getTokenByIpAddress(this.data.ipAddress).subscribe(res => {
+      this.cvmsService.GenerateToken(this.data.ipAddress).subscribe(res => {
         if (res != null) {
-          let _token = res[0].prmkey;
+          let _token = res;
           this._media.getTextDataCVMS(this.data.ipAddress, "8066", _token).subscribe(res => {
             this.listOfMedialist = [];
             this.sessionService._setSessionValue("isNotHeader", undefined);

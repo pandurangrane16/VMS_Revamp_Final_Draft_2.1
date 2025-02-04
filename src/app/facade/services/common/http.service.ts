@@ -54,7 +54,7 @@ export class HttpService {
   }
 
   _getMethodNotCommon(_appendUrl: string, _token: string): Observable<any> {
-    _token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJWbXNBZG1pbiIsInJvbGVzIjpbIkFkbWluIl0sImlhdCI6MTczODMxNDkxNSwiZXhwIjoxNzM4MzMyOTE1fQ.VZufCxTwmsIkGmexQIw_ZcqY5WzhsFSv62UEbCFjPvg";
+    _token = _token;
     this.authService._setSessionValue("isNotHeader","1");
     const _headers = new HttpHeaders().set('Authorization', `Bearer ${_token}`);
     return this.http.get(_appendUrl, {headers:_headers});
