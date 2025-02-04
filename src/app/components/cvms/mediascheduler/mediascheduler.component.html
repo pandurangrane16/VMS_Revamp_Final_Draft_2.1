@@ -60,7 +60,7 @@
                             <div class="col-md-4">
                                 <div class="input-group">
                                     <input formControlName="globalFromDt" appBlockCopyPaste
-                                        (keypress)="keyPress($event)" class="form-control" placeholder="yyyy-mm-dd"
+                                        (keypress)="keyPress($event)" class="form-control" placeholder="dd-mm-yyyy"
                                         name="dp" [minDate]="minDate" ngbDatepicker #dFromDatePub="ngbDatepicker" />
                                     <button class="btn btn-outline-primary border-primary"
                                         (click)="dFromDatePub.toggle()" type="button">
@@ -79,7 +79,7 @@
                             <div class="col-md-4">
                                 <div class="input-group">
                                     <input formControlName="globalToDt" appBlockCopyPaste
-                                        (keypress)="keyPress($event)" class="form-control" placeholder="yyyy-mm-dd"
+                                        (keypress)="keyPress($event)" class="form-control" placeholder="dd-mm-yyyy"
                                         name="dp" [minDate]="minDate" ngbDatepicker #dToDatePub="ngbDatepicker" />
                                     <button class="btn btn-outline-primary border-primary"
                                         (click)="dToDatePub.toggle()" type="button">
@@ -93,7 +93,7 @@
                         </div>
                         <div class="row">
                             <div class="mb-3 col">
-                                <button *ngIf="(f['globalToDt'].touched  && !f['globalToDt'].errors) && (f['schedulename'].touched && !f['schedulename'].errors) && (f['mediaplayername'].touched && !f['mediaplayername'].errors), 'is-valid': f['cronexpression'].valid " ngClass="btn btn-secondary" (click)="OnSaveDetails()"
+                                <button ngClass="btn btn-secondary" (click)="OnSaveDetails()"
                                     style="width: 20%;" formControlName="SaveDetails" class="form-control">Save
                                     Details</button>
                             </div>

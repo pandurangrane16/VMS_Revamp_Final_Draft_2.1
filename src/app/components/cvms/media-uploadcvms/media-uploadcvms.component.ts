@@ -1,4 +1,4 @@
-import { Component, OnInit, PipeTransform } from '@angular/core';
+import { Component, OnInit, PipeTransform, signal } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { getErrorMsg } from 'src/app/utils/utils';
@@ -18,6 +18,7 @@ import { MediaFacadeService } from 'src/app/facade/facade_services/media-facade.
 import { check } from 'ngx-bootstrap-icons';
 import { FileServiceService } from 'src/app/facade/services/vcms/file-service.service';
 import { mediaAudit } from 'src/app/models/media/PlaylistMaster';
+import { Globals } from 'src/app/utils/global';
 
 declare var $: any; 
 @Component({
@@ -62,8 +63,7 @@ export class MediaUploadcvmsComponent implements OnInit {
   format: string = "";
   fileName: string = "";
   MediaName:string="";
-  
-
+   
 
   get f() { return this.form.controls; }
 
@@ -75,6 +75,7 @@ export class MediaUploadcvmsComponent implements OnInit {
     private formBuilder: FormBuilder,
     public _commonFacade: CommonFacadeService,
     public _router: Router,
+    private global: Globals,
   ) {
     this.dropdownSettingsVms = {
       singleSelection: false,
@@ -87,7 +88,7 @@ export class MediaUploadcvmsComponent implements OnInit {
     };
     this.BuildForm();
     this.FileTypes = this.getFileType();
-
+    this.global.CurrentPage = "Send Media CVMS";
   }
 
 
@@ -138,6 +139,16 @@ export class MediaUploadcvmsComponent implements OnInit {
 
   }
 
+  extractFileName(originalName:string):string{
+    if(!originalName) return '';
+    const lastDotIndex = originalName.lastIndexOf(".");
+    if(lastDotIndex === -1) return originalName.substring(0,30);
+    const extension = originalName.substring(lastDotIndex);
+    const newWithoutext = originalName.substring(0,lastDotIndex);
+    const truncatedName = newWithoutext.substring(0,25);
+    return truncatedName + extension;
+  }
+
   AddUpdateMedia(element?: any, media?: any) {
    
     let _vcmsuploadmediadata = new Vcmsuploadmedia();
@@ -172,7 +183,7 @@ export class MediaUploadcvmsComponent implements OnInit {
       let _requestTextData = {
         type: this.form.controls.mediatype.value,
         id: media.id,
-        name: media.fileName,
+        name: this.extractFileName(media.fileName),
         file: media.uploadSetId + '/' + media.fileName
       }
       _vcmsuploadmediadata.RequestData = JSON.stringify(_requestTextData);
@@ -343,9 +354,11 @@ export class MediaUploadcvmsComponent implements OnInit {
     }
   }
   clearForm() {
-
     this.form.reset();
-    this.form.controls["isActive"].setValue(false);
+    //this.form.controls["isActive"].setValue(false);
   }
+  
+  
+  
 
 }

@@ -45,7 +45,7 @@ export class AppComponent implements OnInit {
     private singlarService: SocketService
   ) {
     this.ver = environment.version;
-    console.log(this.loggedIn);
+    //console.log(this.loggedIn);
     // this._facadeService.isLoggedin.subscribe(x => {
     //   debugger;
     //   this.loggedIn = x.LoggedIn;

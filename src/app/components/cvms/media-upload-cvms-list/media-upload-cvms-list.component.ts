@@ -23,6 +23,7 @@ export class MediaUploadCvmsListComponent {
   searchText!: string;
   page: any;
   tabno: number;
+  type:number;
   listOfMediaUpload: any;
   listOfMediaUploadPending: any;
   listOfMediaUploadApproved: any;
@@ -54,6 +55,7 @@ export class MediaUploadCvmsListComponent {
     private toast: ToastrService,
     public modalService: NgbModal) {
     this.global.CurrentPage = "Media Upload List CVMS";
+    
   }
   OnTabChange(status: number) {
     this.tabno = status;
@@ -91,8 +93,8 @@ export class MediaUploadCvmsListComponent {
     this._router.navigate(['users/add-user']);
   }
 
-  ngOnInit(): void {
-    this.tabno = 0;
+  ngOnInit(): void {   
+    this.type = 2;
     this.getMediaDetails();
   }
   OpenUploadMedia() {
@@ -103,7 +105,7 @@ export class MediaUploadCvmsListComponent {
     this._request.pageSize = this.recordPerPage;
     this._request.startId = this.startId;
     this._request.searchItem = this.searchText;
-    this.mediaFacade.GetMediaUploadDetails(this._request, this.tabno).subscribe(data => {
+    this.mediaFacade.GetMediaUploadDetails(this._request, this.type).subscribe(data => {
       if (data != null) {
         this.listOfMediaUpload = data.data;
         this.listOfMediaUpload.forEach((element: any) => {

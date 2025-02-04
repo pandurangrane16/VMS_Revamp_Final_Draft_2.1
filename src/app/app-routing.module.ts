@@ -38,7 +38,7 @@ import { PlaylistStatusComponent } from './components/media/playlist-status/play
 import { ChatAppComponent } from './components/shared/chat-app/chat-app.component';
 import { NotificationPanelComponent } from './components/shared/notification-panel/notification-panel.component';
 import { MediaUploadcvmsComponent } from './components/cvms/media-uploadcvms/media-uploadcvms.component';
-import { MediaplayerComponent } from './components/cvms/mediaplayer/mediaplayer.component';
+
 import { MediaschedulerComponent } from './components/cvms/mediascheduler/mediascheduler.component';
 import { MediaUploadCvmsListComponent } from './components/cvms/media-upload-cvms-list/media-upload-cvms-list.component';
 import { EmergencyPlayCvmsComponent } from './components/cvms/emergency-play-cvms/emergency-play-cvms.component';

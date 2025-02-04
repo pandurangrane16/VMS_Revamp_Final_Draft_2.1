@@ -39,8 +39,8 @@ export class MediaschedulerListComponent {
     { "Head": "Controller Name", "FieldName": "ipAddress", "type": "string" },
     { "Head": "ScheduleName", "FieldName": "schedulename", "type": "string" },
     { "Head": "Media Name", "FieldName": "mediaPlayerName", "type": "string" },
-    //{ "Head": "From Date", "FieldName": "fromdate", "type": "string" },
-    // { "Head": "To Date", "FieldName": "enddate", "type": "string" },
+    { "Head": "From Date", "FieldName": "fromdate", "type": "string" },
+    { "Head": "To Date", "FieldName": "enddate", "type": "string" },
     { "Head": "Status", "FieldName": "statusdesc", "type": "string" },
     { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
   ];
@@ -118,33 +118,11 @@ export class MediaschedulerListComponent {
 
             let _data = JSON.parse(element.requestData);
             element.schedulename = _data.name;
-            element.mediaPlayerName = _data.mediaPlayerName;
+            element.mediaPlayerName = _data.mediaPlayerName;            
 
-
-
-            let _dtFrom = new Date(_data.fromdate);
-            //console.log(_dtFrom);
-            let _dtTo = new Date(_data.todate);
-            let _fromDay = _dtFrom.getDate().toLocaleString();
-            let _fromMonth = (_dtFrom.getMonth() + 1).toLocaleString();
-            let _fromYear = _dtFrom.getFullYear();
-            let _fromHrs = _dtFrom.getHours().toLocaleString();
-            let _fromMins = _dtFrom.getMinutes().toLocaleString();
-            let _fromSecs = _dtFrom.getSeconds().toLocaleString();
-            let _toDay = _dtTo.getDate().toLocaleString();
-            let _toMonth = (_dtTo.getMonth() + 1).toLocaleString();
-            let _toYear = _dtTo.getFullYear();
-            let _toHrs = _dtTo.getHours().toLocaleString();
-            let _toMins = _dtTo.getMinutes().toLocaleString();
-            let _toSecs = _dtTo.getSeconds().toLocaleString();
-            element.fromdate = _fromDay.padStart(2, '0') + "-" + _fromMonth.padStart(2, '0') + "-" + _fromYear + " " + _fromHrs.padStart(2, '0') + ":" + _fromMins.padStart(2, '0') + ":" + _fromSecs.padStart(2, '0');
-            element.enddate = _toDay.padStart(2, '0') + "-" + _toMonth.padStart(2, '0') + "-" + _toYear + " " + _toHrs.padStart(2, '0') + ":" + _toMins.padStart(2, '0') + ":" + _toSecs.padStart(2, '0');
-            element.fromdate = this.datepipe.transform(_data.fromdate,"dd-MM-yyyy HH:mm:ss")
-            element.enddate =this.datepipe.transform(_data.todate,"dd-MM-yyyy HH:mm:ss")
-            // element.fromdate = this.datepipe.transform(fromdate, "dd-MM-yyyy HH:mm:ss");
-
-            // var todate = new Date(_data.todate);
-            // element.enddate = this.datepipe.transform(todate, "dd-MM-yyyy HH:mm:ss");        
+            element.fromdate = _data.fromDate;
+            element.enddate = _data.toDate;
+              
           }
 
 

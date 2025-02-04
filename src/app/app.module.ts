@@ -100,7 +100,7 @@ import { environment } from 'src/environment';
 import { ChatAppComponent } from './components/shared/chat-app/chat-app.component';
 import { NotificationPanelComponent } from './components/shared/notification-panel/notification-panel.component';
 import { MediaUploadcvmsComponent } from './components/cvms/media-uploadcvms/media-uploadcvms.component';
-import { MediaplayerComponent } from './components/cvms/mediaplayer/mediaplayer.component';
+
 import { MediaschedulerComponent } from './components/cvms/mediascheduler/mediascheduler.component';
 import { CVMSMediaModalComponent } from './components/cvms/cvmsmedia-modal/cvmsmedia-modal.component';
 import { MediaUploadCvmsListComponent } from './components/cvms/media-upload-cvms-list/media-upload-cvms-list.component';
@@ -175,8 +175,7 @@ const config: SocketIoConfig = { url: environment.Socket_URL, options: {} };
     MediaStatusComponent,
     ChatAppComponent,
     NotificationPanelComponent,
-    MediaUploadcvmsComponent,
-    MediaplayerComponent,
+    MediaUploadcvmsComponent,  
     MediaschedulerComponent,
     CVMSMediaModalComponent,
     MediaUploadCvmsListComponent,

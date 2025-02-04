@@ -5,12 +5,13 @@
                 <!-- <span class="spinner-border spinner-border-sm me-1" ></span> -->
                 <i class="icon-arrow-left"></i>
                 Back To List
-            </button>          
+            </button>
             <div class="card">
-
+                
                 <form *ngIf="!loading" [formGroup]="form" #mediaform="ngForm" (ngSubmit)="onSubmit()">
                     <div class="card-body">
                         <div class="row">
+                            
                             <div class="mb-4 col">
                                 <cm-multiselect-auto-complt [inputData]="_inputVmsData" [label]="label1"
                                     [dropdownSettings]="dropdownSettingsVms" (selectedItem)="getSelectedVms($event,1)"
@@ -41,6 +42,7 @@
                             </div>
                             <div class="mb-3 col-6 form-group" *ngIf="isFileTypeText">
                                 <label class="form-label">Media Text *</label>
+                               
                                 <input type="text" formControlName="MediaTextName" class="form-control"
                                     [ngClass]="{ 'is-invalid': f['MediaTextName'].touched && f['MediaTextName'].errors}"
                                     placeholder="Media Text" ngModel />
@@ -91,12 +93,12 @@
                     </div>
 
                     <div class="card-footer text-right">
-                        <button [disabled]="!form.valid" class="btn btn-primary mr-2">
+                        <button [disabled]="!form.valid" class="btn btn-primary mr-2" >
                             <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
                             Submit
                         </button>
 
-                        <button class="btn btn-secondary">
+                        <button  [disabled]="!form.valid" class="btn btn-secondary" (click)="clearForm()">
                             <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
                             Reset
                         </button>
