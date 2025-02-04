@@ -26,7 +26,7 @@ export class MediauploadserviceService {
     return this._httpService._getMethod("vcms_api/api/MediaUpload/GetMediaDetailsForIpAddress?IpAddress=" + ipAddress + "&mediaType=" + type);
   }
   getTextDataForMdPlayer(ipAddress: string,port:string,_token:string) {
-    return this._httpService._getMethodNotCommon("http://"+ipAddress+":"+port+"/media/getMediaDetails","eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJWbXNBZG1pbiIsInJvbGVzIjpbIkFkbWluIl0sImlhdCI6MTczODMxNDAzNiwiZXhwIjoxNzM4MzMyMDM2fQ.NHg-vQaAGPy1jELHvQXxnv0IqROCvqXNZ2IfPvSeUls");
+    return this._httpService._getMethodNotCommon("http://"+ipAddress+":"+port+"/media/getMediaDetails",_token);
   }
 
   getTokenByIpAddress(ipAddress:string) {
