@@ -62,6 +62,9 @@ export class CVMSMediaFacadeServiceService {
   GenerateToken(ipAdd:string) {
     return this._mediupload.generateToken(ipAdd);
   }
+  CheckDuplicateMediaName(mediaName:string,ipAdd:string){
+    return this._mediupload.CheckDuplicateMediaName(mediaName,ipAdd);
+  }
 
 
 

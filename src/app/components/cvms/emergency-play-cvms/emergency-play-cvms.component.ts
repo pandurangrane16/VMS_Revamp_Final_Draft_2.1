@@ -56,8 +56,7 @@ export class EmergencyPlayCvmsComponent {
 
 
   ngOnInit(): void {
-    this.GetVmsDetails();
-    //this.getMedialistData();
+    this.GetVmsDetails();   
   }
   
   GetVmsDetails() {
@@ -92,18 +91,17 @@ export class EmergencyPlayCvmsComponent {
 
   getSelectedPlayer(eve: any, type: any) {
     if (eve.length > 0) {
-      if (type == 1) {
-
+      if (type == 2) {
         eve.forEach((vms: any) => {
           this.playersIds = [];
-          this.playersIds.push(vms.value);
+          this.playersIds.push(vms);
         });
       }
       else {
         eve.forEach((ele: any) => {
           var idx = 0;
           this.playersIds.forEach(element => {
-            if (element == ele.value) {
+            if (element.value == eve.value) { 
               this.playersIds.splice(idx, 1);
             }
             idx++;
@@ -114,14 +112,14 @@ export class EmergencyPlayCvmsComponent {
     else if (eve.length == 0)
       this.playersIds = [];
     else {
-      if (type == 1) {
+      if (type == 2) {
         this.playersIds = [];
-        this.playersIds.push(eve.value);
+        this.playersIds.push(eve);
       }
       else {
         var idx = 0;
         this.playersIds.forEach(element => {
-          if (element == eve.value) {
+          if (element.value == eve.value) { 
             this.playersIds.splice(idx, 1);
           }
           idx++;
@@ -129,7 +127,6 @@ export class EmergencyPlayCvmsComponent {
       }
     }
   }
-
   getSelectedVms(eve: any, type: any) {
     if (eve.length > 0) {
       if (type == 1) {
@@ -172,6 +169,7 @@ export class EmergencyPlayCvmsComponent {
         });
       }
     }
+    this.getMediaPlayerList();
   }
 
   getMediaPlayerList() {
@@ -179,16 +177,15 @@ export class EmergencyPlayCvmsComponent {
       this.toast.error("No controller selected. Please select at least one controller to proceed.");
       return;
     }      
-      
+   
     let _vmsIpAdd = this.vmsIds[0];  
     this._inputPlayerData = [];
     this.mediaFacade.getMediaPlayerByIpAdd(_vmsIpAdd).subscribe(res => {
       if (res != null) {
-        if (res.length > 0) {
-         
+        if (res.length > 0) {         
           let commonList: CommonSelectList[] = [];
           res.forEach((ele: any) => {            
-            let _responseId = ele.id;
+            let _responseId = ele.responseId;
             let _data = JSON.parse(ele.requestData);
             var _commonSelect = new CommonSelectList();
             _commonSelect.displayName = _data.name;
@@ -211,18 +208,17 @@ export class EmergencyPlayCvmsComponent {
       return;
     }  
     if(this._inputPlayerData == undefined || this._inputPlayerData.length < 1){
-      this.toast.error("No Media Player selected. Please select at least one controller to proceed.");
+      this.toast.error("No Media Player selected. Please select at least one Media Player to proceed.");
       return;
     }  
-    let Ipaddress = this.vmsIds[0];//"172.19.32.51";
-    //let Ipaddress = this.vmsIds[0];
-   
-    this.columnid = this._inputPlayerData.data.map((item: any) => item.value);
-    this.columnName = this._inputPlayerData.data.map((item: any) => item.displayName);
+    let Ipaddress = this.vmsIds[0];
+       
+    let displayid = this.playersIds[0].value
+    let displayName = this.playersIds[0].displayName;
     
     let liveplaymedia = {
-      "mediaPlayerId": this.columnid[0],
-      "mediaPlayerName": this.columnName[0]
+      "mediaPlayerId": displayid,
+      "mediaPlayerName": displayName
     }
     let MediaJson = {      
       id: 0,

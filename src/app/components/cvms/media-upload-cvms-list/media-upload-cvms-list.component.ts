@@ -10,6 +10,7 @@ import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-
 import { InputRequest } from 'src/app/models/request/inputReq';
 import { Globals } from 'src/app/utils/global';
 import { CVMSMediaModalComponent } from '../cvmsmedia-modal/cvmsmedia-modal.component';
+import { wind } from 'ngx-bootstrap-icons';
 
 @Component({
   selector: 'app-media-upload-cvms-list',
@@ -57,6 +58,17 @@ export class MediaUploadCvmsListComponent {
     this.global.CurrentPage = "Media Upload List CVMS";
     
   }
+  ngOnInit(): void {   
+    this.type = 2;
+    this.getMediaDetails();
+    this.refreshPage();
+  }
+  refreshPage(){
+    setInterval(() => {      
+      //this._router.navigate(['cvms/uploadMedia']);
+      //this._router.navigate([this._router.url]);
+    }, 5000);    
+  }
   OnTabChange(status: number) {
     this.tabno = status;
     this.searchText = "";
@@ -93,13 +105,11 @@ export class MediaUploadCvmsListComponent {
     this._router.navigate(['users/add-user']);
   }
 
-  ngOnInit(): void {   
-    this.type = 2;
-    this.getMediaDetails();
-  }
+ 
   OpenUploadMedia() {
     this._router.navigate(['cvms/upload-media']);
   }
+  
   getMediaDetails() {
     this._request.currentPage = this.pager;
     this._request.pageSize = this.recordPerPage;

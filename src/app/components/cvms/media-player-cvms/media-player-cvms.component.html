@@ -12,12 +12,11 @@
                     <div class="col-md-12">
                         <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
                             <div class="row">
-                                <div class="col">
-                                  
+                                <div class="col">                                 
                                     <div class="mb-4 form-group">
                                         <label class="form-label">Select Controller</label>
-                                        <select *ngIf="_inputVmsData != undefined" [(ngModel)]="SelectedControllerId" class="form-control form-control-sm"
-                                            (change)="getSelectedVms($event)">
+                                        <select *ngIf="_inputVmsData != undefined" [(ngModel)]="SelectedControllerId"
+                                            class="form-control form-control-sm" (change)="getSelectedVms($event)">
                                             <option [ngValue]="null" disabled>Choose Controller</option>
                                             <option *ngFor="let type of _inputVmsData.data" [ngValue]="type.value">
                                                 {{type.displayName}}</option>
@@ -30,12 +29,12 @@
                                     <div class="mb-4 form-group">
                                         <label class="form-label">Media Player Name*</label>
                                         <input type="text" formControlName="name" [(ngModel)]="MediaName"
-                                        [ngClass]="{ 'is-invalid': f['name'].touched && f['name'].errors}"
+                                            [ngClass]="{ 'is-invalid': f['name'].touched && f['name'].errors}"
                                             class="form-control" placeholder="Enter Media Name" />
                                         <div class="invalid-feedback">
                                             <div>{{getErrorMessage('name','name',true,"Invalid data
                                                 available
-                                                in Media TextName")}}
+                                                in Media Palyer Name")}}
                                             </div>
                                         </div>
                                     </div>
@@ -45,7 +44,7 @@
                                         <div class="mb-3 col form-group">
                                             <label class="form-label">Media Loop Count*</label>
                                             <input type="text" formControlName="mediaLoopCount" class="form-control"
-                                             [ngClass]="{ 'is-invalid': f['mediaLoopCount'].touched && f['mediaLoopCount'].errors}" 
+                                                [ngClass]="{ 'is-invalid': f['mediaLoopCount'].touched && f['mediaLoopCount'].errors}"
                                                 placeholder="Enter Media loop count" />
                                             <div class="invalid-feedback">
                                                 <div>
@@ -68,14 +67,17 @@
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="tileNo">Tile No : </label>
-                                                    <input id="tileNo" formControlName="tileNo" min="1"  class="form-control" />
+                                                    <input id="tileNo" formControlName="tileNo" min="1"
+                                                        class="form-control" (input)="checkValue($event)" />
                                                 </div>
+
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="playlistLoopCount">Playlist Loop Count</label>
-                                                    <input id="playlistLoopCount" type="number" formControlName="playlistLoopCount" min="1" (input)="checkValue($event)"
-                                                        class="form-control" />
+                                                    <input id="playlistLoopCount" type="number"
+                                                        formControlName="playlistLoopCount" min="1"
+                                                        (input)="checkValue($event)" class="form-control" />
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
@@ -135,39 +137,46 @@
                                                             {{j+1}}
                                                         </div>
                                                         <div class="col-md-3" [hidden]="true">
-                                                            <input type="text" 
-                                                                formControlName="mediaId" class="form-control" />
+                                                            <input type="text" formControlName="mediaId"
+                                                                class="form-control" />
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" [readonly]="true" 
+                                                            <input type="text" [readonly]="true"
                                                                 formControlName="mediaName" class="form-control" />
                                                         </div>
                                                         <div class="col-md-2 text-center">
-                                                            <input type="number" formControlName="playOrder" min="1"  (input)="checkValue($event)"
-                                                                class="form-control" />
+                                                            <input type="number" formControlName="playOrder" min="1"
+                                                                (input)="checkValue($event)" class="form-control" />
                                                         </div>
                                                         <div class="col-md-2 text-center">
-                                                            <input type="number" formControlName="imageTextDuration" min="1"  (input)="checkValue($event)"
+                                                            <input type="number" formControlName="imageTextDuration"
+                                                                min="1" (input)="checkValue($event)"
                                                                 class="form-control" placeholder="" />
                                                         </div>
-                                                         <div class="col-md-3">
-                                                            <input type="number" formControlName="videoLoopCount" min="1" (input)="checkValue($event)" [readonly]="!isNameValid(row.get('mediaName')?.value)"
+                                                        <div class="col-md-3">
+                                                            <input type="number" formControlName="videoLoopCount"
+                                                                min="1" (input)="checkValue($event)"
+                                                                [readonly]="!isNameValid(row.get('mediaName')?.value)"
                                                                 class="form-control" placeholder="" />
-                                                      </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6" formGroupName="textStyle">
                                                     <div class="row">
                                                         <div class="col-md-3 text-center">
-                                                            <input type="number" formControlName="fontSize" (input)="checkValue($event)" [readonly]="isNameValid(row.get('mediaName')?.value)"
+                                                            <input type="number" formControlName="fontSize"
+                                                                (input)="checkValue($event)"
+                                                                [readonly]="isNameValid(row.get('mediaName')?.value)"
                                                                 class="form-control" placeholder="" />
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" formControlName="fontColor"  [readonly]="isNameValid(row.get('mediaName')?.value)"
+                                                            <input type="text" formControlName="fontColor"
+                                                                [readonly]="isNameValid(row.get('mediaName')?.value)"
                                                                 class="form-control" placeholder="" />
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" formControlName="backgroundColor" [readonly]="isNameValid(row.get('mediaName')?.value)"
+                                                            <input type="text" formControlName="backgroundColor"
+                                                                [readonly]="isNameValid(row.get('mediaName')?.value)"
                                                                 class="form-control" placeholder="" />
                                                         </div>
                                                         <div class="col-md-3">
@@ -192,7 +201,7 @@
                                         Tile</button>
                                 </div>
                             </div>
-                        </form>                       
+                        </form>
 
                     </div>
 

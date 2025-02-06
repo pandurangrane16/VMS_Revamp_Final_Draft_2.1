@@ -37,8 +37,8 @@ export class MediaplayerlistComponent {
    
   headerArr = [      
       { "Head": "Controller Name", "FieldName": "ipAddress", "type": "string" },      
-      { "Head": "Media Name", "FieldName": "name", "type": "string" },   
-      { "Head": "Status", "FieldName": "statusdesc", "type": "string" },
+      { "Head": "Media Palyer Name", "FieldName": "name", "type": "string" },   
+      { "Head": "Media Player Status", "FieldName": "statusdesc", "type": "string" },
       { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
     ];
     listOfMedialist:any=[];

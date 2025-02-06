@@ -7,9 +7,8 @@
                 Back To List
             </button>
 
-            <div class="card">
-                <form [formGroup]="form">
-
+            <div class="card">                           
+                <form [formGroup]="form">                    
                     <div class="card-body">
                         <div class="row">
                             <div class="mb-4 form-group">
@@ -25,12 +24,13 @@
                         </div>
                         <div class="row mb-2">
                             <div class="col-sm-6 col-md-4 col">
-                                <div class="mb-4 col form-group">
+                                <div class="mb-6 col form-group">
                                     <label class="form-label">Schedule Name*</label>
                                     <input type="text" formControlName="schedulename" [(ngModel)]="name" class="form-control"
                                     [ngClass]="{ 'is-invalid': f['schedulename'].touched && f['schedulename'].errors}"
                                         placeholder="Enter Schedule Name" />
                                 </div>
+                                
                                 <div *ngIf="f['schedulename'].touched && f['schedulename'].errors , 'is-valid': f['schedulename'].valid "
                                     class="invalid-feedback">
                                     <div>{{getErrorMessage('schedulename','schedulename',true,"Invalid data available
@@ -38,19 +38,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-4 col">
-                                <div class="mb-4 col form-group">
-                                    <label class="form-label">Media Name*</label>
-                                    <input type="text" formControlName="mediaplayername" [(ngModel)]="MediaName"
-                                    [ngClass]="{ 'is-invalid': f['mediaplayername'].touched && f['mediaplayername'].errors}"
-                                        class="form-control" placeholder="Enter Media Name" />
-                                </div>
-                                <div *ngIf="f['mediaplayername'].touched && f['mediaplayername'].errors , 'is-valid': f['mediaplayername'].valid "
-                                    class="invalid-feedback">
-                                    <div>{{getErrorMessage('mediaplayername','mediaplayername',true,"Invalid data available
-                                        in mediaplayername")}}
-                                    </div>
-                                </div>
+                            <div class="col-sm-6 col-md-4 col">      
+                                <cm-multiselect-auto-complt [inputData]="_inputPlayerData" [label]="label2"
+                                [dropdownSettings]="dropdownSettingsVms" (selectedItem)="getSelectedPlayer($event,1)"
+                                (deSelectedItem)="getSelectedPlayer($event,0)"></cm-multiselect-auto-complt>                                                    
                             </div>
                            
                         </div>
@@ -75,7 +66,7 @@
                             <div class="col-md-1"></div>
 
                             <label class="col-md-2 text-right mt-2">To Date: </label>
-
+                          
                             <div class="col-md-4">
                                 <div class="input-group">
                                     <input formControlName="globalToDt" appBlockCopyPaste
@@ -92,8 +83,8 @@
 
                         </div>
                         <div class="row">
-                            <div class="mb-3 col">
-                                <button ngClass="btn btn-secondary" (click)="OnSaveDetails()"
+                            <div class="mb-3 col">                            
+                                    <button *ngIf="(f['globalToTm'].touched  && !f['globalToTm'].errors) && (f['globalFromTm'].touched  && !f['globalFromTm'].errors) && (f['globalToDt'].touched  && !f['globalToDt'].errors) && (f['schedulename'].touched && !f['schedulename'].errors), 'is-valid': f['cronexpression'].valid " ngClass="btn btn-secondary" (click)="OnSaveDetails()"
                                     style="width: 20%;" formControlName="SaveDetails" class="form-control">Save
                                     Details</button>
                             </div>

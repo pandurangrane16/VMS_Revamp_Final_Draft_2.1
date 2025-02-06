@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AdminFacadeService } from 'src/app/facade/facade_services/admin-facade.service';
@@ -12,6 +12,7 @@ import { Globals } from 'src/app/utils/global';
 import { getErrorMsg } from 'src/app/utils/utils';
 import { parse, format, isValid } from 'date-fns';
 import { DatePipe } from '@angular/common';
+import { catchError } from 'rxjs';
 
 
 
@@ -35,6 +36,10 @@ export class MediaschedulerComponent {
   maxDate: any;
   cronExpression: any;
   submitting: boolean = false;
+  _inputPlayerData: any = [];
+  dropdownSettingsVms: any;
+  playersIds: any[] = [];
+  label2: string = "Select Media Player";
 
   get f() { return this.form.controls; }
 
@@ -53,6 +58,15 @@ export class MediaschedulerComponent {
     this.BuildForm();
     this.GetVmsDetails();
     this.global.CurrentPage = "Create Media Scheduler CVMS";
+    this.dropdownSettingsVms = {
+      singleSelection: true,
+      idField: 'value',
+      textField: 'displayName',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 5,
+      allowSearchFilter: true,
+    };
   }
 
   BuildForm() {
@@ -61,18 +75,29 @@ export class MediaschedulerComponent {
       globalFromTm: ["", Validators.required],
       globalToDt: ["", Validators.required],
       globalToTm: ["", Validators.required],
-      schedulename: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
-      mediaplayername: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
-      cronexpression: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
+      schedulename: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$"),this.noLeadingEndingWhitespace]],
+      mediaplayername: ['', ''],
+      cronexpression: ['', ''],
     });
   }
 
+  ngOnInit(): void {
+    //this.refreshPage();
+  }
+
+  refreshPage() {
+    setInterval(() => {
+      //window.location.reload();
+      //this._router.navigate([this._router.url]);
+    }, 5000);
+  }
 
   getSelectedVms(eve: any) {
     const selectElement = eve.target as HTMLSelectElement;
     const colindex = selectElement.value.indexOf(":");
     if (colindex !== -1) {
       this.SelectedControllerId = selectElement.value.slice(colindex + 1, selectElement.value.length).replace(/\s+/g, '').split("|");
+      this.getMediaPlayerList();
     }
   }
   keyPress(event: KeyboardEvent) {
@@ -86,6 +111,18 @@ export class MediaschedulerComponent {
     let ToTime = this.form.controls["globalToTm"].value;
     let globalFromDate = FromDt.year + ("0" + FromDt.month).slice(-2) + ("0" + FromDt.day).slice(-2) + ("0" + FromTime.hour).slice(-2) + ("0" + FromTime.minute).slice(-2) + ("0" + FromTime.second).slice(-2);
     let globalToDate = ToDt.year + ("0" + ToDt.month).slice(-2) + ("0" + ToDt.day).slice(-2) + ("0" + ToTime.hour).slice(-2) + ("0" + ToTime.minute).slice(-2) + ("0" + ToTime.second).slice(-2);
+
+    // if (Number(new Date()) < Number(globalFromDate)) {
+    //   this._toast.error("Invalid DateTime selected. From Date Should be greater than Current Date..");
+    //   this.form.patchValue({
+    //     globalFromDt: "",
+    //     globalToDt: "",
+    //     globalFromTm: "",
+    //     globalToTm: ""
+    //   })
+    // }
+
+
     if (Number(globalFromDate) >= Number(globalToDate)) {
       this._toast.error("Invalid DateTime selected From Date and To Date.");
       this.form.patchValue({
@@ -117,16 +154,86 @@ export class MediaschedulerComponent {
           data: commonList,
           disabled: false
         }
-
         this.inputVmsData = _data;
       }
     });
+  }
+
+  getSelectedPlayer(eve: any, type: any) {
+    if (eve.length > 0) {
+      if (type == 1) {
+        eve.forEach((vms: any) => {
+          this.playersIds = [];
+          this.playersIds.push(vms);
+        });
+      }
+      else {
+        eve.forEach((ele: any) => {
+          var idx = 0;
+          this.playersIds.forEach(element => {
+            if (element.value == eve.value) {
+              this.playersIds.splice(idx, 1);
+            }
+            idx++;
+          });
+        });
+      }
+    }
+    else if (eve.length == 0)
+      this.playersIds = [];
+    else {
+      if (type == 1) {
+        this.playersIds = [];
+        this.playersIds.push(eve);
+      }
+      else {
+        var idx = 0;
+        this.playersIds.forEach(element => {
+          //this.playersIds.splice(idx, 1);
+          if (element.value == eve.value) {
+            this.playersIds.splice(idx, 1);
+          }
+          idx++;
+        });
+      }
+    }
+  }
+
+  getMediaPlayerList() {
+
+    let _vmsIpAdd = this.SelectedControllerId[0];
+    this._inputPlayerData = [];
+    this._CVMSfacade.getMediaPlayerByIpAdd(_vmsIpAdd).subscribe(res => {
+      if (res != null) {
+        if (res.length > 0) {
+          let commonList: CommonSelectList[] = [];
+          res.forEach((ele: any) => {            
+            let _responseId = ele.responseId;
+            let _data = JSON.parse(ele.requestData);
+            var _commonSelect = new CommonSelectList();
+            _commonSelect.displayName = _data.name;
+            _commonSelect.value = _responseId;
+            commonList.push(_commonSelect);
+          });
+          let _data = {
+            data: commonList,
+            disabled: false
+          }
+          this._inputPlayerData = _data;
+        }
+      }
+    })
   }
 
   OnSaveDetails() {
 
     if (this.SelectedControllerId == undefined || this.SelectedControllerId.length < 1) {
       this._toast.error("No controller selected. Please select at least one controller to proceed.");
+      return;
+    }
+
+    if (this.playersIds == undefined || this.playersIds.length < 1) {
+      this._toast.error("No Media Player selected. Please select at least one Media Player to proceed.");
       return;
     }
 
@@ -141,15 +248,6 @@ export class MediaschedulerComponent {
 
     let globalFromDate = pubFromDt.year + ("0" + pubFromDt.month).slice(-2) + ("0" + pubFromDt.day).slice(-2) + ("0" + pubFromTime.hour).slice(-2) + ("0" + pubFromTime.minute).slice(-2) + ("0" + pubFromTime.second).slice(-2);
     let globalToDate = pubToDt.year + ("0" + pubToDt.month).slice(-2) + ("0" + pubToDt.day).slice(-2) + ("0" + pubToTime.hour).slice(-2) + ("0" + pubToTime.minute).slice(-2) + ("0" + pubToTime.second).slice(-2);
-
-    const dateFormat = 'yyyyMMddHHmmss';      
-    const fromdate = parse(globalFromDate, dateFormat, new Date());
-    const todate = parse(globalToDate, dateFormat, new Date());
-
-
-    const fromdate1 = this.datepipe.transform(globalFromDate, "dd/MM/yyyy HH:mm");
-    const enddate1 = this.datepipe.transform(globalToDate, "dd/MM/yyyy HH:mm");
-
 
     const year = parseInt(globalFromDate.substring(0, 4), 10);
     const month = parseInt(globalFromDate.substring(4, 6), 10) - 1; // Month is 0-indexed in JavaScript Date
@@ -184,19 +282,22 @@ export class MediaschedulerComponent {
     const hoursFormatted1 = date1.getHours().toString().padStart(2, '0');
     const minutesFormatted1 = date1.getMinutes().toString().padStart(2, '0');
 
-    
-    let jsonfromdate = dayFormatted + "/"+ monthFormatted + "/" + yearFormatted + " " + hoursFormatted + ":" + minutesFormatted1;
-    let jsontodate = dayFormatted1 + "/"+ monthFormatted1 + "/" + yearFormatted1 + " " +  hoursFormatted1 + ":" + minutesFormatted1;
-     
+
+    let jsonfromdate = dayFormatted + "/" + monthFormatted + "/" + yearFormatted + " " + hoursFormatted + ":" + minutesFormatted;
+    let jsontodate = dayFormatted1 + "/" + monthFormatted1 + "/" + yearFormatted1 + " " + hoursFormatted1 + ":" + minutesFormatted1;
+
     // const todate = new Date(todateString);
 
+    let displayid = this.playersIds[0].value
+    let displayName = this.playersIds[0].displayName;
+
     let _requestTextData = {
-      "mediaPlayerId": 3,
-      "mediaPlayerName": this.form.controls["mediaplayername"].value,
+      "mediaPlayerId": displayid,
+      "mediaPlayerName": displayName, //this.form.controls["mediaplayername"].value,
       "name": this.form.controls["schedulename"].value,
-      "fromDate":jsonfromdate,
-      "toDate":jsontodate,
-      "cronExpression": "* * * * *",     
+      "fromDate": jsonfromdate,
+      "toDate": jsontodate,
+      "cronExpression": "* * * * *",
     }
     _vcmsmedischedulerdata.IpAddress = this.SelectedControllerId[0];
     _vcmsmedischedulerdata.VmsId = Number.parseInt(this.SelectedControllerId[1]);
@@ -209,7 +310,10 @@ export class MediaschedulerComponent {
     _vcmsmedischedulerdata.Reason = "Create Media Scheduler";
 
 
-    this._CVMSfacade.SaveMediaScheduler(_vcmsmedischedulerdata).subscribe(data => {
+    this._CVMSfacade.SaveMediaScheduler(_vcmsmedischedulerdata).pipe(catchError((err) => {
+      this._toast.error("Error occured while saving data for " + err);
+      throw err;
+    })).subscribe(data => {
       if (data == 0) {
         this._toast.error("Error occured while saving data for " + _vcmsmedischedulerdata.IpAddress);
       }
@@ -220,13 +324,20 @@ export class MediaschedulerComponent {
           this._router.navigate(['cvms/MediaPlayerSchedulerList']);
         });
       }
-    });
-
-
+    })
   }
   BacktoList() {
     this._router.navigate(['cvms/MediaPlayerSchedulerList']);
   }
 
+  noLeadingEndingWhitespace(control: FormControl) {
+    if (control.value && control.value.trimStart().length !== control.value.length) {
+      return { leadingWhitespace: true };
+    }
+    else if (control.value && control.value.trimEnd().length !== control.value.length) {
+      return { leadingWhitespace: true };
+    }
+    return null;
+  }
 
 }

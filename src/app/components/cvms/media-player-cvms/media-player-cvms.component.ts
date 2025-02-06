@@ -1,5 +1,5 @@
 import { Component, numberAttribute } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AdminFacadeService } from 'src/app/facade/facade_services/admin-facade.service';
 import { CommonSelectList } from 'src/app/models/common/cmSelectList';
 import { InputRequest } from 'src/app/models/request/inputReq';
@@ -63,29 +63,59 @@ export class MediaPlayerCvmsComponent {
 
   ngOnInit(): void {
     this.registrationForm = this.fb.group({
-      name: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
+      name: ['', ''],
       mediaLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
       tiles: this.fb.array([])
     });
+
+    this.UpdateValidations();
+    // this.registrationForm.get('name')?.valueChanges.subscribe((Method:any)=>{
+    //   this.UpdateValidations(Method);
+    // })
     this.GetVmsDetails();
   }
   get f() { return this.registrationForm.controls; }
 
+
+  UpdateValidations(){
+
+    const name = this.registrationForm.get('name') 
+    const tiles = this.registrationForm.get('tiles') 
+    const tileNo = this.registrationForm.get('tileNo') 
+    const imageTextDuration = this.registrationForm.get('imageTextDuration') 
+
+    name?.setValidators([Validators.required,Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$"),this.noLeadingEndingWhitespace]);
+    tileNo?.setValidators([Validators.required,Validators.pattern("[0-9][0-9]*$"),this.noLeadingEndingWhitespace]);
+    imageTextDuration?.setValidators([Validators.required]);     
+    
+    tiles.clearValidators();
+    
+    name?.updateValueAndValidity();
+    tiles?.updateValueAndValidity();
+    tileNo?.updateValueAndValidity();
+    imageTextDuration?.updateValueAndValidity();
+  }
+
   // Function to create a single user form group
   createUser(): FormGroup {
     return this.fb.group({
-      tileNo: ['', Validators.required],
-      playlistLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
+      tileNo: ['', [Validators.required, Validators.pattern("[1-999][1-999]*$")]],
+      playlistLoopCount: ['', ''],
+      //playlistLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
       playlist: this.fb.array([])
     });
   }
   createPlaylistItem(ele: any): FormGroup {
     return this.fb.group({
-      playOrder: [ele.playOrder, [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
-      imageTextDuration: [ele.imageTextDuration, [Validators.required]],
-      mediaId: [ele.mediaId, Validators.required],
-      mediaName: [ele.mediaName, [Validators.required]],
-      videoLoopCount: [ele.videoLoopCount, [Validators.required]],
+      playOrder: [ele.playOrder, ''],
+      imageTextDuration:[ele.imageTextDuration],
+      mediaId:[ele.mediaId,''],
+      mediaName:[ele.mediaName,''],
+      videoLoopCount:[ele.videoLoopCount,''],
+      // imageTextDuration: [ele.imageTextDuration, [Validators.required]],
+      // mediaId: [ele.mediaId, Validators.required],
+      // mediaName: [ele.mediaName, [Validators.required]],
+      // videoLoopCount: [ele.videoLoopCount, [Validators.required]],
       textStyle: this.fb.group({
         fontSize: [0],
         fontColor: [''],
@@ -208,11 +238,22 @@ export class MediaPlayerCvmsComponent {
         "fontColor": "",
         "backgroundColor": ""
       }
-      _plMedia.imageTextDuration = this.selectedMediaId[0][i].mediaDetails.imageTextDuration;
-      _plMedia.mediaId = this.selectedMediaId[0][i].resposneId;
-      _plMedia.mediaName = this.selectedMediaId[0][i].mediaDetails.displayname;
-      _plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
-      _plMedia.videoLoopCount = this.selectedMediaId[0][i].mediaDetails.videoLoopCount;
+      if(this.selectedMediaId[0][i].mediaDetails != null){
+        _plMedia.imageTextDuration = this.selectedMediaId[0][i].mediaDetails.imageTextDuration;
+        _plMedia.mediaId = this.selectedMediaId[0][i].resposneId;
+        _plMedia.mediaName = this.selectedMediaId[0][i].mediaDetails.displayname;
+        _plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
+        _plMedia.videoLoopCount = this.selectedMediaId[0][i].mediaDetails.videoLoopCount;
+        
+      }
+      else
+      {
+        //_plMedia.imageTextDuration = this.selectedMediaId[0][i].imageTextDuration;
+        _plMedia.mediaId = this.selectedMediaId[0][i].id;
+        _plMedia.mediaName = this.selectedMediaId[0][i].name;
+        //_plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
+        //_plMedia.videoLoopCount = this.selectedMediaId[0][i].mediaDetails.videoLoopCount;
+      }
       _plMedia.textStyle = _textStyle;
       _plMediaList.push(_plMedia);
 
@@ -276,7 +317,7 @@ export class MediaPlayerCvmsComponent {
   // }
 
   OnSavePlaylistDetails(): void {
-
+ 
     if (this.SelectedControllerId == undefined || this.SelectedControllerId.length < 1) {
       this.toast.error("No controller selected. Please select at least one controller to proceed.");
       return;
@@ -326,6 +367,10 @@ export class MediaPlayerCvmsComponent {
         }
       });     
     }
+    else
+    {
+      this.toast.error("There was a problem saving your data. Please review your input for any errors.");
+    }
   }
 
   patchTileValue(i: number, j: number, _data: any) {
@@ -353,4 +398,14 @@ export class MediaPlayerCvmsComponent {
       event.target.value = 1;
     }
   }
+  noLeadingEndingWhitespace(control: FormControl) {
+    
+      if (control.value && control.value.trimStart().length !== control.value.length) {
+        return { leadingWhitespace: true };
+      }
+      else if (control.value && control.value.trimEnd().length !== control.value.length) {
+        return { leadingWhitespace: true };
+      }
+      return null;
+    }
 }

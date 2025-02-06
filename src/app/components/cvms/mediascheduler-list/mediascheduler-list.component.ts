@@ -37,12 +37,12 @@ export class MediaschedulerListComponent {
   headerArr = [
     // { "Head": "ID", "FieldName": "id", "type": "number" },
     { "Head": "Controller Name", "FieldName": "ipAddress", "type": "string" },
-    { "Head": "ScheduleName", "FieldName": "schedulename", "type": "string" },
-    { "Head": "Media Name", "FieldName": "mediaPlayerName", "type": "string" },
-    { "Head": "From Date", "FieldName": "fromdate", "type": "string" },
-    { "Head": "To Date", "FieldName": "enddate", "type": "string" },
-    { "Head": "Status", "FieldName": "statusdesc", "type": "string" },
-    { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
+    { "Head": "Scheduler Name", "FieldName": "schedulename", "type": "string" },
+    { "Head": "Media Player Name", "FieldName": "mediaPlayerName", "type": "string" },
+    { "Head": "Start Date Time", "FieldName": "fromdate", "type": "string" },
+    { "Head": "End Date Time", "FieldName": "enddate", "type": "string" },
+    { "Head": "Scheduler Status", "FieldName": "statusdesc", "type": "string" },
+    { "Head": "Scheduler Created Date", "FieldName": "creationTime", "type": "string" },
   ];
   listOfMedialist: any = [];
   btnArray: any[] = [];

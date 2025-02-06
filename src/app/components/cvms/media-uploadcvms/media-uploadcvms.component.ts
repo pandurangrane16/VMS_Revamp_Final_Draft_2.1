@@ -1,6 +1,6 @@
-import { Component, OnInit, PipeTransform, signal } from '@angular/core';
+import { booleanAttribute, Component, OnInit, Pipe, PipeTransform, signal } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { getErrorMsg } from 'src/app/utils/utils';
 import { CommonSelectList } from 'src/app/models/common/cmSelectList';
 import { AdminFacadeService } from 'src/app/facade/facade_services/admin-facade.service';
@@ -19,8 +19,10 @@ import { check } from 'ngx-bootstrap-icons';
 import { FileServiceService } from 'src/app/facade/services/vcms/file-service.service';
 import { mediaAudit } from 'src/app/models/media/PlaylistMaster';
 import { Globals } from 'src/app/utils/global';
+import { catchError } from 'rxjs';
+import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 
-declare var $: any; 
+declare var $: any;
 @Component({
   selector: 'app-media-uploadcvms',
   templateUrl: './media-uploadcvms.component.html',
@@ -62,8 +64,8 @@ export class MediaUploadcvmsComponent implements OnInit {
   url: string = "";
   format: string = "";
   fileName: string = "";
-  MediaName:string="";
-   
+  MediaName: string = "";
+
 
   get f() { return this.form.controls; }
 
@@ -97,64 +99,87 @@ export class MediaUploadcvmsComponent implements OnInit {
       //MediaTextName: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
       //MediaTextName: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
       MediaFileName: ['', ''],
-      MediaTextName:['', ''],
-      mediaName:['', ''],
+      MediaTextName: ['', ''],
+      mediaName: ['', ''],
       //mediaName: ['', [Validators.required,Validators.maxLength(30) ,Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
       mediatype: ['', ''],
     });
-  }
-  BacktoList() {
-    this._router.navigate(['cvms/uploadMedia']);
-  }
 
+    this.form.get('mediatype')?.valueChanges.subscribe((Method:any)=>{
+      this.UpdateValidations(Method);
+    })
+  }
 
   ngOnInit(): void {
     this.GetVmsDetails();
     this.getMedialistData();
   }
 
+  BacktoList() {
+    this._router.navigate(['cvms/uploadMedia']);
+  }
+
+  UpdateValidations(method:string){
+
+    const MediaName = this.form.get('mediaName') 
+    const MediaTextName = this.form.get('MediaTextName') 
+
+    if (method == 'text') {
+      MediaName?.setValidators([Validators.required,this.noLeadingEndingWhitespace]);
+      MediaTextName?.setValidators([Validators.required,this.noLeadingEndingWhitespace]); 
+    }
+    else
+    {
+      MediaName?.clearValidators();
+      MediaTextName?.clearValidators();
+    }
+    
+    MediaName?.updateValueAndValidity();
+    MediaTextName?.updateValueAndValidity();
+  }
 
   onSubmit() {
-    if(this.vmsIds == undefined || this.vmsIds.length < 1){
-      this.toast.error("No controller selected. Please select at least one controller to proceed.");
+    if (this.vmsIds == undefined || this.vmsIds.length < 1) {
+      this.toast.error("Controller not selected. Please select at least one controller to proceed.");
       return;
     }
     if (this.isFileTypeImage) {
-      if(this.selectedIds.length < 1){
-        this.toast.error("No Media/Text not selected.Please select at least one Media to proceed.");
+      if (this.selectedIds.length < 1) {
+        this.toast.error("Media/Text not selected.Please select at least one Media/Text to proceed.");
         return;
       }
     }
+
     for (let i = 0; i < this.vmsIds.length; i++) {
       const element = this.vmsIds[i];
       if (this.isFileTypeImage) {
         for (let j = 0; j < this.selectedIds.length; j++) {
-          const media = this.selectedMedia[j];         
+          const media = this.selectedMedia[j];
           this.AddUpdateMedia(element, media);
         }
       } else {
-        this.AddUpdateMedia(element, null);
+        this._CVMSfacade.CheckDuplicateMediaName(this.form.controls.mediaName.value,this.vmsIds[i]).pipe(catchError((error)=>{
+          this.toast.error("Error occured while checking duplicate Media name " + error);    
+          throw error;
+        })).subscribe(data => {
+          if (data) {
+            this.toast.error("Media Name is Duplicate. Please set Different Name.");
+            return;
+          }
+          else {
+            this.AddUpdateMedia(element, null);
+          }      
+        })        
       }
-    }
-
+    }    
   }
 
-  extractFileName(originalName:string):string{
-    if(!originalName) return '';
-    const lastDotIndex = originalName.lastIndexOf(".");
-    if(lastDotIndex === -1) return originalName.substring(0,30);
-    const extension = originalName.substring(lastDotIndex);
-    const newWithoutext = originalName.substring(0,lastDotIndex);
-    const truncatedName = newWithoutext.substring(0,25);
-    return truncatedName + extension;
-  }
 
   AddUpdateMedia(element?: any, media?: any) {
-   
     let _vcmsuploadmediadata = new Vcmsuploadmedia();
     _vcmsuploadmediadata.controllerName = element;
     _vcmsuploadmediadata.IpAddress = this.vmsIds[0];
-    _vcmsuploadmediadata.VmsId =  Number.parseInt(this.vmsId[0]);
+    _vcmsuploadmediadata.VmsId = Number.parseInt(this.vmsId[0]);
     if (media != null) {
       _vcmsuploadmediadata.medianame = media.displayName;
     }
@@ -163,7 +188,6 @@ export class MediaUploadcvmsComponent implements OnInit {
     }
 
     _vcmsuploadmediadata.status = 0;
-    
     _vcmsuploadmediadata.AuditedBy = "System";
     _vcmsuploadmediadata.IsAudited = true;
     _vcmsuploadmediadata.AuditedTime = new Date();
@@ -198,7 +222,7 @@ export class MediaUploadcvmsComponent implements OnInit {
         this.toast.success("Saved successfully for " + _vcmsuploadmediadata.controllerName);
         this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
           this._router.navigate(['cvms/uploadMedia']);
-        }); 
+        });
       }
     });
   }
@@ -207,7 +231,6 @@ export class MediaUploadcvmsComponent implements OnInit {
     return ['media', 'text'];
   }
   onCheckBoxChange(event: any, data: any): void {
-
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
       this.selectedIds.push(data.id);
@@ -225,7 +248,6 @@ export class MediaUploadcvmsComponent implements OnInit {
   }
 
   ButtonAction(actiondata: any) {
-
     if (actiondata.action == 'view') {
       this._commonFacade.setSession("playlistData", JSON.stringify(actiondata.data));
       this._router.navigate(['medias/playlist-configure'], { queryParams: { isCopy: false, status: actiondata.data.status, plid: actiondata.data.plid } });
@@ -234,7 +256,6 @@ export class MediaUploadcvmsComponent implements OnInit {
   }
   getMedialistData() {
     this._media.getAllMediaDetails().subscribe(res => {
-
       if (res != null && res.length > 0) {
         this.listOfMedialist = res;
       }
@@ -246,7 +267,6 @@ export class MediaUploadcvmsComponent implements OnInit {
   onUploadTypeChange(value: any) {
 
     if (this.mediatype == 'text') {
-
       this.isFileTypeText = true;
       this.isFileTypeImage = false;
     }
@@ -275,7 +295,7 @@ export class MediaUploadcvmsComponent implements OnInit {
           if (ele.vmdType == 2) {
             var _commonSelect = new CommonSelectList();
             _commonSelect.displayName = ele.description;
-            _commonSelect.value = ele.ipAddress + "|" + ele.id;            
+            _commonSelect.value = ele.ipAddress + "|" + ele.id;
             commonList.push(_commonSelect);
           }
         });
@@ -291,15 +311,16 @@ export class MediaUploadcvmsComponent implements OnInit {
   getSelectedVms(eve: any, type: any) {
     if (eve.length > 0) {
       if (type == 1) {
-        eve.forEach((vms: any) => {         
-          this.vmsIds.push(vms.value);          
+        eve.forEach((vms: any) => {
+          this.vmsIds = [];
+          this.vmsIds.push(vms.value);
         });
       }
       else {
         eve.forEach((ele: any) => {
           var idx = 0;
           this.vmsIds.forEach(element => {
-            if (element == ele.value) {
+            if (element.value == eve.value) {
               this.vmsIds.splice(idx, 1);
             }
             idx++;
@@ -309,19 +330,20 @@ export class MediaUploadcvmsComponent implements OnInit {
     }
     else if (eve.length == 0)
       this.vmsIds = [];
-    
+
     else {
-      let  inputVal = eve.value.split('|');
+      this.vmsIds = [];
+      let inputVal = eve.value.split('|');
       let ipaddress = inputVal[0];
       let vmsid = inputVal[1];
-
       if (type == 1)
+
         this.vmsIds.push(ipaddress),
-        this.vmsId.push(vmsid);
+          this.vmsId.push(vmsid);
       else {
         var idx = 0;
         this.vmsIds.forEach(element => {
-          if (element == eve.value) {
+          if (element.value == eve.value) {
             this.vmsIds.splice(idx, 1);
           }
           idx++;
@@ -348,17 +370,38 @@ export class MediaUploadcvmsComponent implements OnInit {
     // Remove the modal-backdrop class after the modal is closed
     $('.modal-backdrop').remove();
   }
-  limitInput(){
-    if(this.MediaName.length > 30){
-      this.MediaName = this.MediaName.substring(0,30);
+  limitInput() {
+    if (this.MediaName.length > 30) {
+      this.MediaName = this.MediaName.substring(0, 25);
     }
   }
   clearForm() {
     this.form.reset();
+    this.selectedMedia = [];
+
     //this.form.controls["isActive"].setValue(false);
   }
-  
-  
-  
+
+  noLeadingEndingWhitespace(control: FormControl) {
+    if (control.value && control.value.trimStart().length !== control.value.length) {
+      return { leadingWhitespace: true };
+    }
+    else if (control.value && control.value.trimEnd().length !== control.value.length) {
+      return { leadingWhitespace: true };
+    }
+    return null;
+  }
+
+  extractFileName(originalName: string): string {
+    if (!originalName) {
+      return '';
+    }
+    const lastDotIndex = originalName.lastIndexOf('.');
+    const baseName = lastDotIndex === -1 ? originalName : originalName.substring(0, lastDotIndex);
+    const extension = lastDotIndex === -1 ? '' : originalName.substring(lastDotIndex);
+    const truncatedBaseName = baseName.substring(0, 25);
+    return truncatedBaseName + extension;
+  }
+
 
 }

@@ -36,4 +36,8 @@ export class MediauploadserviceService {
   generateToken(ipAdd:string) {
     return this._httpService._postMethod(undefined,"vcms_api/api/VMSComm/GenerateToken?_ipaddress="+ipAdd);
   }
+  CheckDuplicateMediaName(mediaName:string,ipAdd:string){
+    return this._httpService._getMethod("Vcms_API/api/MediaUpload/CheckDuplicateMediaName?pMediaName="+mediaName+"&_ipaddres="+ipAdd);
+  }
+  
 }
