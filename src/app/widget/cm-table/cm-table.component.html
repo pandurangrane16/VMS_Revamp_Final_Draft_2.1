@@ -21,9 +21,14 @@
             <input  class="chkBox" (change)="Checked($event,item)"
             type="checkbox" id="defaultCheck1">
           </span>
-          <span *ngIf="head.FieldName == 'actions' && btnArray.length > 0"><button *ngFor="let btn of btnArray" type="button" class="btn btn-inverse-primary btn-sm" (click)="GoToBtnAction(btn,item)">
-            <i [class]="btn.icon"></i>
-          </button></span>
+          <span *ngIf="head.FieldName == 'actions' && btnArray.length > 0">
+            <ng-container *ngFor="let btn of btnArray">
+              <button *ngIf="!btn.condition || btn.condition(item)" type="button" class="btn btn-inverse-primary btn-sm" (click)="GoToBtnAction(btn, item)">
+                <i [class]="btn.icon"></i>
+              </button>
+            </ng-container>
+          </span> 
+
         </td>
         <!-- <td *ngIf="btnArray.length > 0">
           

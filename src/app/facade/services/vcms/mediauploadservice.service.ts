@@ -11,13 +11,16 @@ export class MediauploadserviceService {
     private _httpService: HttpService,
     private _http: HttpClient) { }
 
+  GetUploadMediaListDetails(inputReq :any,type : number){
+    //return this._httpService._getMethod('Vcms_API/api/MediaUpload/GetVMSMasterUploadDetails_new');
+    return this._httpService._postMethod(inputReq,'Vcms_API/api/MediaUpload/GetMediaUploadPaging?type=' + type);
+  }
   getMediauploadDetails(inputReq: any, type: number) {
-    return this._httpService._postMethod(inputReq, 'Vcms_API/api/MediaUpload/GetDetails?type=' + type);
+     return this._httpService._postMethod(inputReq, 'Vcms_API/api/MediaUpload/GetDetails?type=' + type);
   }
   SaveMediaupload(_data: any) {
     return this._httpService._postMethod(_data, 'Vcms_API/api/MediaUpload/SaveMediaUploadMaster');
   }
-
 
   UpdateMediaupload(_data: any) {
     return this._httpService._postMethod(_data, 'Vcms_API/api/MediaUpload/PutMediaUploadMaster');
@@ -26,7 +29,9 @@ export class MediauploadserviceService {
     return this._httpService._getMethod("vcms_api/api/MediaUpload/GetMediaDetailsForIpAddress?IpAddress=" + ipAddress + "&mediaType=" + type);
   }
   getTextDataForMdPlayer(ipAddress: string,port:string,_token:string) {
-    return this._httpService._getMethodNotCommon("http://"+ipAddress+":"+port+"/media/getMediaDetails",_token);
+    //return this._httpService._getMethodNotCommon("http://"+ipAddress+":"+port+"/media/getMediaDetails",_token);
+    return this._httpService._getMethod("Vcms_API/api/MediaUpload/Getmediadetails_controller?_ipaddres="+ipAddress);
+    
   }
 
   getTokenByIpAddress(ipAddress:string) {
@@ -39,5 +44,13 @@ export class MediauploadserviceService {
   CheckDuplicateMediaName(mediaName:string,ipAdd:string){
     return this._httpService._getMethod("Vcms_API/api/MediaUpload/CheckDuplicateMediaName?pMediaName="+mediaName+"&_ipaddres="+ipAdd);
   }
+
+
+  GetVMSNameForIpAddress(ipAdd:string){
+    return this._httpService._getMethod("Vcms_API/api/MediaUpload/GetVMSNameForIpAddress?_ipaddres="+ipAdd);
+  }
+
+  
+
   
 }

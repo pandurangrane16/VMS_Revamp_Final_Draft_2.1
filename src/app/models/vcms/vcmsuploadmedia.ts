@@ -1,8 +1,7 @@
 export class Vcmsuploadmedia {
     medianame!:string;
     mediaText!:string;
-    status!:number;
-    createddate!:Date;  
+    status!:number;    
     MediaFileName!:string;
     mediatype!:string;
     controllerName!:string;
@@ -14,4 +13,5 @@ export class Vcmsuploadmedia {
     Reason!:string;
     AuditedTime!:Date;
     VmsId!:number;   
+    requesttype!:string;
 }

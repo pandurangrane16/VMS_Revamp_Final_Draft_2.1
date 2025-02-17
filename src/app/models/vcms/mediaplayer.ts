@@ -3,12 +3,11 @@ export class Mediaplayer {
     RequestData!:string;
     CreationTime!:Date;
     status!:number;
-    medianame!:string;
+    mediaplayername!:string;
     mediaText!:string;
     IsAudited!:boolean;
     AuditedBy!:string;
-    Reason!:string;
-    createddate!:Date;  
+    Reason!:string;    
     AuditedTime!:Date;    
     VmsId!:number;   
 }

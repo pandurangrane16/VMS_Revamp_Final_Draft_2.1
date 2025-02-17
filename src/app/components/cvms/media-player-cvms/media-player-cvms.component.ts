@@ -19,6 +19,7 @@ import { Globals } from 'src/app/utils/global';
 import { json, numeric } from '@rxweb/reactive-form-validators';
 import { MediaFacadeService } from 'src/app/facade/facade_services/media-facade.service';
 import { FileServiceService } from 'src/app/facade/services/vcms/file-service.service';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 
 @Component({
@@ -30,7 +31,7 @@ import { FileServiceService } from 'src/app/facade/services/vcms/file-service.se
 
 
 export class MediaPlayerCvmsComponent {
-
+  isOrderChange:boolean=false;
   currentTile: number = -1;
   registrationForm: any;
   disabledTextType: boolean = false;
@@ -46,7 +47,8 @@ export class MediaPlayerCvmsComponent {
   ShowSaveBtn: boolean = false;
   vmsIds: any[] = [];
   SelectedControllerId: any;
-  
+  dupliactefound: boolean;
+
 
 
   constructor(private fb: FormBuilder,
@@ -77,19 +79,20 @@ export class MediaPlayerCvmsComponent {
   get f() { return this.registrationForm.controls; }
 
 
-  UpdateValidations(){
+  UpdateValidations() {
 
-    const name = this.registrationForm.get('name') 
-    const tiles = this.registrationForm.get('tiles') 
-    const tileNo = this.registrationForm.get('tileNo') 
-    const imageTextDuration = this.registrationForm.get('imageTextDuration') 
+    const name = this.registrationForm.get('name')
+    const tiles = this.registrationForm.get('tiles')
+    const tileNo = this.registrationForm.get('tileNo')
 
-    name?.setValidators([Validators.required,Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$"),this.noLeadingEndingWhitespace]);
-    tileNo?.setValidators([Validators.required,Validators.pattern("[0-9][0-9]*$"),this.noLeadingEndingWhitespace]);
-    imageTextDuration?.setValidators([Validators.required]);     
-    
+    const imageTextDuration = this.registrationForm.get('imageTextDuration')
+
+    name?.setValidators([Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$"), this.noLeadingEndingWhitespace]);
+    tileNo?.setValidators([Validators.required, Validators.pattern("[0-9][0-9]*$"), this.noLeadingEndingWhitespace]);
+    imageTextDuration?.setValidators([Validators.required]);
+
     tiles.clearValidators();
-    
+
     name?.updateValueAndValidity();
     tiles?.updateValueAndValidity();
     tileNo?.updateValueAndValidity();
@@ -100,22 +103,22 @@ export class MediaPlayerCvmsComponent {
   createUser(): FormGroup {
     return this.fb.group({
       tileNo: ['', [Validators.required, Validators.pattern("[1-999][1-999]*$")]],
-      playlistLoopCount: ['', ''],
-      //playlistLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
+      //playlistLoopCount: ['', ''],
+      playlistLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
       playlist: this.fb.array([])
     });
   }
   createPlaylistItem(ele: any): FormGroup {
     return this.fb.group({
       playOrder: [ele.playOrder, ''],
-      imageTextDuration:[ele.imageTextDuration],
-      mediaId:[ele.mediaId,''],
-      mediaName:[ele.mediaName,''],
-      videoLoopCount:[ele.videoLoopCount,''],
-      // imageTextDuration: [ele.imageTextDuration, [Validators.required]],
-      // mediaId: [ele.mediaId, Validators.required],
-      // mediaName: [ele.mediaName, [Validators.required]],
-      // videoLoopCount: [ele.videoLoopCount, [Validators.required]],
+      // imageTextDuration:[ele.imageTextDuration],
+      // mediaId:[ele.mediaId,''],
+      // mediaName:[ele.mediaName,''],
+      // videoLoopCount:[ele.videoLoopCount,''],
+      imageTextDuration: [ele.imageTextDuration, [Validators.required]],
+      mediaId: [ele.mediaId, ''],
+      mediaName: [ele.mediaName, ''],
+      videoLoopCount: [ele.videoLoopCount, ''],
       textStyle: this.fb.group({
         fontSize: [0],
         fontColor: [''],
@@ -168,16 +171,34 @@ export class MediaPlayerCvmsComponent {
   }
   // Add a new user to the form array
   addTile(): void {
-    this.currentTile++;
-    let _tileDetails = new SelectedMediaVCMS();
-    _tileDetails.tileNo = this.currentTile;
-    this.selectedMediaPlaylist.push(_tileDetails);
-    this.userDetails.push(this.createUser());
+
+    if (!this.SelectedControllerId?.length) {
+      this.toast.error("No controller selected. Please select at least one controller to proceed.");
+      return;
+    }
+    let ipaddress = this.SelectedControllerId[0];
+    let mediaplayername = this.registrationForm.controls["name"].value;
+    
+    this._CVMSfacade.CheckDuplicateMediaPlayerName(mediaplayername, ipaddress).subscribe(data => {
+
+      if (JSON.parse(data) == 1) {      
+        this.toast.error("Media Player Name already exists in the System.");
+        this.registrationForm.setErrors({ duplicateName: true });
+        return;
+      }
+      else {
+        this.currentTile++;
+        let _tileDetails = new SelectedMediaVCMS();
+        _tileDetails.tileNo = this.currentTile;
+        this.selectedMediaPlaylist.push(_tileDetails);
+        this.userDetails.push(this.createUser());
+      }
+    });
 
   }
 
-  // Remove a user form group from the form array
-  removeUser(index: number): void {
+  // Remove a tiles form group from the form array
+  removeTiles(index: number): void {
     this.userDetails.removeAt(index);
     this.selectedMediaPlaylist.splice(index, 1);
   }
@@ -194,7 +215,7 @@ export class MediaPlayerCvmsComponent {
     const modalRef = this.modalService.open(CVMSMediaModalComponent, { ariaLabelledBy: 'modal-basic-title', size: 'xl' });
     if (type == "Media") {
       this.mediauploadtype = "media";
-      let _reqdata = { "action": "view", urls: [], modalType: "mediaupload", content: this.listOfMedialist, _crrTile: this.currentTile,"ipAddress":ipAddress };
+      let _reqdata = { "action": "view", urls: [], modalType: "mediaupload", content: this.listOfMedialist, _crrTile: this.currentTile, "ipAddress": ipAddress };
       modalRef.componentInstance.data = _reqdata;
       modalRef.componentInstance.selectedId.subscribe((selectedId: any) => {
         //console.log(selectedId);
@@ -204,7 +225,7 @@ export class MediaPlayerCvmsComponent {
 
     }
     else {
-      let _reqdata = { "action": "view", urls: [], modalType: "textupload", content: this.listOfMedialist, _crrTile: this.currentTile,"ipAddress":ipAddress };
+      let _reqdata = { "action": "view", urls: [], modalType: "textupload", content: this.listOfMedialist, _crrTile: this.currentTile, "ipAddress": ipAddress };
       this.mediauploadtype = "text";
       modalRef.componentInstance.data = _reqdata;
       modalRef.componentInstance.selectedId.subscribe((selectedId: any) => {
@@ -238,16 +259,15 @@ export class MediaPlayerCvmsComponent {
         "fontColor": "",
         "backgroundColor": ""
       }
-      if(this.selectedMediaId[0][i].mediaDetails != null){
+      if (this.selectedMediaId[0][i].mediaDetails != null) {
         _plMedia.imageTextDuration = this.selectedMediaId[0][i].mediaDetails.imageTextDuration;
         _plMedia.mediaId = this.selectedMediaId[0][i].resposneId;
         _plMedia.mediaName = this.selectedMediaId[0][i].mediaDetails.displayname;
         _plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
         _plMedia.videoLoopCount = this.selectedMediaId[0][i].mediaDetails.videoLoopCount;
-        
+
       }
-      else
-      {
+      else {
         //_plMedia.imageTextDuration = this.selectedMediaId[0][i].imageTextDuration;
         _plMedia.mediaId = this.selectedMediaId[0][i].id;
         _plMedia.mediaName = this.selectedMediaId[0][i].name;
@@ -276,7 +296,7 @@ export class MediaPlayerCvmsComponent {
     const selectElement = eve.target as HTMLSelectElement;
     const colindex = selectElement.value.indexOf(":");
     if (colindex !== -1) {
-      this.SelectedControllerId =  selectElement.value.slice(colindex + 1, selectElement.value.length).replace(/\s+/g, '').split("|");     
+      //this.SelectedControllerId = selectElement.value.slice(colindex + 1, selectElement.value.length).replace(/\s+/g, '').split("|");
       
     }
   }
@@ -298,30 +318,81 @@ export class MediaPlayerCvmsComponent {
     }
   }
 
-  // getMedialistData(plid: number): boolean {
-  //   this._media.GetMediaDetails(plid).subscribe(res => {
-  //     if (res != null && res.length > 0) {
-       
-  //       if(res[0].fileType == 'Video'){
-  //           return false;
-  //       }
-  //       else if(res[0].fileType == 'Image'){
-  //         return true;        
-  //       }       
-  //     }
-  //     else
-  //       this.toast.error("Failed to failed media details.", "Error", { positionClass: "toast-bottom-right" });
-  //     return true;
-  //   }, (err) => { console.log(err) });
-  //   return true;
-  // }
+  OnSavePlaylistDetails_new(): void {
+    
+
+    const ipAddress = this.SelectedControllerId[0];
+    const mediaPlayerName = this.registrationForm.controls["name"].value;
+
+    // Check for duplicate media player name
+    this._CVMSfacade.CheckDuplicateMediaPlayerName(mediaPlayerName, ipAddress).subscribe(data => {
+      if (data === 1) {
+        this.toast.error("Media Player Name already exists in the System.");
+        this.registrationForm.setErrors({ duplicateName: true });
+        return;
+      }
+    });
+
+    const tiles = this.registrationForm.controls['tiles'];
+    const tileCount = tiles.length;
+
+    if (tileCount === 0) {
+      this.toast.error("At least one playlist must be created to set up the media player.");
+      return;
+    }
+
+    // Iterate through tiles and playlists to extract text styles
+    tiles.controls.forEach((tile: any, i: number) => {
+      tile.controls["playlist"].controls.forEach((playlist: any, j: number) => {
+        const textStyle = playlist.controls["textStyle"].value;
+        const formattedTextStyle = {
+          backgroundColor: textStyle.backgroundColor,
+          fontSize: textStyle.fontSize,
+          fontColor: textStyle.fontColor
+        };
+        this.patchTileValue(i, j, formattedTextStyle);
+      });
+    });
+
+    if (!this.registrationForm.valid) {
+      this.toast.error("There was a problem saving your data. Please review your input for any errors.");
+      return;
+    }
+
+    // Create and populate Mediaplayer object
+    const mediaPlayerData = new Mediaplayer();
+    mediaPlayerData.VmsId = Number.parseInt(this.SelectedControllerId[1]);
+    mediaPlayerData.IpAddress = ipAddress;
+    mediaPlayerData.mediaplayername = mediaPlayerName;
+    mediaPlayerData.status = 0;
+    mediaPlayerData.AuditedBy = "System";
+    mediaPlayerData.IsAudited = true;
+    mediaPlayerData.AuditedTime = new Date();
+    mediaPlayerData.Reason = "Upload Data for new MediaPlayer";
+    mediaPlayerData.CreationTime = new Date();
+    mediaPlayerData.RequestData = JSON.stringify(this.registrationForm.value);
+
+    // Save media player data
+    this._CVMSfacade.SaveMediaPlayer(mediaPlayerData).subscribe(data => {
+      if (data === 0) {
+        this.toast.error(`Error occurred while saving data for ${mediaPlayerData.IpAddress}`);
+      } else {
+        this.toast.success(`Saved successfully for ${mediaPlayerData.IpAddress}`);
+        this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
+        });
+      }
+    });
+
+  }
 
   OnSavePlaylistDetails(): void {
- 
+
     if (this.SelectedControllerId == undefined || this.SelectedControllerId.length < 1) {
       this.toast.error("No controller selected. Please select at least one controller to proceed.");
       return;
     }
+
     let _tileCount = this.registrationForm.controls['tiles'].length;
     for (var i = 0; i < _tileCount; i++) {
       let _plCount = this.registrationForm.controls['tiles'].controls[i].controls["playlist"].length;
@@ -336,21 +407,31 @@ export class MediaPlayerCvmsComponent {
         }
         this.patchTileValue(i, j, _textStyle);
       }
+      if (_plCount == 0) {
+        this.toast.error("At least one playlist must be created to set up the media player.");
+        return;
+      }
     }
-    //this.registrationForm.controls['tiles'].controls[0].controls["playlist"].controls[0].controls["textStyle"].value
-    //this.registrationForm.controls['tiles'].controls[i].controls["playlist"].controls[0].controls["textStyle"].value
-    if (this.registrationForm.valid) {
+    if (_tileCount == 0) {
+      this.toast.error("At least one Tiles and Playlist must be created to set up the media player.");
+      return;
+    }
+
+    if (this.registrationForm.valid) {      
+        this.toast.error("There was a problem saving your data. Please review your input for any errors.");
+        return;
+      }    
 
       let _vcmsmediplayerdata = new Mediaplayer();
-      _vcmsmediplayerdata.VmsId =  Number.parseInt(this.SelectedControllerId[1]);
+      _vcmsmediplayerdata.VmsId = Number.parseInt(this.SelectedControllerId[1]);
       _vcmsmediplayerdata.IpAddress = this.SelectedControllerId[0];
-      _vcmsmediplayerdata.medianame = this.registrationForm.controls["name"].value;
+      _vcmsmediplayerdata.mediaplayername = this.registrationForm.controls["name"].value;
       _vcmsmediplayerdata.status = 0;
       _vcmsmediplayerdata.AuditedBy = "System";
       _vcmsmediplayerdata.IsAudited = true;
       _vcmsmediplayerdata.AuditedTime = new Date();
       _vcmsmediplayerdata.Reason = "Upload Data for new MediaPlayer";
-      _vcmsmediplayerdata.createddate = new Date();
+      _vcmsmediplayerdata.CreationTime = new Date();
       _vcmsmediplayerdata.RequestData = JSON.stringify(this.registrationForm.value);
 
       this._CVMSfacade.SaveMediaPlayer(_vcmsmediplayerdata).subscribe(data => {
@@ -359,18 +440,14 @@ export class MediaPlayerCvmsComponent {
         }
         else {
           this.toast.success("Saved successfully for " + _vcmsmediplayerdata.IpAddress);
-          
+
           this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
-          }); 
-          
+          });
+
         }
-      });     
-    }
-    else
-    {
-      this.toast.error("There was a problem saving your data. Please review your input for any errors.");
-    }
+      });    
+    
   }
 
   patchTileValue(i: number, j: number, _data: any) {
@@ -393,19 +470,26 @@ export class MediaPlayerCvmsComponent {
     playlist.push(playlistItem);
   }
 
-  checkValue(event:any) {
+  checkValue(event: any) {
     if (event.target.value <= 0) {
       event.target.value = 1;
     }
   }
   noLeadingEndingWhitespace(control: FormControl) {
-    
-      if (control.value && control.value.trimStart().length !== control.value.length) {
-        return { leadingWhitespace: true };
-      }
-      else if (control.value && control.value.trimEnd().length !== control.value.length) {
-        return { leadingWhitespace: true };
-      }
-      return null;
+
+    if (control.value && control.value.trimStart().length !== control.value.length) {
+      return { leadingWhitespace: true };
     }
+    else if (control.value && control.value.trimEnd().length !== control.value.length) {
+      return { leadingWhitespace: true };
+    }
+    return null;
+  }
+
+  OrderChange(eve:any){
+    if(eve.currentTarget.checked == true) 
+      this.isOrderChange = false;
+    else 
+    this.isOrderChange = true;
+  }
 }

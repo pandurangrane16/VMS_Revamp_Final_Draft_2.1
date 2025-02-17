@@ -11,6 +11,10 @@ import { InputRequest } from 'src/app/models/request/inputReq';
 import { Globals } from 'src/app/utils/global';
 import { CVMSMediaModalComponent } from '../cvmsmedia-modal/cvmsmedia-modal.component';
 import { wind } from 'ngx-bootstrap-icons';
+import { Subscription, interval } from 'rxjs';
+import { json } from '@rxweb/reactive-form-validators';
+import { Vcmsuploadmedia } from 'src/app/models/vcms/vcmsuploadmedia';
+
 
 @Component({
   selector: 'app-media-upload-cvms-list',
@@ -24,7 +28,7 @@ export class MediaUploadCvmsListComponent {
   searchText!: string;
   page: any;
   tabno: number;
-  type:number;
+  type: number;
   listOfMediaUpload: any;
   listOfMediaUploadPending: any;
   listOfMediaUploadApproved: any;
@@ -36,16 +40,22 @@ export class MediaUploadCvmsListComponent {
   startId!: number;
   isSearch: boolean = false;
   closeResult!: string;
+  subscription: any;
   _request: any = new InputRequest();
   headerArr = [
-    // { "Head": "ID", "FieldName": "id", "type": "number" },
-    { "Head": "Controller Name", "FieldName": "ipAddress", "type": "string" },
-    { "Head": "Media Name", "FieldName": "mediaName", "type": "string" },   
+    { "Head": "ID", "FieldName": "medidId", "type": "number" },
+    { "Head": "Controller Name", "FieldName": "controllerName", "type": "string" },
+    { "Head": "Media Name", "FieldName": "mediaName", "type": "string" },
     { "Head": "Status", "FieldName": "statusdesc", "type": "string" },
     { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
+    { "Head": "Action", "FieldName": "actions", "type": "button" },
   ];
-  listOfMedialist:any=[];
-  btnArray: any[] = [];
+  listOfMedialist: any = [];
+  //btnArray: any[] = [];
+  btnArray: any[] = [
+    { "name": "Remove", "icon": "icon-trash", "tip": "Click to Remove", "action": "delete", condition: (row: any) => row.status === 1}]; 
+
+
 
   constructor(private _commonFacade: CommonFacadeService,
     private global: Globals,
@@ -54,20 +64,24 @@ export class MediaUploadCvmsListComponent {
     private confirmationDialogService: ConfirmationDialogService,
     public datepipe: DatePipe,
     private toast: ToastrService,
+    private _CVMSfacade: CVMSMediaFacadeServiceService,
     public modalService: NgbModal) {
     this.global.CurrentPage = "Media Upload List CVMS";
+
+  }
+  ngOnInit(): void {
+    this.type = 1;
     
-  }
-  ngOnInit(): void {   
-    this.type = 2;
     this.getMediaDetails();
-    this.refreshPage();
+    //this.refreshPage();
   }
-  refreshPage(){
-    setInterval(() => {      
-      //this._router.navigate(['cvms/uploadMedia']);
-      //this._router.navigate([this._router.url]);
-    }, 5000);    
+  refreshPage() {
+
+    const source = interval(5000);
+    this.subscription = source.subscribe((val) => this.getMediaDetails());
+    // setInterval(() => {
+
+    // }, 5000);
   }
   OnTabChange(status: number) {
     this.tabno = status;
@@ -105,34 +119,44 @@ export class MediaUploadCvmsListComponent {
     this._router.navigate(['users/add-user']);
   }
 
- 
+
   OpenUploadMedia() {
     this._router.navigate(['cvms/upload-media']);
   }
+
   
+
   getMediaDetails() {
     this._request.currentPage = this.pager;
     this._request.pageSize = this.recordPerPage;
     this._request.startId = this.startId;
     this._request.searchItem = this.searchText;
-    this.mediaFacade.GetMediaUploadDetails(this._request, this.type).subscribe(data => {
-      if (data != null) {
-        this.listOfMediaUpload = data.data;
+
+    this.mediaFacade.GetUploadMediaListDetails(this._request, this.type).subscribe(data => {        
+      
+      if (data.data != null) {
+        let _data = JSON.stringify(data.data);
+        this.listOfMediaUpload = JSON.parse(_data);
         this.listOfMediaUpload.forEach((element: any) => {
-          if (element.creationTime != null) {
-            var _d = new Date(element.creationTime);
-            var _dateStr = this.datepipe.transform(_d, "dd-MM-yyyy HH:mm:ss");
-            element.creationTime = _dateStr;
+          if (element.mediaDetails != null) {
+            element.medidId = element.mediaDetails.id;
+            element.mediaName = element.mediaDetails.mediaName;
+            if (element.mediaDetails.creationTime != null) {
+              var _d = new Date(element.mediaDetails.creationTime);
+              var _dateStr = this.datepipe.transform(_d, "dd-MM-yyyy HH:mm:ss");
+              element.creationTime = _dateStr;
+            }
+            if (element.mediaDetails.status == 1) {
+              element.statusdesc = "Sent Successfully"
+            }
+            else if (element.mediaDetails.status == 0) {
+              element.statusdesc = "Sent Pending"
+            }
+            else if (element.mediaDetails.status == 2) {
+              element.statusdesc = "Sent Failed"
+            }
           }
-          if (element.status == 1) {
-            element.statusdesc = "Sent Successfully"
-          }
-          else if (element.status == 0) {
-            element.statusdesc = "Sent Pending"
-          }
-          else if (element.status == 2) {
-            element.statusdesc = "Sent Failed"
-          }
+
         });
         var _length = data.totalRecords / this.recordPerPage;
         if (_length > Math.floor(_length) && Math.floor(_length) != 0)
@@ -156,7 +180,71 @@ export class MediaUploadCvmsListComponent {
       this.listOfMediaUploadRejected = this.listOfMediaUpload.filter((x: any) => x.status == 2);
     }
   }
-  ButtonAction(actiondata: any) { }
+  // ButtonAction(actiondata: any) {
+  //   alert(actiondata.actions);
+  // }
+
+  ButtonAction(actiondata: any) { 
+    if (actiondata.action === "delete") {
+      this.deleteRecord(actiondata.data);
+    }
+  }
+
+  deleteRecord(element?: any) {
+
+     let _vcmsuploadmediadata = new Vcmsuploadmedia();
+
+     _vcmsuploadmediadata.controllerName = element.controllerName;
+    // _vcmsuploadmediadata.IpAddress = this.vmsIds[0];
+
+     _vcmsuploadmediadata.IpAddress = element.ipAddress;
+     _vcmsuploadmediadata.VmsId=element.vmsId;
+
+    // _vcmsuploadmediadata.VmsId = Number.parseInt(this.vmsId[0]);
+
+     _vcmsuploadmediadata.status = 0;
+     _vcmsuploadmediadata.AuditedBy = "System";
+     _vcmsuploadmediadata.IsAudited = true;
+     _vcmsuploadmediadata.AuditedTime = new Date();
+     _vcmsuploadmediadata.Reason = "Upload Data for test";
+     //_vcmsuploadmediadata.createddate = new Date();
+     _vcmsuploadmediadata.CreationTime = new Date();
+     _vcmsuploadmediadata.requesttype ="/media/deleteMediaDetails"
+     _vcmsuploadmediadata.medianame=element.mediaName;
+ 
+     let requestData = {
+      mediaId: element.id,
+      mediaName: element.mediaName
+    
+    };
+    _vcmsuploadmediadata.RequestData = JSON.stringify(requestData);
+      // _vcmsuploadmediadata.RequestData = JSON.stringify(_requestTextData);
+     
+ 
+ 
+     this._CVMSfacade.SaveMediaUpload(_vcmsuploadmediadata).subscribe(data => {
+       if (data == 0) {
+         this.toast.error("Error occured while saving data for " + _vcmsuploadmediadata.controllerName);
+       }
+       else {
+        this.listOfMediaUpload = this.listOfMediaUpload.filter((media: any) => media.id !== element.id);
+
+
+  this.toast.success("Data deleted successfully for " + _vcmsuploadmediadata.controllerName);
 
   
+   this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+    this._router.navigate(['cvms/uploadMedia']);
+   });
+       }
+     });
+   }
+
 }
+
+
+
+
+
+
+

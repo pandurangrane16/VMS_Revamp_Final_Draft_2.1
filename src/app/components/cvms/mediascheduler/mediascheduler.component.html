@@ -7,8 +7,8 @@
                 Back To List
             </button>
 
-            <div class="card">                           
-                <form [formGroup]="form">                    
+            <div class="card">
+                <form [formGroup]="form" #mediaform="ngForm">
                     <div class="card-body">
                         <div class="row">
                             <div class="mb-4 form-group">
@@ -26,11 +26,12 @@
                             <div class="col-sm-6 col-md-4 col">
                                 <div class="mb-6 col form-group">
                                     <label class="form-label">Schedule Name*</label>
-                                    <input type="text" formControlName="schedulename" [(ngModel)]="name" class="form-control"
-                                    [ngClass]="{ 'is-invalid': f['schedulename'].touched && f['schedulename'].errors}"
+                                    <input type="text" formControlName="schedulename" [(ngModel)]="name"
+                                        class="form-control"
+                                        [ngClass]="{ 'is-invalid': f['schedulename'].touched && f['schedulename'].errors}"
                                         placeholder="Enter Schedule Name" />
                                 </div>
-                                
+
                                 <div *ngIf="f['schedulename'].touched && f['schedulename'].errors , 'is-valid': f['schedulename'].valid "
                                     class="invalid-feedback">
                                     <div>{{getErrorMessage('schedulename','schedulename',true,"Invalid data available
@@ -38,12 +39,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-4 col">      
+                            <div class="col-sm-6 col-md-4 col">
                                 <cm-multiselect-auto-complt [inputData]="_inputPlayerData" [label]="label2"
-                                [dropdownSettings]="dropdownSettingsVms" (selectedItem)="getSelectedPlayer($event,1)"
-                                (deSelectedItem)="getSelectedPlayer($event,0)"></cm-multiselect-auto-complt>                                                    
+                                    [dropdownSettings]="dropdownSettingsVms"
+                                    (selectedItem)="getSelectedPlayer($event,1)"
+                                    (deSelectedItem)="getSelectedPlayer($event,0)"></cm-multiselect-auto-complt>
                             </div>
-                           
+
                         </div>
                         <div class="row mb-2">
                             <div class="col-md-1"></div>
@@ -66,14 +68,14 @@
                             <div class="col-md-1"></div>
 
                             <label class="col-md-2 text-right mt-2">To Date: </label>
-                          
+
                             <div class="col-md-4">
                                 <div class="input-group">
-                                    <input formControlName="globalToDt" appBlockCopyPaste
-                                        (keypress)="keyPress($event)" class="form-control" placeholder="dd-mm-yyyy"
-                                        name="dp" [minDate]="minDate" ngbDatepicker #dToDatePub="ngbDatepicker" />
-                                    <button class="btn btn-outline-primary border-primary"
-                                        (click)="dToDatePub.toggle()" type="button">
+                                    <input formControlName="globalToDt" appBlockCopyPaste (keypress)="keyPress($event)"
+                                        class="form-control" placeholder="dd-mm-yyyy" name="dp" [minDate]="minDate"
+                                        ngbDatepicker #dToDatePub="ngbDatepicker" />
+                                    <button class="btn btn-outline-primary border-primary" (click)="dToDatePub.toggle()"
+                                        type="button">
                                         <i class="fa fa-calendar"></i></button>
                                 </div>
                             </div>
@@ -83,10 +85,15 @@
 
                         </div>
                         <div class="row">
-                            <div class="mb-3 col">                            
-                                    <button *ngIf="(f['globalToTm'].touched  && !f['globalToTm'].errors) && (f['globalFromTm'].touched  && !f['globalFromTm'].errors) && (f['globalToDt'].touched  && !f['globalToDt'].errors) && (f['schedulename'].touched && !f['schedulename'].errors), 'is-valid': f['cronexpression'].valid " ngClass="btn btn-secondary" (click)="OnSaveDetails()"
+                            <div class="mb-3 col">
+                             
+
+                                <button [disabled]="!this.form.valid" ngClass="btn btn-secondary" (click)="OnSaveDetails()"
                                     style="width: 20%;" formControlName="SaveDetails" class="form-control">Save
-                                    Details</button>
+                                    Details
+                                    <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                </button>
+
                             </div>
                         </div>
                     </div>
