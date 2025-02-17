@@ -26,7 +26,9 @@ export class MediauploadserviceService {
     return this._httpService._getMethod("vcms_api/api/MediaUpload/GetMediaDetailsForIpAddress?IpAddress=" + ipAddress + "&mediaType=" + type);
   }
   getTextDataForMdPlayer(ipAddress: string,port:string,_token:string) {
-    return this._httpService._getMethodNotCommon("http://"+ipAddress+":"+port+"/media/getMediaDetails",_token);
+    //return this._httpService._getMethodNotCommon("http://"+ipAddress+":"+port+"/media/getMediaDetails",_token);
+    return this._httpService._getMethod("Vcms_API/api/MediaUpload/Getmediadetails_controller?_ipaddres="+ipAddress);
+    
   }
 
   getTokenByIpAddress(ipAddress:string) {
@@ -39,5 +41,11 @@ export class MediauploadserviceService {
   CheckDuplicateMediaName(mediaName:string,ipAdd:string){
     return this._httpService._getMethod("Vcms_API/api/MediaUpload/CheckDuplicateMediaName?pMediaName="+mediaName+"&_ipaddres="+ipAdd);
   }
+  GetVMSNameForIpAddress(ipAdd:string){
+    return this._httpService._getMethod("Vcms_API/api/MediaUpload/GetVMSNameForIpAddress?_ipaddres="+ipAdd);
+  }
+
+  
+
   
 }

@@ -10,7 +10,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+                        <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
                             <div class="row">
                                 <div class=" col-md-5 col-sm-5 col">
                                     <div class="mb-4 form-group">
@@ -58,12 +58,7 @@
                             </div>
 
 
-
-
-
-                            
-
-                            <div formArrayName="tiles" *ngIf="currentTile != -1">
+                            <!-- <div formArrayName="tiles" *ngIf="currentTile != -1">
 
                                 <div *ngFor="let user of userDetails.controls; let i = index" class="bordered-div mb-4 light-gray-div" >
                                     <i class="fa fa-close" style="float: right; font-size:24px" aria-hidden="true" (click)="removeTiles(i)"></i>                                   
@@ -220,4 +215,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->  -->

@@ -27,6 +27,9 @@ export class CVMSMediaFacadeServiceService {
   UpdateMediaPlayer(data:any){
     return this._mediaplayer.UpdateMedia(data);
   }
+  GetMediaPlayerById(data:any){
+    return this._mediaplayer.UpdateMedia(data);
+  }
 
   GetMediaUploadDetails(inputReq :any,type : number) {
     return this._mediupload.getMediauploadDetails(inputReq,type);
@@ -66,6 +69,11 @@ export class CVMSMediaFacadeServiceService {
     return this._mediupload.CheckDuplicateMediaName(mediaName,ipAdd);
   }
 
+  GetVMSNameForIpAddress(ipAdd:string){
+    return this._mediupload.GetVMSNameForIpAddress(ipAdd);
+  }
+
+  
 
 
 }

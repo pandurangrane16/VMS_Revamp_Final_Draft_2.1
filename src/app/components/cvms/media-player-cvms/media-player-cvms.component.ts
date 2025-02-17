@@ -34,7 +34,6 @@ export class MediaPlayerCvmsComponent {
   currentTile: number = -1;
   registrationForm: any;
   disabledTextType: boolean = false;
-  _inputVmsData: any;
   MediaName: string;
   _request: any = new InputRequest();
   mediauploadtype: string;
@@ -46,7 +45,7 @@ export class MediaPlayerCvmsComponent {
   ShowSaveBtn: boolean = false;
   vmsIds: any[] = [];
   SelectedControllerId: any;
-  
+  _inputVmsData: any;
 
 
   constructor(private fb: FormBuilder,
@@ -74,6 +73,9 @@ export class MediaPlayerCvmsComponent {
     // })
     this.GetVmsDetails();
   }
+
+
+
   get f() { return this.registrationForm.controls; }
 
 
@@ -82,6 +84,7 @@ export class MediaPlayerCvmsComponent {
     const name = this.registrationForm.get('name') 
     const tiles = this.registrationForm.get('tiles') 
     const tileNo = this.registrationForm.get('tileNo') 
+    
     const imageTextDuration = this.registrationForm.get('imageTextDuration') 
 
     name?.setValidators([Validators.required,Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$"),this.noLeadingEndingWhitespace]);
@@ -100,22 +103,22 @@ export class MediaPlayerCvmsComponent {
   createUser(): FormGroup {
     return this.fb.group({
       tileNo: ['', [Validators.required, Validators.pattern("[1-999][1-999]*$")]],
-      playlistLoopCount: ['', ''],
-      //playlistLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
+      //playlistLoopCount: ['', ''],
+      playlistLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
       playlist: this.fb.array([])
     });
   }
   createPlaylistItem(ele: any): FormGroup {
     return this.fb.group({
       playOrder: [ele.playOrder, ''],
-      imageTextDuration:[ele.imageTextDuration],
-      mediaId:[ele.mediaId,''],
-      mediaName:[ele.mediaName,''],
-      videoLoopCount:[ele.videoLoopCount,''],
-      // imageTextDuration: [ele.imageTextDuration, [Validators.required]],
-      // mediaId: [ele.mediaId, Validators.required],
-      // mediaName: [ele.mediaName, [Validators.required]],
-      // videoLoopCount: [ele.videoLoopCount, [Validators.required]],
+      // imageTextDuration:[ele.imageTextDuration],
+      // mediaId:[ele.mediaId,''],
+      // mediaName:[ele.mediaName,''],
+      // videoLoopCount:[ele.videoLoopCount,''],
+      imageTextDuration: [ele.imageTextDuration, [Validators.required]],
+      mediaId: [ele.mediaId, ''],
+      mediaName: [ele.mediaName, ''],
+      videoLoopCount: [ele.videoLoopCount,''],
       textStyle: this.fb.group({
         fontSize: [0],
         fontColor: [''],
@@ -176,8 +179,8 @@ export class MediaPlayerCvmsComponent {
 
   }
 
-  // Remove a user form group from the form array
-  removeUser(index: number): void {
+  // Remove a tiles form group from the form array
+  removeTiles(index: number): void {
     this.userDetails.removeAt(index);
     this.selectedMediaPlaylist.splice(index, 1);
   }
@@ -298,23 +301,7 @@ export class MediaPlayerCvmsComponent {
     }
   }
 
-  // getMedialistData(plid: number): boolean {
-  //   this._media.GetMediaDetails(plid).subscribe(res => {
-  //     if (res != null && res.length > 0) {
-       
-  //       if(res[0].fileType == 'Video'){
-  //           return false;
-  //       }
-  //       else if(res[0].fileType == 'Image'){
-  //         return true;        
-  //       }       
-  //     }
-  //     else
-  //       this.toast.error("Failed to failed media details.", "Error", { positionClass: "toast-bottom-right" });
-  //     return true;
-  //   }, (err) => { console.log(err) });
-  //   return true;
-  // }
+  
 
   OnSavePlaylistDetails(): void {
  
@@ -337,6 +324,11 @@ export class MediaPlayerCvmsComponent {
         this.patchTileValue(i, j, _textStyle);
       }
     }
+    if(_tileCount == 0){
+      this.toast.error("At least one playlist must be created to set up the media player.");
+      return;
+    }
+
     //this.registrationForm.controls['tiles'].controls[0].controls["playlist"].controls[0].controls["textStyle"].value
     //this.registrationForm.controls['tiles'].controls[i].controls["playlist"].controls[0].controls["textStyle"].value
     if (this.registrationForm.valid) {
@@ -370,6 +362,7 @@ export class MediaPlayerCvmsComponent {
     else
     {
       this.toast.error("There was a problem saving your data. Please review your input for any errors.");
+      return;
     }
   }
 

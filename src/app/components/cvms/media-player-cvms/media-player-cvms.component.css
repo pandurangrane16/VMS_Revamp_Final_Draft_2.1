@@ -1,11 +1,83 @@
 .container {
-    max-width: 600px;
-    margin: 50px auto;
-  }
-  .form-group {
-    margin-bottom: 15px;
-  }
-  .btn {
-    margin-top: 10px;
-  }
-  
+  max-width: 600px;
+  margin: 50px auto;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.btn {
+  margin-top: 10px;
+}
+
+.bordered-div {
+  border: 1px solid #ccc;
+  padding: 20px;
+  position: relative;
+  /* Important for positioning the close button */
+}
+.remove-media{
+  font-size:24px;
+  color:red;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  margin-right: 50px; /* Add some spacing */
+  float: right; /* Position it to the right */
+}
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+  margin-right: 10px; /* Add some spacing */
+  float: right; /* Position it to the right */
+  padding: 0;
+  /* Remove default button padding */
+  line-height: 1;
+    
+}
+
+.cross-button::before,
+.cross-button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2px; /* Line thickness */
+  height: 10px; /* Line length */
+  background-color: #333; /* Cross color */
+}
+
+.cross-button::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.cross-button::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* Optional hover effect */
+.cross-button:hover::before,
+.cross-button:hover::after {
+  background-color: #000; /* Darker on hover */
+}
+
+.light-gray-div {
+  background-color: #f0f0f0;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: column; /* Arrange rows vertically */
+}
+.TableHeader {
+  background-color: black;
+  color: white;
+  margin-bottom: 4px;
+}

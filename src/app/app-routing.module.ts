@@ -46,6 +46,7 @@ import { MediaPlayerCvmsComponent } from './components/cvms/media-player-cvms/me
 import { MediaplayerlistComponent } from './components/cvms/mediaplayerlist/mediaplayerlist.component';
 import { MedialiveplaylistComponent } from './components/cvms/medialiveplaylist/medialiveplaylist.component';
 import { MediaschedulerListComponent } from './components/cvms/mediascheduler-list/mediascheduler-list.component';
+import { MediaPlayerEditComponent } from './components/cvms/mediaplayer-edit/mediaplayer-edit.component';
 
 const routes: Routes = [
   {
@@ -208,6 +209,7 @@ const routes: Routes = [
     data: { title: 'Playlist Creation' },
     canActivate: [AuthGuradService]
   },
+
   {
     path: "medias/playlist-configure",
     component: PlaylistConfigureComponent,
@@ -293,6 +295,13 @@ const routes: Routes = [
     data: { title: 'Media Player' },
     canActivate: [AuthGuradService]
   },
+  {
+    path: "cvms/playlist-edit/:id",
+    component: MediaPlayerEditComponent,
+    data: { title: 'Playlist Edit' },
+    canActivate: [AuthGuradService]
+  },
+
   { 
     path: "cvms/createMediaPlayerScheduler", 
     component: MediaschedulerComponent,

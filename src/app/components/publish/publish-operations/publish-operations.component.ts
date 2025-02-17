@@ -281,7 +281,6 @@ export class PublishOperationsComponent implements OnInit {
     if (type == 1) {
       if (eve.length > 0) {
         eve.forEach((ele: any) => {
-
           this.selectedVMS.push(ele.value);
         });
       }

@@ -60,14 +60,15 @@ export class CVMSMediaModalComponent implements OnInit {
             this.listOfMedialist = [];
             this.sessionService._setSessionValue("isNotHeader", undefined);
             this.type = "Select Text Media";
-            if (res != null && res.data.length > 0) {
-              res.data.forEach((ele:any) => {
+            let resnew = JSON.parse(res);
+            if (resnew != null && resnew.length > 0) {
+              resnew.forEach((ele:any) => {
                 if(ele.fileType == "text")
                   this.listOfMedialist.push(ele);
               });
             }
             else
-              this.toast.error("Failed to failed media details.", "Error", { positionClass: "toast-bottom-right" });
+              this.toast.error("Failed to failed media details.", "Error", { positionClass: "top-up-right" });
           }, (err) => { console.log(err);
             this.sessionService._setSessionValue("isNotHeader", undefined); });
         }
