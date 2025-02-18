@@ -19,7 +19,6 @@ import { Globals } from 'src/app/utils/global';
 import { json, numeric } from '@rxweb/reactive-form-validators';
 import { MediaFacadeService } from 'src/app/facade/facade_services/media-facade.service';
 import { FileServiceService } from 'src/app/facade/services/vcms/file-service.service';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 
 @Component({
@@ -31,7 +30,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 
 export class MediaPlayerCvmsComponent {
-  isOrderChange:boolean=false;
+
   currentTile: number = -1;
   registrationForm: any;
   disabledTextType: boolean = false;
@@ -47,6 +46,7 @@ export class MediaPlayerCvmsComponent {
   ShowSaveBtn: boolean = false;
   vmsIds: any[] = [];
   SelectedControllerId: any;
+  isPlayOrder:boolean=true;
   dupliactefound: boolean;
 
 
@@ -108,9 +108,9 @@ export class MediaPlayerCvmsComponent {
       playlist: this.fb.array([])
     });
   }
-  createPlaylistItem(ele: any): FormGroup {
+  createPlaylistItem(ele: any,cnt:number): FormGroup {
     return this.fb.group({
-      playOrder: [ele.playOrder, ''],
+      playOrder: [cnt, ''],
       // imageTextDuration:[ele.imageTextDuration],
       // mediaId:[ele.mediaId,''],
       // mediaName:[ele.mediaName,''],
@@ -281,8 +281,10 @@ export class MediaPlayerCvmsComponent {
 
     this.selectedMediaId = [];
     this.selectedMediaPlaylist[idx].playlist = _plMediaList;
+    var cnt=this.selectedMediaPlaylist[idx].playlist.length;
     this.selectedMediaPlaylist[idx].playlist.forEach((ele: any) => {
-      this.addPlaylist(idx, ele);
+      cnt++;
+      this.addPlaylist(idx, ele,cnt);
     });
     //console.log(this.selectedMediaPlaylist);
   }
@@ -296,8 +298,8 @@ export class MediaPlayerCvmsComponent {
     const selectElement = eve.target as HTMLSelectElement;
     const colindex = selectElement.value.indexOf(":");
     if (colindex !== -1) {
-      //this.SelectedControllerId = selectElement.value.slice(colindex + 1, selectElement.value.length).replace(/\s+/g, '').split("|");
-      
+      this.SelectedControllerId = selectElement.value.slice(colindex + 1, selectElement.value.length).replace(/\s+/g, '').split("|");
+
     }
   }
   BacktoList() {
@@ -462,11 +464,11 @@ export class MediaPlayerCvmsComponent {
     });
   }
 
-  addPlaylist(index: number, ele: any) {
+  addPlaylist(index: number, ele: any,cnt:number) {
     //var playlist = this.getPlForCreate(index);
     //if(playlist == undefined)
     var playlist = this.getPlaylist(index);
-    const playlistItem = this.createPlaylistItem(ele);
+    const playlistItem = this.createPlaylistItem(ele,cnt);
     playlist.push(playlistItem);
   }
 
@@ -484,12 +486,5 @@ export class MediaPlayerCvmsComponent {
       return { leadingWhitespace: true };
     }
     return null;
-  }
-
-  OrderChange(eve:any){
-    if(eve.currentTarget.checked == true) 
-      this.isOrderChange = false;
-    else 
-    this.isOrderChange = true;
   }
 }

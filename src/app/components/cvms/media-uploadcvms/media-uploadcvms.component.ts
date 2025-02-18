@@ -310,6 +310,7 @@ export class MediaUploadcvmsComponent implements OnInit {
   }
 
   getSelectedVms(eve: any, type: any) {
+    
     if (eve.length > 0) {
       if (type == 1) {
         eve.forEach((vms: any) => {
@@ -336,9 +337,11 @@ export class MediaUploadcvmsComponent implements OnInit {
       let inputVal = eve.value.split('|');
       let ipaddress = inputVal[0];
       let vmsid = inputVal[1];
-      if (type == 1)
+      if (type == 1){
         this.vmsIds.push(ipaddress),
           this.vmsId.push(vmsid);
+         
+       }
       else {
         var idx = 0;
         this.vmsIds.forEach(element => {
@@ -379,9 +382,8 @@ export class MediaUploadcvmsComponent implements OnInit {
 
     //this.selectedMedia = [];        
     //this.GetVmsDetails();    
-    //this.isFileTypeImage = false;  
+    //this.isFileTypeImage = false;   
     //this.form.controls["isActive"].setValue(false);  
-
   }
 
   noLeadingEndingWhitespace(control: FormControl) {

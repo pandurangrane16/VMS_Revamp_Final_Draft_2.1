@@ -109,6 +109,10 @@ import { MediaPlayerCvmsComponent } from './components/cvms/media-player-cvms/me
 import { MediaplayerlistComponent } from './components/cvms/mediaplayerlist/mediaplayerlist.component';
 import { MedialiveplaylistComponent } from './components/cvms/medialiveplaylist/medialiveplaylist.component';
 import { MediaschedulerListComponent } from './components/cvms/mediascheduler-list/mediascheduler-list.component';
+import { MediaPlayerEditComponent } from './components/cvms/mediaplayer-edit/mediaplayer-edit.component';
+
+
+
 
 
 
@@ -183,7 +187,8 @@ const config: SocketIoConfig = { url: environment.Socket_URL, options: {} };
     MediaPlayerCvmsComponent,
     MediaplayerlistComponent,
     MedialiveplaylistComponent,
-    MediaschedulerListComponent,   
+    MediaschedulerListComponent,
+    MediaPlayerEditComponent  
     
   ],
   imports: [
