@@ -46,7 +46,7 @@ export class MediaPlayerCvmsComponent {
   ShowSaveBtn: boolean = false;
   vmsIds: any[] = [];
   SelectedControllerId: any;
-  isPlayOrder:boolean=true;
+  isPlayOrder: boolean = true;
   dupliactefound: boolean;
 
 
@@ -103,14 +103,17 @@ export class MediaPlayerCvmsComponent {
   createUser(): FormGroup {
     return this.fb.group({
       tileNo: ['', [Validators.required, Validators.pattern("[1-999][1-999]*$")]],
+      isPlayOrder: [0],
+      duration: [0],
+      mediaLoopCount: [0],
       //playlistLoopCount: ['', ''],
       playlistLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
       playlist: this.fb.array([])
     });
   }
-  createPlaylistItem(ele: any,cnt:number): FormGroup {
+  createPlaylistItem(ele: any, cnt: number): FormGroup {
     return this.fb.group({
-      playOrder: [cnt, ''],
+      playOrder: [{ value: cnt, disabled: true }, Validators.required],
       // imageTextDuration:[ele.imageTextDuration],
       // mediaId:[ele.mediaId,''],
       // mediaName:[ele.mediaName,''],
@@ -178,10 +181,10 @@ export class MediaPlayerCvmsComponent {
     }
     let ipaddress = this.SelectedControllerId[0];
     let mediaplayername = this.registrationForm.controls["name"].value;
-    
+
     this._CVMSfacade.CheckDuplicateMediaPlayerName(mediaplayername, ipaddress).subscribe(data => {
 
-      if (JSON.parse(data) == 1) {      
+      if (JSON.parse(data) == 1) {
         this.toast.error("Media Player Name already exists in the System.");
         this.registrationForm.setErrors({ duplicateName: true });
         return;
@@ -281,10 +284,12 @@ export class MediaPlayerCvmsComponent {
 
     this.selectedMediaId = [];
     this.selectedMediaPlaylist[idx].playlist = _plMediaList;
-    var cnt=this.selectedMediaPlaylist[idx].playlist.length;
+
+    var playlist = this.getPlaylist(idx);
+    var cnt = playlist.length;
     this.selectedMediaPlaylist[idx].playlist.forEach((ele: any) => {
       cnt++;
-      this.addPlaylist(idx, ele,cnt);
+      this.addPlaylist(idx, ele, cnt);
     });
     //console.log(this.selectedMediaPlaylist);
   }
@@ -293,6 +298,66 @@ export class MediaPlayerCvmsComponent {
     const playlistArray = this.getPlaylist(userIndex);  // Get the specific playlist FormArray for the user
     playlistArray.removeAt(id);
     this.selectedMediaId.splice(id, 1);
+
+    this.changeSequence(userIndex, id, 1);
+  }
+  changeSequence(userIndex: number, id: number, type: number) {
+    const playlistArray = this.getPlaylist(userIndex);
+    if (type == 0) {
+      var cnt = 0;
+      playlistArray.controls.forEach((ele: any) => {
+        cnt++;
+        ele.get('playOrder')?.enable();
+      });
+    } else {
+      var cnt = 0;
+      playlistArray.controls.forEach((ele: any) => {
+        cnt++;
+        ele.patchValue({ playOrder: cnt });
+      });
+    }
+  }
+
+  validateSequence(userIndex: number) {
+
+    const playlistArray = this.getPlaylist(userIndex);
+    var _okaySequence = true;
+    var prevVal = 0;
+    playlistArray.controls.forEach((ele: any) => {
+      let val = ele.controls["playOrder"].value;
+      if (val == prevVal) {
+        _okaySequence = false;
+      }
+      prevVal = val;
+    });
+
+    if (_okaySequence == true) {
+      var startPoint = 1;
+      var endPoint = playlistArray.length;
+      var _okaySeq = true;
+      for (var i = startPoint; i <= endPoint; i++) {
+        let valFound = false;
+        playlistArray.controls.forEach((ele: any) => {
+          let val = ele.controls["playOrder"].value;
+          if (val == i)
+            valFound = true;
+        });
+        if (valFound == false) {
+          _okaySeq = false;
+        }
+      }
+      if (_okaySeq == false) {
+        this.toast.error("Sequence values are missing");
+      } else {
+        playlistArray.controls.forEach((ele: any) => {
+          ele.get('playOrder')?.disable();
+        });
+      }
+    }
+    else {
+      this.toast.error("Invalid sequence number occured");
+    }
+
   }
   getSelectedVms(eve: any) {
     const selectElement = eve.target as HTMLSelectElement;
@@ -319,9 +384,14 @@ export class MediaPlayerCvmsComponent {
       return false;
     }
   }
-
+  validateFields() {
+    let len = this.registrationForm.controls['tiles'].length;
+    for (var i = 0; i < len; i++) {
+      this.validateSequence(i);
+    }
+  }
   OnSavePlaylistDetails_new(): void {
-    
+
 
     const ipAddress = this.SelectedControllerId[0];
     const mediaPlayerName = this.registrationForm.controls["name"].value;
@@ -419,37 +489,37 @@ export class MediaPlayerCvmsComponent {
       return;
     }
 
-    if (this.registrationForm.valid) {      
-        this.toast.error("There was a problem saving your data. Please review your input for any errors.");
-        return;
-      }    
+    if (this.registrationForm.valid) {
+      this.toast.error("There was a problem saving your data. Please review your input for any errors.");
+      return;
+    }
 
-      let _vcmsmediplayerdata = new Mediaplayer();
-      _vcmsmediplayerdata.VmsId = Number.parseInt(this.SelectedControllerId[1]);
-      _vcmsmediplayerdata.IpAddress = this.SelectedControllerId[0];
-      _vcmsmediplayerdata.mediaplayername = this.registrationForm.controls["name"].value;
-      _vcmsmediplayerdata.status = 0;
-      _vcmsmediplayerdata.AuditedBy = "System";
-      _vcmsmediplayerdata.IsAudited = true;
-      _vcmsmediplayerdata.AuditedTime = new Date();
-      _vcmsmediplayerdata.Reason = "Upload Data for new MediaPlayer";
-      _vcmsmediplayerdata.CreationTime = new Date();
-      _vcmsmediplayerdata.RequestData = JSON.stringify(this.registrationForm.value);
+    let _vcmsmediplayerdata = new Mediaplayer();
+    _vcmsmediplayerdata.VmsId = Number.parseInt(this.SelectedControllerId[1]);
+    _vcmsmediplayerdata.IpAddress = this.SelectedControllerId[0];
+    _vcmsmediplayerdata.mediaplayername = this.registrationForm.controls["name"].value;
+    _vcmsmediplayerdata.status = 0;
+    _vcmsmediplayerdata.AuditedBy = "System";
+    _vcmsmediplayerdata.IsAudited = true;
+    _vcmsmediplayerdata.AuditedTime = new Date();
+    _vcmsmediplayerdata.Reason = "Upload Data for new MediaPlayer";
+    _vcmsmediplayerdata.CreationTime = new Date();
+    _vcmsmediplayerdata.RequestData = JSON.stringify(this.registrationForm.value);
 
-      this._CVMSfacade.SaveMediaPlayer(_vcmsmediplayerdata).subscribe(data => {
-        if (data == 0) {
-          this.toast.error("Error occured while saving data for " + _vcmsmediplayerdata.IpAddress);
-        }
-        else {
-          this.toast.success("Saved successfully for " + _vcmsmediplayerdata.IpAddress);
+    this._CVMSfacade.SaveMediaPlayer(_vcmsmediplayerdata).subscribe(data => {
+      if (data == 0) {
+        this.toast.error("Error occured while saving data for " + _vcmsmediplayerdata.IpAddress);
+      }
+      else {
+        this.toast.success("Saved successfully for " + _vcmsmediplayerdata.IpAddress);
 
-          this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-            this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
-          });
+        this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
+        });
 
-        }
-      });    
-    
+      }
+    });
+
   }
 
   patchTileValue(i: number, j: number, _data: any) {
@@ -464,11 +534,11 @@ export class MediaPlayerCvmsComponent {
     });
   }
 
-  addPlaylist(index: number, ele: any,cnt:number) {
+  addPlaylist(index: number, ele: any, cnt: number) {
     //var playlist = this.getPlForCreate(index);
     //if(playlist == undefined)
     var playlist = this.getPlaylist(index);
-    const playlistItem = this.createPlaylistItem(ele,cnt);
+    const playlistItem = this.createPlaylistItem(ele, cnt);
     playlist.push(playlistItem);
   }
 
@@ -486,5 +556,20 @@ export class MediaPlayerCvmsComponent {
       return { leadingWhitespace: true };
     }
     return null;
+  }
+
+  ToAllDuration(idx: number) {
+    let val = this.registrationForm.controls['tiles'].controls[idx].controls['duration'].value;
+    const playlistArray = this.getPlaylist(idx);
+    playlistArray.controls.forEach((ele: any) => {
+      ele.patchValue({ imageTextDuration: val });
+    });
+  }
+  ToAllLoop(idx: number) {
+    let val = this.registrationForm.controls['tiles'].controls[idx].controls['mediaLoopCount'].value;
+    const playlistArray = this.getPlaylist(idx);
+    playlistArray.controls.forEach((ele: any) => {
+      ele.patchValue({ videoLoopCount: val });
+    });
   }
 }
