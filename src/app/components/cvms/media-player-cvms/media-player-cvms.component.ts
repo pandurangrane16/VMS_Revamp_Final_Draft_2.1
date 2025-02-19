@@ -30,7 +30,7 @@ import { FileServiceService } from 'src/app/facade/services/vcms/file-service.se
 
 
 export class MediaPlayerCvmsComponent {
-
+  isSeqValidate : boolean = false;
   currentTile: number = -1;
   registrationForm: any;
   disabledTextType: boolean = false;
@@ -357,7 +357,7 @@ export class MediaPlayerCvmsComponent {
     else {
       this.toast.error("Invalid sequence number occured");
     }
-
+    return _okaySequence;
   }
   getSelectedVms(eve: any) {
     const selectElement = eve.target as HTMLSelectElement;
@@ -386,13 +386,16 @@ export class MediaPlayerCvmsComponent {
   }
   validateFields() {
     let len = this.registrationForm.controls['tiles'].length;
+    
     for (var i = 0; i < len; i++) {
-      this.validateSequence(i);
+      this.isSeqValidate = this.validateSequence(i);
+      if(this.isSeqValidate == false){
+        break;
+      }
     }
   }
   OnSavePlaylistDetails_new(): void {
-
-
+    
     const ipAddress = this.SelectedControllerId[0];
     const mediaPlayerName = this.registrationForm.controls["name"].value;
 
