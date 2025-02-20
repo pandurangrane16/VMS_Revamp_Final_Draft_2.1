@@ -15,4 +15,6 @@ export class Mediaplayer {
     ResponseId! : number;
     id!:number;
     controllerName! :string;
+    medianame!:string;
+    createddate!:Date;
 }

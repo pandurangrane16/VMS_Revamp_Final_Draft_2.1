@@ -74,7 +74,9 @@ export class CVMSMediaFacadeServiceService {
   CheckDuplicateMediaName(mediaName:string,ipAdd:string){
     return this._mediupload.CheckDuplicateMediaName(mediaName,ipAdd);
   }
-  
+  CheckDuplicateMediaPlayerName(mediaPlayerName:string,ipAdd:string){
+    return this._mediaplayer.CheckDuplicateMediaPlayerName(mediaPlayerName,ipAdd);
+  }
   GetVMSNameForIpAddress(ipAdd:string){
     return this._mediupload.GetVMSNameForIpAddress(ipAdd);
   }

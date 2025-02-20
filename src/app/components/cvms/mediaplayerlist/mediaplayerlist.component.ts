@@ -105,14 +105,8 @@ export class MediaplayerlistComponent {
       this._request.pageSize = this.recordPerPage;
       this._request.startId = this.startId;
       this._request.searchItem = this.searchText;
-<<<<<<< HEAD
-      this.mediaFacade.GetMediaPlayer(this._request).subscribe(data => {
-
-        if (data != null) {
-=======
       this.mediaFacade.GetMediaPlayerListDetails(this._request, this.tabno).subscribe(data => {
         if (data.data != null) {
->>>>>>> 0b2ff1c8e491dad01e247be8536c56490742cb49
           this.listOfMediaUpload = data.data;
           this.listOfMediaUpload.forEach((element: any) => {           
 

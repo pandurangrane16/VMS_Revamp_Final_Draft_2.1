@@ -39,8 +39,5 @@ export class MediaplayerserviceService {
   GetMediaPlayerListDetails(inputReq :any,type : number){    
     return this._httpService._postMethod(inputReq,"Vcms_API/api/Mediaplayer/GetMediaPlayerPaging?type=" + type);
   }
-  getMediaPlayerById(id: number,body:any) {
-    return this._httpService._postMethod(body,'Vcms_API/api/Mediaplayer/GetMediaPlayer?id=' + id);
-  }
 }
 
