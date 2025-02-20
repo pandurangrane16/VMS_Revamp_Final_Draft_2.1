@@ -45,7 +45,7 @@ export class MediaPlayerCvmsComponent {
   ShowSaveBtn: boolean = false;
   vmsIds: any[] = [];
   SelectedControllerId: any;
-  _inputVmsData: any;
+     _inputVmsData: any;
 
 
   constructor(private fb: FormBuilder,

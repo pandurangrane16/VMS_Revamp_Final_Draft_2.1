@@ -306,6 +306,7 @@ export class MediaschedulerComponent {
       _vcmsmedischedulerdata.AuditedTime = new Date();
       _vcmsmedischedulerdata.status = 0;
       _vcmsmedischedulerdata.Reason = "Create Media Scheduler";
+      _vcmsmedischedulerdata.requesttype="/mediaSchedule/createMediaPlayerScheduler";
 
 
       this._CVMSfacade.SaveMediaScheduler(_vcmsmedischedulerdata).pipe(catchError((err) => {

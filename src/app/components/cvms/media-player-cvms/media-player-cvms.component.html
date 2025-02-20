@@ -15,12 +15,15 @@
                                 <div class=" col-md-5 col-sm-5 col">
                                     <div class="mb-4 form-group">
                                         <label class="form-label">Select Controller</label>
+
+                                     
+
                                         <select *ngIf="_inputVmsData != undefined" [(ngModel)]="SelectedControllerId"
                                             class="form-control form-control-sm" (change)="getSelectedVms($event)">
                                             <option [ngValue]="null" disabled>Choose Controller</option>
                                             <option *ngFor="let type of _inputVmsData.data" [ngValue]="type.value">
                                                 {{type.displayName}}</option>
-                                        </select>
+                                        </select> 
                                     </div>
                                 </div>
                                 <div class="col-md-5 col-sm-5 col">
@@ -61,7 +64,7 @@
 
 
 
-                            
+
 
                             <div formArrayName="tiles" *ngIf="currentTile != -1">
 
@@ -199,7 +202,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <div class="row">
                                 <div class="col-sm-5 col-md-5 mb-3">
                                     <button type="button" (click)="addTile()" class="btn btn-primary">

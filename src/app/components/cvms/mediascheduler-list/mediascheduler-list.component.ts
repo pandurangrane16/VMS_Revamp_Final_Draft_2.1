@@ -8,6 +8,7 @@ import { CVMSMediaFacadeServiceService } from 'src/app/facade/facade_services/cv
 import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-dialog.service';
 import { InputRequest } from 'src/app/models/request/inputReq';
 import { Globals } from 'src/app/utils/global';
+import { Mediascheduler } from 'src/app/models/vcms/mediascheduler';
 
 @Component({
   selector: 'app-mediascheduler-list',
@@ -43,9 +44,13 @@ export class MediaschedulerListComponent {
     { "Head": "End Date Time", "FieldName": "enddate", "type": "string" },
     { "Head": "Scheduler Status", "FieldName": "statusdesc", "type": "string" },
     { "Head": "Scheduler Created Date", "FieldName": "creationTime", "type": "string" },
+    { "Head": "Action", "FieldName": "actions", "type": "button" },
   ];
   listOfMedialist: any = [];
-  btnArray: any[] = [];
+  btnArray: any[] = [
+  { "name": "View", "icon": "icon-eye", "tip": "Click to View", "action": "update","condition": (row: any) => row.status === 1   },
+  { "name": "Remove", "icon": "icon-trash", "tip": "Click to Remove", "action": "delete" ,"condition": (row: any) => row.status === 1  },
+  {"name":"Update", "icon": "icon-write", "tip": "Click to Update","action": "update","condition": (row: any) => row.status === 1 }]; 
 
   constructor(private _commonFacade: CommonFacadeService,
     private global: Globals,
@@ -63,7 +68,72 @@ export class MediaschedulerListComponent {
     this.isSearch = false;
     this.getMediaDetails();
   }
-
+  ButtonAction(actiondata: any) { 
+    if (actiondata.action === "delete") {
+      this.deleteRecord(actiondata.data);
+    }
+    if (actiondata.action === "update") {
+      this.updateRecord(actiondata.data);
+    }
+  }
+  updateRecord(element?: any){}
+      deleteRecord(element?: any) {
+          this.confirmationDialogService.confirm('Please confirm..', 'Do you really want to remove this Playlist... ?')
+          .then((confirmed) => { if (confirmed == true) this.RemovePlaylist(element) })
+          .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
+        }
+        RemovePlaylist(element?: any){
+             let _vcmsuploadmediadata = new Mediascheduler();
+        
+             _vcmsuploadmediadata.controllerName = element.controllerName;
+            // _vcmsuploadmediadata.IpAddress = this.vmsIds[0];
+        
+             _vcmsuploadmediadata.IpAddress = element.ipAddress;
+             _vcmsuploadmediadata.VmsId=element.vmsId;
+        
+            // _vcmsuploadmediadata.VmsId = Number.parseInt(this.vmsId[0]);
+        
+             _vcmsuploadmediadata.status = 0;
+             _vcmsuploadmediadata.AuditedBy = "System";
+             _vcmsuploadmediadata.IsAudited = true;
+             _vcmsuploadmediadata.AuditedTime = new Date();
+             _vcmsuploadmediadata.Reason = "Upload Data for test";
+             //_vcmsuploadmediadata.createddate = new Date();
+             _vcmsuploadmediadata.CreationTime = new Date();
+             _vcmsuploadmediadata.requesttype ="/mediaSchedule/deleteSchedule"
+             _vcmsuploadmediadata.medianame=element.mediaName;
+            
+             let requestData2 = JSON.parse(element.requestData); // Parse requestData from element
+             let mediaName = requestData2.name;
+             let requestData = {
+              scheduleId: element.id,
+              scheduleName: mediaName
+            
+            };
+            _vcmsuploadmediadata.RequestData = JSON.stringify(requestData);
+              // _vcmsuploadmediadata.RequestData = JSON.stringify(_requestTextData);
+             
+         
+         
+             this.mediaFacade.SaveMediaScheduler(_vcmsuploadmediadata).subscribe(data => {
+               if (data == 0) {
+                 this.toast.error("Error occured while saving data for " + _vcmsuploadmediadata.controllerName);
+               }
+               else {
+                this.listOfMediaUpload = this.listOfMediaUpload.filter((media: any) => media.id !== element.id);
+        
+        
+        
+          this.toast.success("Data deleted successfully for " + _vcmsuploadmediadata.controllerName);
+        
+          
+           this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this._router.navigate(['cvms/MediaPlayerSchedulerList']);
+           });
+               }
+             });
+           }
+      
   //Common Functionalities
   onPager(pager: number) {
     this._request.pageSize = this.recordPerPage;
@@ -159,5 +229,5 @@ export class MediaschedulerListComponent {
     }
   }
 
-  ButtonAction(actiondata: any) { }
+  
 }

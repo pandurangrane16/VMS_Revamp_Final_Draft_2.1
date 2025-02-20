@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { json } from '@rxweb/reactive-form-validators';
 import { ToastrService } from 'ngx-toastr';
+import { Mediaplayer } from 'src/app/models/vcms/mediaplayer';
 import { CommonFacadeService } from 'src/app/facade/facade_services/common-facade.service';
 import { CVMSMediaFacadeServiceService } from 'src/app/facade/facade_services/cvmsmedia-facade-service.service';
 import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-dialog.service';
@@ -37,17 +38,19 @@ export class MediaplayerlistComponent {
    
   headerArr = [      
       { "Head": "Controller Name", "FieldName": "ipAddress", "type": "string" },      
-      { "Head": "Media Palyer Name", "FieldName": "name", "type": "string" },   
+      { "Head": "Media Player Name", "FieldName": "name", "type": "string" },   
       { "Head": "Media Player Status", "FieldName": "statusdesc", "type": "string" },
       { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
+      { "Head": "Action", "FieldName": "actions", "type": "button" },
     ];
     listOfMedialist:any=[];
-    btnArray: any[] = [];
+   
   
     constructor(private _commonFacade: CommonFacadeService,
       private global: Globals,
       private _router: Router,
       private mediaFacade: CVMSMediaFacadeServiceService,
+     // private _CVMSfacade: CVMSMediaFacadeServiceService,
       private confirmationDialogService: ConfirmationDialogService,
       public datepipe: DatePipe,
       private toast: ToastrService,
@@ -102,7 +105,8 @@ export class MediaplayerlistComponent {
       this._request.pageSize = this.recordPerPage;
       this._request.startId = this.startId;
       this._request.searchItem = this.searchText;
-      this.mediaFacade.GetMediaPlayer(this._request, this.tabno).subscribe(data => {
+      this.mediaFacade.GetMediaPlayer(this._request).subscribe(data => {
+
         if (data != null) {
           this.listOfMediaUpload = data.data;
           this.listOfMediaUpload.forEach((element: any) => {
@@ -149,8 +153,86 @@ export class MediaplayerlistComponent {
         this.listOfMediaUploadRejected = this.listOfMediaUpload.filter((x: any) => x.status == 2);
       }
     }
+    btnArray: any[] = [{ "name": "View", "icon": "icon-eye", "tip": "Click to View", "action": "update","condition": (row: any) => row.status === 1   },
+       { "name": "Remove", "icon": "icon-trash", "tip": "Click to Remove", "action": "delete" ,"condition": (row: any) => row.status === 1  },
+      {"name":"Update", "icon": "icon-write",  
+    "tip": "Click to Update", 
+    "action": "update", 
+    "condition": (row: any) => row.status === 1 }]; 
 
-    ButtonAction(actiondata: any) { }
+      ButtonAction(actiondata: any) { 
+        if (actiondata.action === "delete") {
+          this.deleteRecord(actiondata.data);
+        }
+        if (actiondata.action === "update") {
+          this.updateRecord(actiondata.data);
+        }
+      }
+      updateRecord(element?: any){
+        const id= element.id;
+        if (id) {
+          this._router.navigate(['cvms/playlist-edit/', id]); // Navigate to the edit page with ID
+        } else {
+          this.toast.error("Invalid record selected for update.");
+        }
+        
+      }
+       deleteRecord(element?: any) {
+        this.confirmationDialogService.confirm('Please confirm..', 'Do you really want to remove this Playlist... ?')
+        .then((confirmed) => { if (confirmed == true) this.RemovePlaylist(element) })
+        .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
+      }
+      RemovePlaylist(element?: any){
+           let _vcmsuploadmediadata = new Mediaplayer();
+      
+           _vcmsuploadmediadata.controllerName = element.controllerName;
+          // _vcmsuploadmediadata.IpAddress = this.vmsIds[0];
+      
+           _vcmsuploadmediadata.IpAddress = element.ipAddress;
+           _vcmsuploadmediadata.VmsId=element.vmsId;
+      
+          // _vcmsuploadmediadata.VmsId = Number.parseInt(this.vmsId[0]);
+      
+           _vcmsuploadmediadata.status = 0;
+           _vcmsuploadmediadata.AuditedBy = "System";
+           _vcmsuploadmediadata.IsAudited = true;
+           _vcmsuploadmediadata.AuditedTime = new Date();
+           _vcmsuploadmediadata.Reason = "Upload Data for test";
+           //_vcmsuploadmediadata.createddate = new Date();
+           _vcmsuploadmediadata.CreationTime = new Date();
+           _vcmsuploadmediadata.RequestType ="/mediaPlayer/deleteMediaPlayer"
+           _vcmsuploadmediadata.medianame=element.mediaName;
+          
+           let requestData2 = JSON.parse(element.requestData); // Parse requestData from element
+           let mediaName = requestData2.name;
+           let requestData = {
+            mediaPlayerId: element.id,
+            mediaPlayerName: mediaName
+          
+          };
+          _vcmsuploadmediadata.RequestData = JSON.stringify(requestData);
+            // _vcmsuploadmediadata.RequestData = JSON.stringify(_requestTextData);
+           
+       
+       
+           this.mediaFacade.SaveMediaPlayer(_vcmsuploadmediadata).subscribe(data => {
+             if (data == 0) {
+               this.toast.error("Error occured while saving data for " + _vcmsuploadmediadata.controllerName);
+             }
+             else {
+              this.listOfMediaUpload = this.listOfMediaUpload.filter((media: any) => media.id !== element.id);
+      
+      
+      
+        this.toast.success("Data deleted successfully for " + _vcmsuploadmediadata.controllerName);
+      
+        
+         this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
+         });
+             }
+           });
+         }
     
-  
-}
+        }
+

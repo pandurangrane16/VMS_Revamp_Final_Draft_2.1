@@ -12,8 +12,8 @@ export class MediaplayerserviceService {
     private _http: HttpClient) { }
 
 
-  getUploadMediaDetails(inputReq :any,type : number) {
-    return this._httpService._postMethod(inputReq,'Vcms_API/api/Mediaplayer/GetMediaPlayer?type='+ type);
+  getUploadMediaDetails(inputReq :any) {
+    return this._httpService._postMethod(inputReq,'Vcms_API/api/Mediaplayer/GetMediaPlayer');
   }
   SaveMedia(_data: any) {
 
@@ -21,11 +21,16 @@ export class MediaplayerserviceService {
   }
 
   UpdateMedia(_data: any) {
-    return this._httpService._postMethod(_data, 'Vcms_API/api/Mediaplayer/PutMediaPlayerMaster');
+    return this._httpService._putMethod(_data, 'Vcms_API/api/Mediaplayer/PutMediaPlayerMaster');
   }
   getMediaPlayerByIpAddress(ipAdd: string) {
     return this._httpService._getMethod('Vcms_API/api/Mediaplayer/GetMediaPlayerByIpAddress?_ipAddress=' + ipAdd);
   }
+  getMediaPlayerById(id: number,body:any) {
+    return this._httpService._postMethod(body,'Vcms_API/api/Mediaplayer/GetMediaPlayer?id=' + id);
+  }
+  
+  
 
 }
 

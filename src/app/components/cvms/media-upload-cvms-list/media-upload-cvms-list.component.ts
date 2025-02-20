@@ -55,8 +55,7 @@ export class MediaUploadCvmsListComponent {
   listOfMedialist: any = [];
   //btnArray: any[] = [];
   btnArray: any[] = [
-    { "name": "Remove", "icon": "icon-trash", "tip": "Click to Remove", "action": "delete", condition: (row: any) => row.status === 1}]; 
-
+  { "name": "Remove", "icon": "icon-trash", "tip": "Click to Remove", "action": "delete" ,"condition": (row: any) => row.status === 1  },]; 
 
 
 
@@ -146,7 +145,7 @@ export class MediaUploadCvmsListComponent {
 
   
 
-        this.listOfMediaUpload.forEach((element: any) => {
+          this.listOfMediaUpload.forEach((element: any) => {
           if (element.creationTime != null) {
             var _d = new Date(element.creationTime);
             var _dateStr = this.datepipe.transform(_d, "dd-MM-yyyy HH:mm:ss");
@@ -194,8 +193,12 @@ export class MediaUploadCvmsListComponent {
       this.deleteRecord(actiondata.data);
     }
   }
-
   deleteRecord(element?: any) {
+    this.confirmationDialogService.confirm('Please confirm..', 'Do you really want to remove this media... ?')
+    .then((confirmed) => { if (confirmed == true) this.RemovePlaylist(element) })
+    .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
+  }
+  RemovePlaylist(element?: any) {
 
      let _vcmsuploadmediadata = new Vcmsuploadmedia();
 

@@ -39,6 +39,7 @@ export class MedialiveplaylistComponent {
       { "Head": "Controller Name", "FieldName": "ipAddress", "type": "string" },      
       { "Head": "Status", "FieldName": "statusdesc", "type": "string" },
       { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
+      
     ];
     listOfMedialist:any=[];
     btnArray: any[] = [];

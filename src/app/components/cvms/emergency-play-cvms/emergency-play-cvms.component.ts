@@ -228,7 +228,8 @@ export class EmergencyPlayCvmsComponent {
       responseId: 0,
       requestData: JSON.stringify(liveplaymedia),
       responseData: null,
-      status: 0      
+      status: 0,  
+      requesttype :"/player/livePlay"   
     };
     console.log(MediaJson);
     this.mediaFacade.PlayEmergencyMedia(MediaJson).subscribe(data => {
