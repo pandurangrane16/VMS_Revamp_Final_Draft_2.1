@@ -32,5 +32,13 @@ export class MediaplayerserviceService {
   
   
 
+  CheckDuplicateMediaPlayerName(mediaPlayerName:string,ipAdd:string){    
+    return this._httpService._getMethod("Vcms_API/api/Mediaplayer/CheckDuplicateMediaPlayerName?pMediaPlayerName="+mediaPlayerName+"&_ipaddres="+ipAdd);
+  }
+
+  GetMediaPlayerListDetails(inputReq :any,type : number){    
+    return this._httpService._postMethod(inputReq,"Vcms_API/api/Mediaplayer/GetMediaPlayerPaging?type=" + type);
+  }
+
 }
 

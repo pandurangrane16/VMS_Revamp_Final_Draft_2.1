@@ -14,10 +14,7 @@
                             <div class="row">
                                 <div class=" col-md-5 col-sm-5 col">
                                     <div class="mb-4 form-group">
-                                        <label class="form-label">Select Controller</label>
-
-                                     
-
+                                        <label class="form-label lable-bold">Select Controller</label>
                                         <select *ngIf="_inputVmsData != undefined" [(ngModel)]="SelectedControllerId"
                                             class="form-control form-control-sm" (change)="getSelectedVms($event)">
                                             <option [ngValue]="null" disabled>Choose Controller</option>
@@ -28,7 +25,7 @@
                                 </div>
                                 <div class="col-md-5 col-sm-5 col">
                                     <div class="mb-4 form-group">
-                                        <label class="form-label">Media Player Name*</label>
+                                        <label class="form-label lable-bold">Media Player Name*</label>
                                         <input type="text" formControlName="name" [(ngModel)]="MediaName"
                                             [ngClass]="{ 'is-invalid': f['name'].touched && f['name'].errors}"
                                             class="form-control" placeholder="Enter Media Player Name" />
@@ -43,7 +40,7 @@
                                 <div class="col-md-2 col-sm-2 col">
                                     <div class="row">
                                         <div class="mb-3 col form-group">
-                                            <label class="form-label">Media Loop Count*</label>
+                                            <label class="form-label lable-bold">Media Loop Count*</label>
                                             <input type="text" formControlName="mediaLoopCount" class="form-control"
                                                 [ngClass]="{ 'is-invalid': f['mediaLoopCount'].touched && f['mediaLoopCount'].errors}"
                                                 placeholder="Enter Media loop count" />
@@ -61,22 +58,19 @@
                             </div>
 
 
-
-
-
-
-
                             <div formArrayName="tiles" *ngIf="currentTile != -1">
 
-                                <div *ngFor="let user of userDetails.controls; let i = index" class="bordered-div mb-4 light-gray-div" >
-                                    <i class="fa fa-close" style="float: right; font-size:24px" aria-hidden="true" (click)="removeTiles(i)"></i>                                   
-                                    
+                                <div *ngFor="let user of userDetails.controls; let i = index"
+                                    class="bordered-div mb-4 light-gray-div">
+                                    <i class="fa fa-close" style="float: right; font-size:24px" aria-hidden="true"
+                                        (click)="removeTiles(i)"></i>
+
                                     <div [formGroupName]="i">
                                         <div class="row">
 
                                             <div class="col-md-3 mb-2">
                                                 <div class="form-group">
-                                                    <label for="tileNo">Tile No : </label>
+                                                    <label for="tileNo lable-bold">Tile No : </label>
                                                     <input type="number" id="tileNo" formControlName="tileNo" min="1"
                                                         class="form-control" (input)="checkValue($event)" />
 
@@ -85,63 +79,85 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-group">
-                                                    <label for="playlistLoopCount">Playlist Loop Count</label>
+                                                    <label for="playlistLoopCount lable-bold">Playlist Loop Count</label>
                                                     <input id="playlistLoopCount" type="number"
                                                         formControlName="playlistLoopCount" min="1"
                                                         (input)="checkValue($event)" class="form-control" />
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
-                                                                                                
+
                                                 <button ngClass="btn btn-secondary" (click)="ShowMediaPopup('Media',i)"
                                                     class="form-control"><i class="fa fa-plus">&nbsp;&nbsp;Image</i>
-                                                    </button>
+                                                </button>
                                             </div>
                                             <div class="col-md-2">
                                                 <button ngClass="btn btn-secondary" (click)="ShowMediaPopup('Text',i)"
                                                     class="form-control"><i class="fa fa-plus">&nbsp;&nbsp;Text</i>
-                                                    </button>
+                                                </button>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row TableHeader">
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="col-md-2 text-center">
+                                                        #
+                                                    </div>
+                                                    <div class="col-md-3 text-center">
+                                                        File/Text Name
+                                                    </div>
+                                                    <div class="col-md-2 text-center">
+                                                        Play Order
+                                                    </div>
+                                                    <div class="col-md-2 text-center">
+                                                        Duration
+                                                    </div>
+                                                    <div class="col-md-3 text-center">
+                                                        Loop Count
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="col-md-3 text-center">
+                                                        Font Size
+                                                    </div>
+                                                    <div class="col-md-3 text-center">
+                                                        Font Color
+                                                    </div>
+                                                    <div class="col-md-3 text-center">
+                                                        Background Color
+                                                    </div>
+                                                    <div class="col-md-3 text-center">
+                                                        Action
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="col-md-7"></div>
+                                                    <div class="col-md-2 text-center">
+                                                        <input type="number" formControlName="duration" *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
+                                                            class="form-control"
+                                                            style="padding-bottom: 4px;border-color: black;"
+                                                            (blur)="ToAllDuration(i)" placeholder="To All" />
+                                                    </div>
+                                                    <div class="col-md-3 text-center">
+                                                        <input type="number" formControlName="mediaLoopCount" *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
+                                                            class="form-control"
+                                                            style="padding-bottom: 4px;border-color: black;"
+                                                            (blur)="ToAllLoop(i)" placeholder="To All" />
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
 
                                         <div formArrayName="playlist">
-                                            <div class="row TableHeader">
-                                                <div class="col-md-6">
-                                                    <div class="row">
-                                                        <div class="col-md-2 text-center">
-                                                            #
-                                                        </div>
-                                                        <div class="col-md-3 text-center">
-                                                            File/Text Name
-                                                        </div>
-                                                        <div class="col-md-2 text-center">
-                                                            Play Order
-                                                        </div>
-                                                        <div class="col-md-2 text-center">
-                                                            Duration
-                                                        </div>
-                                                        <div class="col-md-3 text-center">
-                                                            Loop Count
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="row">
-                                                        <div class="col-md-3 text-center">
-                                                            Font Size
-                                                        </div>
-                                                        <div class="col-md-3 text-center">
-                                                            Font Color
-                                                        </div>
-                                                        <div class="col-md-3 text-center">
-                                                            Background Color
-                                                        </div>
-                                                        <div class="col-md-3 text-center">
-                                                            Action
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                             <div class="row" *ngFor="let row of getPlaylist(i).controls; let j = index"
                                                 [formGroupName]="j">
                                                 <div class="col-md-6">
@@ -169,7 +185,6 @@
                                                         <div class="col-md-3">
                                                             <input type="number" formControlName="videoLoopCount"
                                                                 min="1" (input)="checkValue($event)"
-                                                                [readonly]="!isNameValid(row.get('mediaName')?.value)"
                                                                 class="form-control" placeholder="" />
                                                         </div>
                                                     </div>
@@ -193,9 +208,42 @@
                                                                 class="form-control" placeholder="" />
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <i class="fa fa-trash-o remove-media" (click)="RemoveRow(i,j)"></i>                                                            
+                                                            <i class="fa fa-trash-o remove-media"
+                                                                (click)="RemoveRow(i,j)"></i>
                                                         </div>
                                                     </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="col-md-5"></div>
+                                                    <div class="col-md-1">
+                                                        <button class="btn btn-secondary" *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
+                                                            (click)="changeSequence(i,0,0)"
+                                                            formControllName="isPlayOrder">
+                                                            <svg width="16" height="16" fill="currentColor"
+                                                                class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5" />
+                                                            </svg>
+                                                        </button>
+
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <button class="btn btn-secondary" (click)="validateSequence(i,0)" *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0">
+                                                            <svg width="16" height="16" fill="currentColor"
+                                                                class="bi bi-check-square" viewBox="0 0 16 16">
+                                                                <path
+                                                                    d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                                                                <path
+                                                                    d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -207,12 +255,11 @@
                                 <div class="col-sm-5 col-md-5 mb-3">
                                     <button type="button" (click)="addTile()" class="btn btn-primary">
                                         <i class="fa fa-plus">&nbsp;&nbsp;Tile</i>
-                                        </button>
+                                    </button>
                                 </div>
-                                <div class="col-sm-6 col-md-6 col" >
+                                <div class="col-sm-6 col-md-6 col">
                                     <button ngClass="btn btn-success" *ngIf="ShowSaveBtn"
-                                        (click)=" OnSavePlaylistDetails()" style="width: 45%" formControlName="SaveDetails"
-                                        class="form-control">Save
+                                        (click)=" OnSavePlaylistDetails_new()" style="width: 45%" class="form-control">Save
                                         Details</button>
                                 </div>
                             </div>

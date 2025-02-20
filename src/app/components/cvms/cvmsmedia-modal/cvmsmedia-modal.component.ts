@@ -39,7 +39,7 @@ export class CVMSMediaModalComponent implements OnInit {
 
   }
   ngOnInit(): void {
-    //console.log(this.data);
+       
     this._currentTile = this.data._crrTile;
     if (this.data.modalType == "mediaupload") {
       this.listOfMedialist = [];

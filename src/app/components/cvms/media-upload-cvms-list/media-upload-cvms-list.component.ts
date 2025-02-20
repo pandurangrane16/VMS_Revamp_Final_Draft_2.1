@@ -9,10 +9,11 @@ import { MediaFacadeService } from 'src/app/facade/facade_services/media-facade.
 import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-dialog.service';
 import { InputRequest } from 'src/app/models/request/inputReq';
 import { Globals } from 'src/app/utils/global';
-import { Vcmsuploadmedia } from 'src/app/models/vcms/vcmsuploadmedia';
 import { CVMSMediaModalComponent } from '../cvmsmedia-modal/cvmsmedia-modal.component';
 import { wind } from 'ngx-bootstrap-icons';
 import { Subscription, interval } from 'rxjs';
+import { json } from '@rxweb/reactive-form-validators';
+import { Vcmsuploadmedia } from 'src/app/models/vcms/vcmsuploadmedia';
 
 
 @Component({
@@ -22,9 +23,6 @@ import { Subscription, interval } from 'rxjs';
 })
 export class MediaUploadCvmsListComponent {
   minDate: any;
-
- 
-
   modelFromDate: any;
   modelToDate: any;
   searchText!: string;
@@ -45,8 +43,8 @@ export class MediaUploadCvmsListComponent {
   subscription: any;
   _request: any = new InputRequest();
   headerArr = [
-    // { "Head": "ID", "FieldName": "id", "type": "number" },
-    { "Head": "Controller Name", "FieldName": "ipAddress", "type": "string" },
+    { "Head": "ID", "FieldName": "medidId", "type": "number" },
+    { "Head": "Controller Name", "FieldName": "controllerName", "type": "string" },
     { "Head": "Media Name", "FieldName": "mediaName", "type": "string" },
     { "Head": "Status", "FieldName": "statusdesc", "type": "string" },
     { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
@@ -56,7 +54,6 @@ export class MediaUploadCvmsListComponent {
   //btnArray: any[] = [];
   btnArray: any[] = [
   { "name": "Remove", "icon": "icon-trash", "tip": "Click to Remove", "action": "delete" ,"condition": (row: any) => row.status === 1  },]; 
-
 
 
   constructor(private _commonFacade: CommonFacadeService,
@@ -72,7 +69,8 @@ export class MediaUploadCvmsListComponent {
 
   }
   ngOnInit(): void {
-    this.type = 2;
+    this.type = 1;
+    
     this.getMediaDetails();
     //this.refreshPage();
   }
@@ -81,7 +79,7 @@ export class MediaUploadCvmsListComponent {
     const source = interval(5000);
     this.subscription = source.subscribe((val) => this.getMediaDetails());
     // setInterval(() => {
-      
+
     // }, 5000);
   }
   OnTabChange(status: number) {
@@ -125,25 +123,13 @@ export class MediaUploadCvmsListComponent {
     this._router.navigate(['cvms/upload-media']);
   }
 
-  getControllerName(ipAddress:string){
-    this.mediaFacade.GetVMSNameForIpAddress(ipAddress).subscribe(data => {
-      if (data != null) {
-        this.listOfMediaUpload = data.data;       
-        
-      }
-    })
-  }
+  
 
   getMediaDetails() {
     this._request.currentPage = this.pager;
     this._request.pageSize = this.recordPerPage;
     this._request.startId = this.startId;
     this._request.searchItem = this.searchText;
-    this.mediaFacade.GetMediaUploadDetails(this._request, this.type).subscribe(data => {
-      if (data != null) {
-        this.listOfMediaUpload = data.data;
-
-  
 
           this.listOfMediaUpload.forEach((element: any) => {
           if (element.creationTime != null) {
@@ -160,6 +146,7 @@ export class MediaUploadCvmsListComponent {
           else if (element.status == 2) {
             element.statusdesc = "Sent Failed"
           }
+
         });
         var _length = data.totalRecords / this.recordPerPage;
         if (_length > Math.floor(_length) && Math.floor(_length) != 0)
@@ -183,8 +170,7 @@ export class MediaUploadCvmsListComponent {
       this.listOfMediaUploadRejected = this.listOfMediaUpload.filter((x: any) => x.status == 2);
     }
   }
-  // ButtonAction(actiondata: any) { 
-
+  // ButtonAction(actiondata: any) {
   //   alert(actiondata.actions);
   // }
 
@@ -238,7 +224,6 @@ export class MediaUploadCvmsListComponent {
         this.listOfMediaUpload = this.listOfMediaUpload.filter((media: any) => media.id !== element.id);
 
 
-
   this.toast.success("Data deleted successfully for " + _vcmsuploadmediadata.controllerName);
 
   
@@ -250,3 +235,10 @@ export class MediaUploadCvmsListComponent {
    }
 
 }
+
+
+
+
+
+
+

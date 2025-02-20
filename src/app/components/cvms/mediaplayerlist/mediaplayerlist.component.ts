@@ -105,29 +105,34 @@ export class MediaplayerlistComponent {
       this._request.pageSize = this.recordPerPage;
       this._request.startId = this.startId;
       this._request.searchItem = this.searchText;
+<<<<<<< HEAD
       this.mediaFacade.GetMediaPlayer(this._request).subscribe(data => {
 
         if (data != null) {
+=======
+      this.mediaFacade.GetMediaPlayerListDetails(this._request, this.tabno).subscribe(data => {
+        if (data.data != null) {
+>>>>>>> 0b2ff1c8e491dad01e247be8536c56490742cb49
           this.listOfMediaUpload = data.data;
-          this.listOfMediaUpload.forEach((element: any) => {
-           
+          this.listOfMediaUpload.forEach((element: any) => {           
 
-            let _data = JSON.parse(element.requestData);
+            let _data = JSON.parse(element.mediaplayer.requestData);
+            element.medidId = element.mediaplayer.id;
             element.schedulename = _data.name;
             element.mediaPlayerName = _data.mediaPlayerName;
             element.name = _data.name;;
-            if (element.creationTime != null) {
-              var _d = new Date(element.creationTime);
+            if (element.mediaplayer.creationTime != null) {
+              var _d = new Date(element.mediaplayer.creationTime);
               var _dateStr = this.datepipe.transform(_d, "dd-MM-yyyy HH:mm:ss");
               element.creationTime = _dateStr;
             }
-            if (element.status == 1) {
+            if (element.mediaplayer.status == 1) {
               element.statusdesc = "Sent Successfully"
             }
-            else if (element.status == 0) {
+            else if (element.mediaplayer.status == 0) {
               element.statusdesc = "Sent Pending"
             }
-            else if (element.status == 2) {
+            else if (element.mediaplayer.status == 2) {
               element.statusdesc = "Sent Failed"
             }
           });

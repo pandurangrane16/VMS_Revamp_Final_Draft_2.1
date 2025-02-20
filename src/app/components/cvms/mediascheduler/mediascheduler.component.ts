@@ -234,6 +234,18 @@ export class MediaschedulerComponent {
       this._toast.error("No Media Player selected. Please select at least one Media Player to proceed.");
       return;
     }
+
+    if(this.form.controls["globalFromDt"].value =='' || this.form.controls["globalFromTm"].value == '')
+    {
+      this._toast.error("Either From Date or Time missing ,Please select From Date and Time for Media Scheduler");
+      return;
+    }
+    
+    if( this.form.controls["globalToDt"].value == '' || this.form.controls["globalToTm"].value == ''){
+      this._toast.error("Either To Date or Time missing, Please select To Date and Time for Media Scheduler. ");
+      return; 
+    }
+
     if (this.form.valid) {
       let _vcmsmedischedulerdata = new Mediascheduler();
       let pubFromDt = this.form.controls["globalFromDt"].value;

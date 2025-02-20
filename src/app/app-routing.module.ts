@@ -209,7 +209,6 @@ const routes: Routes = [
     data: { title: 'Playlist Creation' },
     canActivate: [AuthGuradService]
   },
-
   {
     path: "medias/playlist-configure",
     component: PlaylistConfigureComponent,

@@ -606,5 +606,8 @@ a, a:active, a:checked, a:focus, a:hover{color: #851fee;}
   margin: 0;
   padding-bottom: 3px;}
 
-
+.lable-bold{
+  font-weight: bold;
+}
+  
   

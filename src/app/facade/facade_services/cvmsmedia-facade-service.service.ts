@@ -27,13 +27,18 @@ export class CVMSMediaFacadeServiceService {
   UpdateMediaPlayer(data:any){
     return this._mediaplayer.UpdateMedia(data);
   }
-  GetMediaPlayerById(data:any){
-    return this._mediaplayer.UpdateMedia(data);
-  }
 
   GetMediaUploadDetails(inputReq :any,type : number) {
     return this._mediupload.getMediauploadDetails(inputReq,type);
   }
+  GetUploadMediaListDetails(inputReq :any,type : number) {
+    return this._mediupload.GetUploadMediaListDetails(inputReq,type);
+  }
+
+  GetMediaPlayerListDetails(inputReq :any,type : number) {
+    return this._mediaplayer.GetMediaPlayerListDetails(inputReq,type);
+  }
+  
 
   SaveMediaUpload(data:any){
    

@@ -105,7 +105,7 @@ export class MediaUploadcvmsComponent implements OnInit {
       mediatype: ['', ''],
     });
 
-    this.form.get('mediatype')?.valueChanges.subscribe((Method:any)=>{
+    this.form.get('mediatype')?.valueChanges.subscribe((Method: any) => {
       this.UpdateValidations(Method);
     })
   }
@@ -119,21 +119,20 @@ export class MediaUploadcvmsComponent implements OnInit {
     this._router.navigate(['cvms/uploadMedia']);
   }
 
-  UpdateValidations(method:string){
+  UpdateValidations(method: string) {
 
-    const MediaName = this.form.get('mediaName') 
-    const MediaTextName = this.form.get('MediaTextName') 
+    const MediaName = this.form.get('mediaName')
+    const MediaTextName = this.form.get('MediaTextName')
 
     if (method == 'text') {
-      MediaName?.setValidators([Validators.required,this.noLeadingEndingWhitespace]);
-      MediaTextName?.setValidators([Validators.required,this.noLeadingEndingWhitespace]); 
+      MediaName?.setValidators([Validators.required, this.noLeadingEndingWhitespace]);
+      MediaTextName?.setValidators([Validators.required, this.noLeadingEndingWhitespace]);
     }
-    else
-    {
+    else {
       MediaName?.clearValidators();
       MediaTextName?.clearValidators();
     }
-    
+
     MediaName?.updateValueAndValidity();
     MediaTextName?.updateValueAndValidity();
   }
@@ -155,11 +154,11 @@ export class MediaUploadcvmsComponent implements OnInit {
       if (this.isFileTypeImage) {
         for (let j = 0; j < this.selectedIds.length; j++) {
           const media = this.selectedMedia[j];
-          this.AddUpdateMedia(element, media);
+          this.AddUpdateMedia(element, media, this.vmsId[i]);
         }
       } else {
-        this._CVMSfacade.CheckDuplicateMediaName(this.form.controls.mediaName.value,this.vmsIds[i]).pipe(catchError((error)=>{
-          this.toast.error("Error occured while checking duplicate Media name " + error);    
+        this._CVMSfacade.CheckDuplicateMediaName(this.form.controls.mediaName.value, this.vmsIds[i]).pipe(catchError((error) => {
+          this.toast.error("Error occured while checking duplicate Media name " + error);
           throw error;
         })).subscribe(data => {
           if (data) {
@@ -167,19 +166,19 @@ export class MediaUploadcvmsComponent implements OnInit {
             return;
           }
           else {
-            this.AddUpdateMedia(element, null);
-          }      
-        })        
+            this.AddUpdateMedia(element, null, null);
+          }
+        })
       }
-    }    
+    }
   }
 
 
-  AddUpdateMedia(element?: any, media?: any) {
+  AddUpdateMedia(element?: any, media?: any, vmsId?: any ) {
     let _vcmsuploadmediadata = new Vcmsuploadmedia();
     _vcmsuploadmediadata.controllerName = element;
-    _vcmsuploadmediadata.IpAddress = this.vmsIds[0];
-    _vcmsuploadmediadata.VmsId = Number.parseInt(this.vmsId[0]);
+    _vcmsuploadmediadata.IpAddress = element;
+    _vcmsuploadmediadata.VmsId = Number.parseInt(vmsId);
     if (media != null) {
       _vcmsuploadmediadata.medianame = media.displayName;
     }
@@ -192,7 +191,6 @@ export class MediaUploadcvmsComponent implements OnInit {
     _vcmsuploadmediadata.IsAudited = true;
     _vcmsuploadmediadata.AuditedTime = new Date();
     _vcmsuploadmediadata.Reason = "Upload Data for test";
-   // _vcmsuploadmediadata.createddate = new Date();
     _vcmsuploadmediadata.CreationTime = new Date();
     _vcmsuploadmediadata.requesttype ="/media/uploadMedia"
 
@@ -336,13 +334,11 @@ export class MediaUploadcvmsComponent implements OnInit {
       this.vmsIds = [];
 
     else {
-      this.vmsIds = [];
       let inputVal = eve.value.split('|');
       let ipaddress = inputVal[0];
       let vmsid = inputVal[1];
-      if (type == 1)
-       {
-        this.vmsIds.push(ipaddress);
+      if (type == 1){
+        this.vmsIds.push(ipaddress),
           this.vmsId.push(vmsid);
          
        }
@@ -381,14 +377,13 @@ export class MediaUploadcvmsComponent implements OnInit {
       this.MediaName = this.MediaName.substring(0, 25);
     }
   }
-  clearForm() {    
-    this.form.reset();   
-    
+  clearForm() {
+    this.form.reset();
+
     //this.selectedMedia = [];        
     //this.GetVmsDetails();    
-    //this.isFileTypeImage = false;  
+    //this.isFileTypeImage = false;   
     //this.form.controls["isActive"].setValue(false);  
-    
   }
 
   noLeadingEndingWhitespace(control: FormControl) {
