@@ -82,7 +82,10 @@ export class CVMSMediaFacadeServiceService {
     return this._mediupload.GetVMSNameForIpAddress(ipAdd);
   }
 
-  
+  getMediaPlayerById(id: number,body :any) {
+    return this._mediaplayer.getMediaPlayerById(id,body);
+  }
+
 
 
 }
