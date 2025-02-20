@@ -9,5 +9,10 @@ export class Mediaplayer {
     AuditedBy!:string;
     Reason!:string;    
     AuditedTime!:Date;    
-    VmsId!:number;   
+    VmsId!:number;  
+    RequestType! :string; 
+    ResponseData! :string;
+    ResponseId! : number;
+    id!:number;
+    controllerName! :string;
 }

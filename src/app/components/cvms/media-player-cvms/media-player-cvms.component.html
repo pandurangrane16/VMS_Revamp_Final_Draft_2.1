@@ -20,7 +20,7 @@
                                             <option [ngValue]="null" disabled>Choose Controller</option>
                                             <option *ngFor="let type of _inputVmsData.data" [ngValue]="type.value">
                                                 {{type.displayName}}</option>
-                                        </select>
+                                        </select> 
                                     </div>
                                 </div>
                                 <div class="col-md-5 col-sm-5 col">
@@ -250,7 +250,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <div class="row">
                                 <div class="col-sm-5 col-md-5 mb-3">
                                     <button type="button" (click)="addTile()" class="btn btn-primary">

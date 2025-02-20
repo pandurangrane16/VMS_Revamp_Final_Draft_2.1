@@ -53,8 +53,7 @@ export class MediaUploadCvmsListComponent {
   listOfMedialist: any = [];
   //btnArray: any[] = [];
   btnArray: any[] = [
-    { "name": "Remove", "icon": "icon-trash", "tip": "Click to Remove", "action": "delete", condition: (row: any) => row.status === 1}]; 
-
+  { "name": "Remove", "icon": "icon-trash", "tip": "Click to Remove", "action": "delete" ,"condition": (row: any) => row.status === 1  },]; 
 
 
   constructor(private _commonFacade: CommonFacadeService,
@@ -132,29 +131,20 @@ export class MediaUploadCvmsListComponent {
     this._request.startId = this.startId;
     this._request.searchItem = this.searchText;
 
-    this.mediaFacade.GetUploadMediaListDetails(this._request, this.type).subscribe(data => {        
-      
-      if (data.data != null) {
-        let _data = JSON.stringify(data.data);
-        this.listOfMediaUpload = JSON.parse(_data);
-        this.listOfMediaUpload.forEach((element: any) => {
-          if (element.mediaDetails != null) {
-            element.medidId = element.mediaDetails.id;
-            element.mediaName = element.mediaDetails.mediaName;
-            if (element.mediaDetails.creationTime != null) {
-              var _d = new Date(element.mediaDetails.creationTime);
-              var _dateStr = this.datepipe.transform(_d, "dd-MM-yyyy HH:mm:ss");
-              element.creationTime = _dateStr;
-            }
-            if (element.mediaDetails.status == 1) {
-              element.statusdesc = "Sent Successfully"
-            }
-            else if (element.mediaDetails.status == 0) {
-              element.statusdesc = "Sent Pending"
-            }
-            else if (element.mediaDetails.status == 2) {
-              element.statusdesc = "Sent Failed"
-            }
+          this.listOfMediaUpload.forEach((element: any) => {
+          if (element.creationTime != null) {
+            var _d = new Date(element.creationTime);
+            var _dateStr = this.datepipe.transform(_d, "dd-MM-yyyy HH:mm:ss");
+            element.creationTime = _dateStr;
+          }
+          if (element.status == 1) {
+            element.statusdesc = "Sent Successfully"
+          }
+          else if (element.status == 0) {
+            element.statusdesc = "Sent Pending"
+          }
+          else if (element.status == 2) {
+            element.statusdesc = "Sent Failed"
           }
 
         });
@@ -189,8 +179,12 @@ export class MediaUploadCvmsListComponent {
       this.deleteRecord(actiondata.data);
     }
   }
-
   deleteRecord(element?: any) {
+    this.confirmationDialogService.confirm('Please confirm..', 'Do you really want to remove this media... ?')
+    .then((confirmed) => { if (confirmed == true) this.RemovePlaylist(element) })
+    .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
+  }
+  RemovePlaylist(element?: any) {
 
      let _vcmsuploadmediadata = new Vcmsuploadmedia();
 

@@ -16,8 +16,8 @@ export class CVMSMediaFacadeServiceService {
     private _medialive: MedialiveplayService
   ) { }
 
-  GetMediaPlayer(inputReq :any,type : number) {
-    return this._mediaplayer.getUploadMediaDetails(inputReq,type);
+  GetMediaPlayer(inputReq :any,) {
+    return this._mediaplayer.getUploadMediaDetails(inputReq);
   }
 
   SaveMediaPlayer(data:any){   
@@ -56,6 +56,7 @@ export class CVMSMediaFacadeServiceService {
   getMediaPlayerByIpAdd(ipAdd:string){
     return this._mediaplayer.getMediaPlayerByIpAddress(ipAdd);
   }
+ 
   PlayEmergencyMedia(data:any) {       
     return this._medialive.PlayEmergencyMedia(data);
   }
@@ -73,10 +74,6 @@ export class CVMSMediaFacadeServiceService {
   CheckDuplicateMediaName(mediaName:string,ipAdd:string){
     return this._mediupload.CheckDuplicateMediaName(mediaName,ipAdd);
   }
-  CheckDuplicateMediaPlayerName(mediaPlayerName:string,ipAdd:string){
-    return this._mediaplayer.CheckDuplicateMediaPlayerName(mediaPlayerName,ipAdd);
-  }
-
   
   GetVMSNameForIpAddress(ipAdd:string){
     return this._mediupload.GetVMSNameForIpAddress(ipAdd);

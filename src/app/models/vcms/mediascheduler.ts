@@ -11,5 +11,7 @@ export class Mediascheduler {
     resposnedata:string;
     resposneid:number;
     VmsId!:number;   
-    
+    requesttype!:string;
+    controllerName! :string;
+    medianame! :string;
 }
