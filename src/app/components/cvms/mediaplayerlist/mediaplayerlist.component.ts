@@ -105,28 +105,29 @@ export class MediaplayerlistComponent {
       this._request.pageSize = this.recordPerPage;
       this._request.startId = this.startId;
       this._request.searchItem = this.searchText;
-      this.mediaFacade.GetMediaPlayerListDetails(this._request, this.tabno).subscribe(data => {
-        if (data.data != null) {
-          this.listOfMediaUpload = data.data;
-          this.listOfMediaUpload.forEach((element: any) => {           
+      this.mediaFacade.GetMediaPlayer(this._request).subscribe(data => {
 
-            let _data = JSON.parse(element.mediaplayer.requestData);
-            element.medidId = element.mediaplayer.id;
+        if (data != null) {
+          this.listOfMediaUpload = data.data;
+          this.listOfMediaUpload.forEach((element: any) => {
+           
+
+            let _data = JSON.parse(element.requestData);
             element.schedulename = _data.name;
             element.mediaPlayerName = _data.mediaPlayerName;
             element.name = _data.name;;
-            if (element.mediaplayer.creationTime != null) {
-              var _d = new Date(element.mediaplayer.creationTime);
+            if (element.creationTime != null) {
+              var _d = new Date(element.creationTime);
               var _dateStr = this.datepipe.transform(_d, "dd-MM-yyyy HH:mm:ss");
               element.creationTime = _dateStr;
             }
-            if (element.mediaplayer.status == 1) {
+            if (element.status == 1) {
               element.statusdesc = "Sent Successfully"
             }
-            else if (element.mediaplayer.status == 0) {
+            else if (element.status == 0) {
               element.statusdesc = "Sent Pending"
             }
-            else if (element.mediaplayer.status == 2) {
+            else if (element.status == 2) {
               element.statusdesc = "Sent Failed"
             }
           });
@@ -216,14 +217,14 @@ export class MediaplayerlistComponent {
        
            this.mediaFacade.SaveMediaPlayer(_vcmsuploadmediadata).subscribe(data => {
              if (data == 0) {
-               this.toast.error("Error occured while saving data for " + _vcmsuploadmediadata.controllerName);
+               this.toast.error("Error occured while saving data for ");
              }
              else {
               this.listOfMediaUpload = this.listOfMediaUpload.filter((media: any) => media.id !== element.id);
       
       
       
-        this.toast.success("Data deleted successfully for " + _vcmsuploadmediadata.controllerName);
+        this.toast.success("Data deleted successfully for ");
       
         
          this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
