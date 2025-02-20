@@ -30,7 +30,7 @@ import { FileServiceService } from 'src/app/facade/services/vcms/file-service.se
 
 
 export class MediaPlayerCvmsComponent {
-  isSeqValidate : boolean = false;
+  isSeqValidate: boolean = false;
   currentTile: number = -1;
   registrationForm: any;
   disabledTextType: boolean = false;
@@ -48,7 +48,7 @@ export class MediaPlayerCvmsComponent {
   SelectedControllerId: any;
   isPlayOrder: boolean = true;
   dupliactefound: boolean;
-
+  formValid: boolean = false;
 
 
   constructor(private fb: FormBuilder,
@@ -318,7 +318,7 @@ export class MediaPlayerCvmsComponent {
     }
   }
 
-  validateSequence(userIndex: number) {
+  validateSequence(userIndex: number,type:number) {
 
     const playlistArray = this.getPlaylist(userIndex);
     var _okaySequence = true;
@@ -347,7 +347,8 @@ export class MediaPlayerCvmsComponent {
         }
       }
       if (_okaySeq == false) {
-        this.toast.error("Sequence values are missing");
+        if(type == 0)
+          this.toast.error("Sequence values are missing");
       } else {
         playlistArray.controls.forEach((ele: any) => {
           ele.get('playOrder')?.disable();
@@ -355,7 +356,8 @@ export class MediaPlayerCvmsComponent {
       }
     }
     else {
-      this.toast.error("Invalid sequence number occured");
+      if(type == 0)
+        this.toast.error("Invalid sequence number occured");
     }
     return _okaySequence;
   }
@@ -386,78 +388,83 @@ export class MediaPlayerCvmsComponent {
   }
   validateFields() {
     let len = this.registrationForm.controls['tiles'].length;
-    
+
     for (var i = 0; i < len; i++) {
-      this.isSeqValidate = this.validateSequence(i);
-      if(this.isSeqValidate == false){
+      this.isSeqValidate = this.validateSequence(i,1);
+      if (this.isSeqValidate == false) {
         break;
       }
     }
   }
   OnSavePlaylistDetails_new(): void {
-    
-    const ipAddress = this.SelectedControllerId[0];
-    const mediaPlayerName = this.registrationForm.controls["name"].value;
+    this.validateFields();
+    if (this.isSeqValidate) {
+      const ipAddress = this.SelectedControllerId[0];
+      const mediaPlayerName = this.registrationForm.controls["name"].value;
 
-    // Check for duplicate media player name
-    this._CVMSfacade.CheckDuplicateMediaPlayerName(mediaPlayerName, ipAddress).subscribe(data => {
-      if (data === 1) {
-        this.toast.error("Media Player Name already exists in the System.");
-        this.registrationForm.setErrors({ duplicateName: true });
+      // Check for duplicate media player name
+      this._CVMSfacade.CheckDuplicateMediaPlayerName(mediaPlayerName, ipAddress).subscribe(data => {
+        if (data === 1) {
+          this.toast.error("Media Player Name already exists in the System.");
+          this.registrationForm.setErrors({ duplicateName: true });
+          return;
+        }
+      });
+
+      const tiles = this.registrationForm.controls['tiles'];
+      const tileCount = tiles.length;
+
+      if (tileCount === 0) {
+        this.toast.error("At least one playlist must be created to set up the media player.");
         return;
       }
-    });
 
-    const tiles = this.registrationForm.controls['tiles'];
-    const tileCount = tiles.length;
-
-    if (tileCount === 0) {
-      this.toast.error("At least one playlist must be created to set up the media player.");
-      return;
-    }
-
-    // Iterate through tiles and playlists to extract text styles
-    tiles.controls.forEach((tile: any, i: number) => {
-      tile.controls["playlist"].controls.forEach((playlist: any, j: number) => {
-        const textStyle = playlist.controls["textStyle"].value;
-        const formattedTextStyle = {
-          backgroundColor: textStyle.backgroundColor,
-          fontSize: textStyle.fontSize,
-          fontColor: textStyle.fontColor
-        };
-        this.patchTileValue(i, j, formattedTextStyle);
-      });
-    });
-
-    if (!this.registrationForm.valid) {
-      this.toast.error("There was a problem saving your data. Please review your input for any errors.");
-      return;
-    }
-
-    // Create and populate Mediaplayer object
-    const mediaPlayerData = new Mediaplayer();
-    mediaPlayerData.VmsId = Number.parseInt(this.SelectedControllerId[1]);
-    mediaPlayerData.IpAddress = ipAddress;
-    mediaPlayerData.mediaplayername = mediaPlayerName;
-    mediaPlayerData.status = 0;
-    mediaPlayerData.AuditedBy = "System";
-    mediaPlayerData.IsAudited = true;
-    mediaPlayerData.AuditedTime = new Date();
-    mediaPlayerData.Reason = "Upload Data for new MediaPlayer";
-    mediaPlayerData.CreationTime = new Date();
-    mediaPlayerData.RequestData = JSON.stringify(this.registrationForm.value);
-
-    // Save media player data
-    this._CVMSfacade.SaveMediaPlayer(mediaPlayerData).subscribe(data => {
-      if (data === 0) {
-        this.toast.error(`Error occurred while saving data for ${mediaPlayerData.IpAddress}`);
-      } else {
-        this.toast.success(`Saved successfully for ${mediaPlayerData.IpAddress}`);
-        this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-          this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
+      // Iterate through tiles and playlists to extract text styles
+      tiles.controls.forEach((tile: any, i: number) => {
+        tile.controls["playlist"].controls.forEach((playlist: any, j: number) => {
+          const textStyle = playlist.controls["textStyle"].value;
+          const formattedTextStyle = {
+            backgroundColor: textStyle.backgroundColor,
+            fontSize: textStyle.fontSize,
+            fontColor: textStyle.fontColor
+          };
+          this.patchTileValue(i, j, formattedTextStyle);
         });
+      });
+
+      if (!this.registrationForm.valid) {
+        this.toast.error("There was a problem saving your data. Please review your input for any errors.");
+        return;
       }
-    });
+
+      // Create and populate Mediaplayer object
+      const mediaPlayerData = new Mediaplayer();
+      mediaPlayerData.VmsId = Number.parseInt(this.SelectedControllerId[1]);
+      mediaPlayerData.IpAddress = ipAddress;
+      mediaPlayerData.mediaplayername = mediaPlayerName;
+      mediaPlayerData.status = 0;
+      mediaPlayerData.AuditedBy = "System";
+      mediaPlayerData.IsAudited = true;
+      mediaPlayerData.AuditedTime = new Date();
+      mediaPlayerData.Reason = "Upload Data for new MediaPlayer";
+      mediaPlayerData.CreationTime = new Date();
+      mediaPlayerData.RequestData = JSON.stringify(this.registrationForm.value);
+
+      // Save media player data
+      this._CVMSfacade.SaveMediaPlayer(mediaPlayerData).subscribe(data => {
+        if (data === 0) {
+          this.toast.error(`Error occurred while saving data for ${mediaPlayerData.IpAddress}`);
+        } else {
+          this.toast.success(`Saved successfully for ${mediaPlayerData.IpAddress}`);
+          this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
+          });
+        }
+      });
+    } else {
+      this.toast.error("Invalid sequence available in tiles");
+    }
+
 
   }
 

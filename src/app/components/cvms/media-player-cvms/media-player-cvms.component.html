@@ -14,7 +14,7 @@
                             <div class="row">
                                 <div class=" col-md-5 col-sm-5 col">
                                     <div class="mb-4 form-group">
-                                        <label class="form-label">Select Controller</label>
+                                        <label class="form-label lable-bold">Select Controller</label>
                                         <select *ngIf="_inputVmsData != undefined" [(ngModel)]="SelectedControllerId"
                                             class="form-control form-control-sm" (change)="getSelectedVms($event)">
                                             <option [ngValue]="null" disabled>Choose Controller</option>
@@ -25,7 +25,7 @@
                                 </div>
                                 <div class="col-md-5 col-sm-5 col">
                                     <div class="mb-4 form-group">
-                                        <label class="form-label">Media Player Name*</label>
+                                        <label class="form-label lable-bold">Media Player Name*</label>
                                         <input type="text" formControlName="name" [(ngModel)]="MediaName"
                                             [ngClass]="{ 'is-invalid': f['name'].touched && f['name'].errors}"
                                             class="form-control" placeholder="Enter Media Player Name" />
@@ -40,7 +40,7 @@
                                 <div class="col-md-2 col-sm-2 col">
                                     <div class="row">
                                         <div class="mb-3 col form-group">
-                                            <label class="form-label">Media Loop Count*</label>
+                                            <label class="form-label lable-bold">Media Loop Count*</label>
                                             <input type="text" formControlName="mediaLoopCount" class="form-control"
                                                 [ngClass]="{ 'is-invalid': f['mediaLoopCount'].touched && f['mediaLoopCount'].errors}"
                                                 placeholder="Enter Media loop count" />
@@ -70,7 +70,7 @@
 
                                             <div class="col-md-3 mb-2">
                                                 <div class="form-group">
-                                                    <label for="tileNo">Tile No : </label>
+                                                    <label for="tileNo lable-bold">Tile No : </label>
                                                     <input type="number" id="tileNo" formControlName="tileNo" min="1"
                                                         class="form-control" (input)="checkValue($event)" />
 
@@ -79,7 +79,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-group">
-                                                    <label for="playlistLoopCount">Playlist Loop Count</label>
+                                                    <label for="playlistLoopCount lable-bold">Playlist Loop Count</label>
                                                     <input id="playlistLoopCount" type="number"
                                                         formControlName="playlistLoopCount" min="1"
                                                         (input)="checkValue($event)" class="form-control" />
@@ -141,18 +141,16 @@
                                                 <div class="row">
                                                     <div class="col-md-7"></div>
                                                     <div class="col-md-2 text-center">
-                                                        <input type="number" formControlName="duration"
+                                                        <input type="number" formControlName="duration" *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
                                                             class="form-control"
                                                             style="padding-bottom: 4px;border-color: black;"
-                                                            (blur)="ToAllDuration(i)" placeholder="To All"
-                                                            [disabled]="registrationForm.controls['tiles'].controls[i].controls['playlist'].length < 1" />
+                                                            (blur)="ToAllDuration(i)" placeholder="To All" />
                                                     </div>
                                                     <div class="col-md-3 text-center">
-                                                        <input type="number" formControlName="mediaLoopCount"
+                                                        <input type="number" formControlName="mediaLoopCount" *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
                                                             class="form-control"
                                                             style="padding-bottom: 4px;border-color: black;"
-                                                            (blur)="ToAllLoop(i)" placeholder="To All"
-                                                            [disabled]="registrationForm.controls['tiles'].controls[i].controls['playlist'].length < 1" />
+                                                            (blur)="ToAllLoop(i)" placeholder="To All" />
                                                     </div>
                                                 </div>
 
@@ -223,7 +221,7 @@
                                                 <div class="row">
                                                     <div class="col-md-5"></div>
                                                     <div class="col-md-1">
-                                                        <button class="btn btn-secondary"
+                                                        <button class="btn btn-secondary" *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
                                                             (click)="changeSequence(i,0,0)"
                                                             formControllName="isPlayOrder">
                                                             <svg width="16" height="16" fill="currentColor"
@@ -235,7 +233,7 @@
 
                                                     </div>
                                                     <div class="col-md-1">
-                                                        <button class="btn btn-secondary" (click)="validateSequence(i)">
+                                                        <button class="btn btn-secondary" (click)="validateSequence(i,0)" *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0">
                                                             <svg width="16" height="16" fill="currentColor"
                                                                 class="bi bi-check-square" viewBox="0 0 16 16">
                                                                 <path

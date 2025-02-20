@@ -12,7 +12,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="mb-4 form-group">
-                                <label class="form-label">Select Controller</label>
+                                <label class="form-label lable-bold">Select Controller</label>
                                 <select class="form-control form-control-sm" [(ngModel)]="SelectedControllerId"
                                     (change)="getSelectedVms($event)" formControlName="VmsController">
                                     <option [ngValue]="null" disabled>Choose Controller</option>
@@ -25,7 +25,7 @@
                         <div class="row mb-2">
                             <div class="col-sm-6 col-md-4 col">
                                 <div class="mb-6 col form-group">
-                                    <label class="form-label">Schedule Name*</label>
+                                    <label class="form-label lable-bold">Schedule Name*</label>
                                     <input type="text" formControlName="schedulename" [(ngModel)]="name"
                                         class="form-control"
                                         [ngClass]="{ 'is-invalid': f['schedulename'].touched && f['schedulename'].errors}"

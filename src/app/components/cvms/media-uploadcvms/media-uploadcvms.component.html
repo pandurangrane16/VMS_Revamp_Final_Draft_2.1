@@ -18,7 +18,7 @@
                                     (deSelectedItem)="getSelectedVms($event,0)"></cm-multiselect-auto-complt>
                             </div>
                             <div class="mb-4 col form-group">
-                                <label class="form-label">Select Media Upload Type*</label>
+                                <label class="form-label lable-bold">Select Media Upload Type*</label>
                                 <select required [(ngModel)]="mediatype" class="form-control form-control-sm"
                                     (change)="onUploadTypeChange($event)" formControlName="mediatype">
                                     <option [ngValue]="null" disabled>Choose your Upload Type</option>
@@ -29,7 +29,7 @@
                         </div>
                         <div class="row">
                             <div class="mb-4 col-6 form-group" *ngIf="isFileTypeText">
-                                <label class="form-label">Media Name*</label>
+                                <label class="form-label lable-bold">Media Name*</label>
                                 <input type="text" formControlName="mediaName" [(ngModel)]="MediaName"
                                     (input)="limitInput()" class="form-control"
                                     [ngClass]="{ 'is-invalid': f['mediaName'].touched && f['mediaName'].errors, 'is-valid': f['mediaName'].valid }"
@@ -41,7 +41,7 @@
                                 </div>
                             </div>
                             <div class="mb-3 col-6 form-group" *ngIf="isFileTypeText">
-                                <label class="form-label">Media Text *</label>
+                                <label class="form-label lable-bold">Media Text *</label>
                                
                                 <input type="text" formControlName="MediaTextName" class="form-control"
                                     [ngClass]="{ 'is-invalid': f['MediaTextName'].touched && f['MediaTextName'].errors}"
