@@ -20,7 +20,7 @@
                                             <option [ngValue]="null" disabled>Choose Controller</option>
                                             <option *ngFor="let type of _inputVmsData.data" [ngValue]="type.value">
                                                 {{type.displayName}}</option>
-                                        </select> 
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-5 col-sm-5 col">
@@ -79,7 +79,8 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-group">
-                                                    <label for="playlistLoopCount lable-bold">Playlist Loop Count</label>
+                                                    <label for="playlistLoopCount lable-bold">Playlist Loop
+                                                        Count</label>
                                                     <input id="playlistLoopCount" type="number"
                                                         formControlName="playlistLoopCount" min="1"
                                                         (input)="checkValue($event)" class="form-control" />
@@ -99,59 +100,79 @@
                                         </div>
 
 
-                                        <div class="row TableHeader">
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-2 text-center">
+                                        <div class="TableHeader">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                    <div style="width: 2% !important;padding: 0 5px; margin: 0 15px;">
                                                         #
                                                     </div>
-                                                    <div class="col-md-3 text-center">
+                                                    <div class="col" style="white-space: nowrap;">
                                                         File/Text Name
                                                     </div>
-                                                    <div class="col-md-2 text-center">
+                                                    <div class="col">
                                                         Play Order
                                                     </div>
-                                                    <div class="col-md-2 text-center">
+                                                    <div class="col text-center">
                                                         Duration
                                                     </div>
-                                                    <div class="col-md-3 text-center">
+                                                    <div class="col text-center">
                                                         Loop Count
                                                     </div>
+                                                    <div class="col text-center">
+                                                        Party
+                                                    </div>
+                                                </div></div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col text-center">
+                                                            Tariff
+                                                        </div>
+                                                   
+                                                        <div class="col text-center">
+                                                            Font Size
+                                                        </div>
+                                                        <div class="col text-center">
+                                                            Font Color
+                                                        </div>
+                                                        <div class="col text-center" style="white-space: nowrap;">
+                                                            Background Color
+                                                        </div>
+                                                       
+                                                        <div class="col text-center">
+                                                            Action
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-3 text-center">
-                                                        Font Size
-                                                    </div>
-                                                    <div class="col-md-3 text-center">
-                                                        Font Color
-                                                    </div>
-                                                    <div class="col-md-3 text-center">
-                                                        Background Color
-                                                    </div>
-                                                    <div class="col-md-3 text-center">
-                                                        Action
-                                                    </div>
+                                           
+                                                  
+                                                  
                                                 </div>
-                                            </div>
-                                        </div>
+                                            
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="row">
-                                                    <div class="col-md-7"></div>
-                                                    <div class="col-md-2 text-center">
-                                                        <input type="number" formControlName="duration" *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
+                                                    <div style="width: 5% !important;padding: 0 5px; margin: 0 15px;">
+                                                        
+                                                    </div>
+                                                    <div class="col-2"></div>
+                                                    <div class="col-2"></div>
+                                                    <div class="col-2 text-center">
+                                                        <input type="number" formControlName="duration"
+                                                            *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
                                                             class="form-control"
                                                             style="padding-bottom: 4px;border-color: black;"
                                                             (blur)="ToAllDuration(i)" placeholder="To All" />
                                                     </div>
-                                                    <div class="col-md-3 text-center">
-                                                        <input type="number" formControlName="mediaLoopCount" *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
+                                                    <div class="col-2 text-center">
+                                                        <input type="number" formControlName="mediaLoopCount"
+                                                            *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
                                                             class="form-control"
                                                             style="padding-bottom: 4px;border-color: black;"
                                                             (blur)="ToAllLoop(i)" placeholder="To All" />
                                                     </div>
+                                                    <div class="col-2"></div>
                                                 </div>
 
                                             </div>
@@ -162,52 +183,71 @@
                                                 [formGroupName]="j">
                                                 <div class="col-md-6">
                                                     <div class="row">
-                                                        <div class="col-md-2 text-center">
+                                                        <div style="width: 2% !important;padding: 0 5px; margin: 0 15px;">
                                                             {{j+1}}
                                                         </div>
-                                                        <div class="col-md-3" [hidden]="true">
+                                                       
+                                                        <div class="col" [hidden]="true">
                                                             <input type="text" formControlName="mediaId"
-                                                                class="form-control" />
+                                                                class="form-control input-box" />
                                                         </div>
-                                                        <div class="col-md-3">
+                                                        <div class="col">
                                                             <input type="text" [readonly]="true"
-                                                                formControlName="mediaName" class="form-control" />
+                                                                formControlName="mediaName"
+                                                                class="form-control input-box" />
                                                         </div>
-                                                        <div class="col-md-2 text-center">
+                                                        <div class="col text-center">
                                                             <input type="number" formControlName="playOrder" min="1"
-                                                                (input)="checkValue($event)" class="form-control" />
+                                                                (input)="checkValue($event)"
+                                                                class="form-control input-box" />
                                                         </div>
-                                                        <div class="col-md-2 text-center">
+                                                        <div class="col text-center">
                                                             <input type="number" formControlName="imageTextDuration"
                                                                 min="1" (input)="checkValue($event)"
-                                                                class="form-control" placeholder="" />
+                                                                class="form-control input-box" placeholder="" />
                                                         </div>
-                                                        <div class="col-md-3">
+                                                        <div class="col">
                                                             <input type="number" formControlName="videoLoopCount"
                                                                 min="1" (input)="checkValue($event)"
-                                                                class="form-control" placeholder="" />
+                                                                class="form-control input-box" placeholder="" />
+                                                        </div>
+                                                        <div class="col">
+                                                            <select class="form-control-sm" formControlName="partyId">
+                                                                <option value="0">Select Party</option>
+                                                                <option *ngFor="let prt of partyDetails"
+                                                                    [value]="prt.id">{{prt.partyName}}</option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6" formGroupName="textStyle">
                                                     <div class="row">
-                                                        <div class="col-md-3 text-center">
+                                                        <div class="col">
+                                                            <select class="form-control-sm" formControlName="tarrifId">
+                                                                <option value="0">Select Tarrif</option>
+                                                                <option *ngFor="let trf of tarrifDetails"
+                                                                    [value]="trf.id">{{trf.tarrifType}}</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col text-center">
                                                             <input type="number" formControlName="fontSize"
                                                                 (input)="checkValue($event)"
                                                                 [readonly]="isNameValid(row.get('mediaName')?.value)"
-                                                                class="form-control" placeholder="" />
+                                                                class="form-control input-box" placeholder="" />
                                                         </div>
-                                                        <div class="col-md-3">
+                                                        <div class="col">
                                                             <input type="text" formControlName="fontColor"
                                                                 [readonly]="isNameValid(row.get('mediaName')?.value)"
-                                                                class="form-control" placeholder="" />
+                                                                class="form-control input-box" placeholder="" />
                                                         </div>
-                                                        <div class="col-md-3">
+                                                        <div class="col">
                                                             <input type="text" formControlName="backgroundColor"
                                                                 [readonly]="isNameValid(row.get('mediaName')?.value)"
-                                                                class="form-control" placeholder="" />
+                                                                class="form-control input-box" placeholder="" />
                                                         </div>
-                                                        <div class="col-md-3">
+                                                        
+                                                        
+                                                        <div class="col text-left">
                                                             <i class="fa fa-trash-o remove-media"
                                                                 (click)="RemoveRow(i,j)"></i>
                                                         </div>
@@ -221,7 +261,8 @@
                                                 <div class="row">
                                                     <div class="col-md-5"></div>
                                                     <div class="col-md-1">
-                                                        <button class="btn btn-secondary" *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
+                                                        <button class="btn btn-secondary"
+                                                            *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
                                                             (click)="changeSequence(i,0,0)"
                                                             formControllName="isPlayOrder">
                                                             <svg width="16" height="16" fill="currentColor"
@@ -233,7 +274,9 @@
 
                                                     </div>
                                                     <div class="col-md-1">
-                                                        <button class="btn btn-secondary" (click)="validateSequence(i,0)" *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0">
+                                                        <button class="btn btn-secondary"
+                                                            (click)="validateSequence(i,0)"
+                                                            *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0">
                                                             <svg width="16" height="16" fill="currentColor"
                                                                 class="bi bi-check-square" viewBox="0 0 16 16">
                                                                 <path
@@ -250,7 +293,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-sm-5 col-md-5 mb-3">
                                     <button type="button" (click)="addTile()" class="btn btn-primary">
@@ -259,7 +302,8 @@
                                 </div>
                                 <div class="col-sm-6 col-md-6 col">
                                     <button ngClass="btn btn-success" *ngIf="ShowSaveBtn"
-                                        (click)=" OnSavePlaylistDetails_new()" style="width: 45%" class="form-control">Save
+                                        (click)=" OnSavePlaylistDetails_new()" style="width: 45%"
+                                        class="form-control">Save
                                         Details</button>
                                 </div>
                             </div>
