@@ -76,7 +76,15 @@ export class MediaschedulerListComponent {
       this.updateRecord(actiondata.data);
     }
   }
-  updateRecord(element?: any){}
+  updateRecord(element?: any){
+    const id= element.id;
+    if (id) {
+      this._router.navigate(['cvms/scheduler-edit/', id]); // Navigate to the edit page with ID
+    } else {
+      this.toast.error("Invalid record selected for update.");
+    }
+    
+  }
       deleteRecord(element?: any) {
           this.confirmationDialogService.confirm('Please confirm..', 'Do you really want to remove this Playlist... ?')
           .then((confirmed) => { if (confirmed == true) this.RemovePlaylist(element) })

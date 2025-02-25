@@ -19,7 +19,7 @@ export class MediaschedulerserviceService {
       }
      
       UpdateMediascheduler(_data: any) {
-        return this._httpService._postMethod(_data,'Vcms_API/api/MediaScheduler/PutMediaSchedulerMaster');
+        return this._httpService._putMethod(_data,'Vcms_API/api/MediaScheduler/PutMediaSchedulerMaster');
       }
 
       getMediaschedulerByIpAddress(ipAdd: string) {
@@ -30,5 +30,8 @@ export class MediaschedulerserviceService {
         return this._httpService._postMethod(_data,'Vcms_API/api/MediaScheduler/GetMediaScheduler?type=' + type);
       }
 
-
+      getMediaSchedulerById(id: number,body:any) {
+        return this._httpService._postMethod(body,'Vcms_API/api/MediaScheduler/GetMediaScheduler?id=' + id);
+      }
+      
 }

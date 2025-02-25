@@ -308,7 +308,7 @@ const routes: Routes = [
     canActivate: [AuthGuradService]
   },
   {
-    path: "cvms/playlist-edit/:id",
+    path: "cvms/scheduler-edit/:id",
     component: MediaSchedulerEditComponent,
     data: { title: 'Playlist Edit' },
     canActivate: [AuthGuradService]

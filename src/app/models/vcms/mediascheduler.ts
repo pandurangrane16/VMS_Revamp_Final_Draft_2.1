@@ -14,4 +14,5 @@ export class Mediascheduler {
     requesttype!:string;
     controllerName! :string;
     medianame! :string;
+    id! :number;
 }

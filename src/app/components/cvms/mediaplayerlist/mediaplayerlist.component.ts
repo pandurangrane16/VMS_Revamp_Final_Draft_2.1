@@ -224,7 +224,7 @@ export class MediaplayerlistComponent {
       
       
       
-        this.toast.success("Data deleted successfully for ");
+        this.toast.success("Data deleted successfully ");
       
         
          this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
