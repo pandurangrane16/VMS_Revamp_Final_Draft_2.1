@@ -31,6 +31,8 @@ import { FileServiceService } from 'src/app/facade/services/vcms/file-service.se
 
 export class MediaPlayerCvmsComponent {
   isSeqValidate: boolean = false;
+  partyDetails: any[] = [];
+  tarrifDetails: any[] = [];
   currentTile: number = -1;
   registrationForm: any;
   disabledTextType: boolean = false;
@@ -75,10 +77,25 @@ export class MediaPlayerCvmsComponent {
     //   this.UpdateValidations(Method);
     // })
     this.GetVmsDetails();
+    this.getPartyDetails();
+    this.getTariffDetails();
   }
   get f() { return this.registrationForm.controls; }
 
-
+  getTariffDetails() {
+    let _data = { "currentPage": "0", "pageSize": "0", "startId": "0", "searchItem": null };
+    this.adminFacade.getTarrifs(_data).subscribe(res=>{
+      if(res != null)
+        this.tarrifDetails = res.data;
+    });
+  }
+  getPartyDetails() {
+    let _data = { "currentPage": "0", "pageSize": "0", "startId": "0", "searchItem": null };
+    this.adminFacade.getParties(_data).subscribe(res=>{
+      if(res != null)
+        this.partyDetails = res.data;
+    });
+  }
   UpdateValidations() {
 
     const name = this.registrationForm.get('name')
@@ -121,14 +138,19 @@ export class MediaPlayerCvmsComponent {
       imageTextDuration: [ele.imageTextDuration, [Validators.required]],
       mediaId: [ele.mediaId, ''],
       mediaName: [ele.mediaName, ''],
-      videoLoopCount: [ele.videoLoopCount, ''],
+      videoLoopCount: [ele.videoLoopCount, Validators.required],
+      
       textStyle: this.fb.group({
         fontSize: [0],
         fontColor: [''],
         backgroundColor: [''],
+        partyId: ['', Validators.required],
+        tarrifId: ['', Validators.required],
       }),
     });
   }
+
+
 
 
   GetVmsDetails() {
@@ -300,8 +322,6 @@ export class MediaPlayerCvmsComponent {
     this.selectedMediaId.splice(id, 1);
 
     this.changeSequence(userIndex, id, 1);
-
-    
   }
   changeSequence(userIndex: number, id: number, type: number) {
     const playlistArray = this.getPlaylist(userIndex);
@@ -320,7 +340,7 @@ export class MediaPlayerCvmsComponent {
     }
   }
 
-  validateSequence(userIndex: number,type:number) {
+  validateSequence(userIndex: number, type: number) {
 
     const playlistArray = this.getPlaylist(userIndex);
     var _okaySequence = true;
@@ -349,7 +369,7 @@ export class MediaPlayerCvmsComponent {
         }
       }
       if (_okaySeq == false) {
-        if(type == 0)
+        if (type == 0)
           this.toast.error("Sequence values are missing");
       } else {
         playlistArray.controls.forEach((ele: any) => {
@@ -358,7 +378,7 @@ export class MediaPlayerCvmsComponent {
       }
     }
     else {
-      if(type == 0)
+      if (type == 0)
         this.toast.error("Invalid sequence number occured");
     }
     return _okaySequence;
@@ -392,7 +412,7 @@ export class MediaPlayerCvmsComponent {
     let len = this.registrationForm.controls['tiles'].length;
 
     for (var i = 0; i < len; i++) {
-      this.isSeqValidate = this.validateSequence(i,1);
+      this.isSeqValidate = this.validateSequence(i, 1);
       if (this.isSeqValidate == false) {
         break;
       }
@@ -487,7 +507,7 @@ export class MediaPlayerCvmsComponent {
         let _textStyle = {
           "backgroundColor": _backGroundColor,
           "fontSize": fontSize,
-          "fontColor": fontColor
+          "fontColor": fontColor,
         }
         this.patchTileValue(i, j, _textStyle);
       }
@@ -584,4 +604,5 @@ export class MediaPlayerCvmsComponent {
       ele.patchValue({ videoLoopCount: val });
     });
   }
+
 }
