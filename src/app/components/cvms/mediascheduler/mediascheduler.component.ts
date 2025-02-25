@@ -137,6 +137,7 @@ export class MediaschedulerComponent {
   }
 
   GetVmsDetails() {
+    
     this.adminFacade.getVmss(this._request).subscribe(data => {
       if (data != null) {
         let commonList: CommonSelectList[] = [];
