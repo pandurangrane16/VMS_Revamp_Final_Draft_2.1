@@ -13,6 +13,8 @@ import { getErrorMsg } from 'src/app/utils/utils';
 import { parse, format, isValid } from 'date-fns';
 import { DatePipe } from '@angular/common';
 import { catchError } from 'rxjs';
+import cronstrue from 'cronstrue';
+
 
 
 
@@ -41,6 +43,24 @@ export class MediaschedulerComponent {
   playersIds: any[] = [];
   label2: string = "Select Media Player";
 
+  selectedMinutes: string='*'; // Default to every minute
+  startHour: string='*'; // Default start hour
+  endHour: string ='*'; // Default end hour
+  selectedDays: string[] = [];
+  weekdaysselect :any=[]
+
+  minutesOptions = Array.from({ length: 60 }, (_, i) => ({
+    value: `*/${i}`,
+    display: `${i}`
+  }));
+  hoursOptions = Array.from({ length: 24 }, (_, i) => ({
+    value: i.toString(),
+    display: i.toString().padStart(2, '0') // Ensures "0" appears as "00", "1" as "01", etc.
+  }));
+  weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  daysOptions:any =[];
+  humanReadableCron: string;
+
   get f() { return this.form.controls; }
 
   constructor(private formBuilder: FormBuilder,
@@ -59,7 +79,7 @@ export class MediaschedulerComponent {
     this.GetVmsDetails();
     this.global.CurrentPage = "Create Media Scheduler CVMS";
     this.dropdownSettingsVms = {
-      singleSelection: true,
+      singleSelection: false,
       idField: 'value',
       textField: 'displayName',
       selectAllText: 'Select All',
@@ -76,8 +96,11 @@ export class MediaschedulerComponent {
       globalToDt: ["", Validators.required],
       globalToTm: ["", Validators.required],
       schedulename: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$"), this.noLeadingEndingWhitespace]],
-
-      cronexpression: ['', ''],
+      selectedMinutes:['', Validators.required],
+      startHour: ['', Validators.required],
+      endHour: ['', Validators.required],
+      weekdaysselect: [[], Validators.required],
+      cronexpression: ['', Validators.required],
     });
   }
 
@@ -91,6 +114,15 @@ export class MediaschedulerComponent {
       month: _mon,
       day: _day
     }
+    this.daysOptions = this.weekDays.map((day, i) => ({
+      value: i.toString(),
+      displayName: day
+    }));
+    let _data = {
+      data: this.daysOptions,
+      disabled: false
+    }
+    this.weekdaysselect = _data;
     //this.refreshPage();
   }
 
@@ -197,6 +229,69 @@ export class MediaschedulerComponent {
       }
     }
   }
+  
+
+    getSelectedDays(event: any, action: number) {
+      if (action === 1) {
+        // Handling Select All
+        if (Array.isArray(event)) {
+          this.selectedDays = event.map(item => item.value);
+        } else {
+          this.selectedDays.push(event.value);
+        }
+      } else {
+        // Handling Unselect All
+        if (Array.isArray(event)) {
+          this.selectedDays = [];
+        } else {
+          this.selectedDays = this.selectedDays.filter(day => day !== event.value);
+        }
+      }
+      this.form.patchValue({
+        weekdaysselect:this.selectedDays
+      })
+    }
+    
+    generateCron() {
+      // Ensure that endHour is greater than or equal to startHour
+      const start = this.startHour !== '*' ? parseInt(this.startHour, 10) : '*';
+      const end = this.endHour !== '*' ? parseInt(this.endHour, 10) : '*';
+    
+      if (start !== '*' && end !== '*' && end < start) {
+        alert("End hour cannot be less than start hour.");
+        return;
+      }
+    
+      // Format Hours
+      let hourValue;
+      if (start === '*' || end === '*') {
+        hourValue = '*';
+      } else {
+        hourValue = start === end ? `${start}` : `${start}-${end}`;
+      }
+    
+      // Ensure selectedMinutes defaults to '*' if no selection is made
+      const minutesValue = this.selectedMinutes !== '*' ? this.selectedMinutes : '*';
+    
+      // Ensure selectedDays defaults to '*' if no selection is made
+      const daysValue = this.selectedDays.length > 0 ? this.selectedDays.join(",") : "*";
+    
+      // Construct the cron expression
+      this.cronExpression = `${minutesValue} ${hourValue} * * ${daysValue}`;
+    
+      try {
+        this.humanReadableCron = cronstrue.toString(this.cronExpression);
+      } catch (error) {
+        console.error("Error converting cron:", error);
+        this.humanReadableCron = "Invalid cron expression";
+      }
+    
+      console.log("Cron:", this.cronExpression);
+      this.form.patchValue({
+        cronexpression :this.cronExpression
+      })
+      console.log("Readable:", this.humanReadableCron);
+    }
 
   getMediaPlayerList() {
 
@@ -248,6 +343,7 @@ export class MediaschedulerComponent {
     }
 
     if (this.form.valid) {
+
       let _vcmsmedischedulerdata = new Mediascheduler();
       let pubFromDt = this.form.controls["globalFromDt"].value;
       let pubToDt = this.form.controls["globalToDt"].value;
@@ -308,7 +404,7 @@ export class MediaschedulerComponent {
         "name": this.form.controls["schedulename"].value,
         "fromDate": jsonfromdate,
         "toDate": jsontodate,
-        "cronExpression": "* * * * *",
+        "cronExpression": this.cronExpression,
       }
       _vcmsmedischedulerdata.IpAddress = this.SelectedControllerId[0];
       _vcmsmedischedulerdata.VmsId = Number.parseInt(this.SelectedControllerId[1]);
@@ -320,7 +416,7 @@ export class MediaschedulerComponent {
       _vcmsmedischedulerdata.status = 0;
       _vcmsmedischedulerdata.Reason = "Create Media Scheduler";
       _vcmsmedischedulerdata.requesttype="/mediaSchedule/createMediaPlayerScheduler";
-
+      
 
       this._CVMSfacade.SaveMediaScheduler(_vcmsmedischedulerdata).pipe(catchError((err) => {
         this._toast.error("Error occured while saving data for " + err);

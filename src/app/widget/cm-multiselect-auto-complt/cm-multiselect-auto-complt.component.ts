@@ -21,6 +21,7 @@ export class CmMultiselectAutoCompltComponent implements OnInit {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
+    console.log(this.inputData);
     this.form = this.fb.group({
       zones: [this.selectedItems]
     });

@@ -17,6 +17,11 @@ import { CommonSelectList } from 'src/app/models/common/cmSelectList';
 import { InputRequest } from 'src/app/models/request/inputReq';
 import { Mediascheduler } from 'src/app/models/vcms/mediascheduler';
 import { catchError } from 'rxjs';
+
+import cronstrue from 'cronstrue';
+
+
+
 @Component({
   selector: 'app-mediascheduler-edit',
   templateUrl: './mediascheduler-edit.component.html',
@@ -26,7 +31,9 @@ import { catchError } from 'rxjs';
 export class MediaSchedulerEditComponent {
 
   initiate: boolean = true;
-
+  croncheck :boolean = false;
+ 
+  selectedDays: string[] = [];
   //form: any;
 
   mediaId!: number;
@@ -41,13 +48,13 @@ export class MediaSchedulerEditComponent {
   id_atcontroller: any;
   name: string;
   cronExpression: any;
-  
+  weekdaysselect :any=[]
 
  
  
   minutesOptions = Array.from({ length: 60 }, (_, i) => ({
-    value: `*/${i + 1}`,
-    display: `${i + 1}`
+    value: `*/${i}`,
+    display: `${i}`
   }));
   hoursOptions = Array.from({ length: 24 }, (_, i) => ({
     value: i.toString(),
@@ -55,13 +62,12 @@ export class MediaSchedulerEditComponent {
   }));
 
 weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-daysOptions = this.weekDays.map((day, i) => ({
-  value: i.toString(),
-  display: day
-}));
+
+daysOptions:any =[];
+ 
 
   
-
+  humanReadableCron: string;
   submitting: boolean = false;
   label2: string = "Select Media Player";
   selectedMediaPlaylist: any = [];
@@ -87,7 +93,8 @@ daysOptions = this.weekDays.map((day, i) => ({
     selectedMinutes: string='*'; // Default to every minute
     startHour: string='*'; // Default start hour
     endHour: string ='*'; // Default end hour
-    selectedDays: string[] = ['*'];
+    showScheduleOptions = false;
+   
   
     // Generated Cron Expression
    
@@ -112,7 +119,7 @@ daysOptions = this.weekDays.map((day, i) => ({
        
         this.global.CurrentPage = "Create Media Scheduler CVMS";
         this.dropdownSettingsVms = {
-          singleSelection: true,
+          singleSelection: false,
           idField: 'value',
           textField: 'displayName',
           selectAllText: 'Select All',
@@ -120,7 +127,7 @@ daysOptions = this.weekDays.map((day, i) => ({
           itemsShowLimit: 5,
           allowSearchFilter: true,
         };
-      }
+    }
 
       BuildForm() {
         this.form = this.formBuilder.group({
@@ -135,7 +142,8 @@ daysOptions = this.weekDays.map((day, i) => ({
           selectedMinutes:['', Validators.required],
           startHour: ['', Validators.required],
           endHour: ['', Validators.required],
-          selectedDays: [[], Validators.required] 
+          
+          weekdaysselect: [[], Validators.required],
           
 
 
@@ -154,10 +162,11 @@ daysOptions = this.weekDays.map((day, i) => ({
       month: _mon,
       day: _day
     }
-  
+    console.log("Days Options: ", this.daysOptions);
    this.getmockdata(this.mediaId);
    //this.getMediaPlayerList();
-   
+;
+  console.log("Days Options: ", this.daysOptions); 
 
   }
   onDaysChange(event: any) {
@@ -166,32 +175,69 @@ daysOptions = this.weekDays.map((day, i) => ({
   BacktoList() {
     this._router.navigate(['cvms/MediaPlayerSchedulerList']);
   }
+  getSelectedDays(event: any, action: number) {
+    if (action === 1) {
+      // Handling Select All
+      if (Array.isArray(event)) {
+        this.selectedDays = event.map(item => item.value);
+      } else {
+        this.selectedDays.push(event.value);
+      }
+    } else {
+      // Handling Unselect All
+      if (Array.isArray(event)) {
+        this.selectedDays = [];
+      } else {
+        this.selectedDays = this.selectedDays.filter(day => day !== event.value);
+      }
+    }
+    this.form.patchValue({
+      weekdaysselect:this.selectedDays
+    })
+  }
+  
   generateCron() {
+   
+    this.croncheck=true;
     // Ensure that endHour is greater than or equal to startHour
-    const start = parseInt(this.startHour, 10);
-    const end = parseInt(this.endHour, 10);
-
-    if (end < start) {
+    const start = this.startHour !== '*' ? parseInt(this.startHour, 10) : '*';
+    const end = this.endHour !== '*' ? parseInt(this.endHour, 10) : '*';
+  
+    if (start !== '*' && end !== '*' && end < start) {
       alert("End hour cannot be less than start hour.");
       return;
     }
-
+  
     // Format Hours
-    const hourValue = start === end ? `${start}` : `${start}-${end}`;
-    
-
-      // Convert selectedDays array into a comma-separated string (Example: 5,6)
-  const daysValue = this.selectedDays.length > 0 ? this.selectedDays.join(",") : "*";
-
- 
-
-
-
-
+    let hourValue;
+    if (start === '*' || end === '*') {
+      hourValue = '*';
+    } else {
+      hourValue = start === end ? `${start}` : `${start}-${end}`;
+    }
+  
+    // Ensure selectedMinutes defaults to '*' if no selection is made
+    const minutesValue = this.selectedMinutes !== '*' ? this.selectedMinutes : '*';
+  
+    // Ensure selectedDays defaults to '*' if no selection is made
+    const daysValue = this.selectedDays.length > 0 ? this.selectedDays.join(",") : "*";
+  
     // Construct the cron expression
-    this.cronExpression = `${this.selectedMinutes} ${hourValue} * * ${daysValue}`;
+    this.cronExpression = `${minutesValue} ${hourValue} * * ${daysValue}`;
+  
+    try {
+      this.humanReadableCron = cronstrue.toString(this.cronExpression);
+    } catch (error) {
+      console.error("Error converting cron:", error);
+      this.humanReadableCron = "Invalid cron expression";
+    }
+    this.form.patchValue({
+      cronexpression :this.cronExpression
+    })
+    console.log("Cron:", this.cronExpression);
+    console.log("Readable:", this.humanReadableCron);
   }
-
+  
   
   keyPress(event: KeyboardEvent) {
     event.preventDefault();
@@ -261,12 +307,6 @@ daysOptions = this.weekDays.map((day, i) => ({
         );
         
        
-
-
-
-
-
-  
         let displayid = selectedPlayer1.value
         let displayName = selectedPlayer1.displayName;
   
@@ -277,7 +317,7 @@ daysOptions = this.weekDays.map((day, i) => ({
           "name": this.form.controls["schedulename"].value,
           "fromDate": jsonfromdate,
           "toDate": jsontodate,
-          "cronExpression": "* * * * *",
+         "cronExpression": this.cronExpression,
         }
         _vcmsmedischedulerdata.IpAddress = this.form.controls['SelectedControllerId'].value;
 
@@ -314,6 +354,14 @@ daysOptions = this.weekDays.map((day, i) => ({
         this._toast.error("Error occured while saving data. Please select Input Values.");
       }
     }
+  
+    toggleScheduleOptions() {
+      if (this.showScheduleOptions) {
+          // Navigate to a different page when clicking "Cancel"
+          this._router.navigate(['cvms/MediaPlayerSchedulerList']);
+      }
+      this.showScheduleOptions = !this.showScheduleOptions;
+  }
     ValidateTime() {
         console.log(this.form);
         let FromDt = this.form.controls["globalFromDt"].value;
@@ -447,10 +495,10 @@ daysOptions = this.weekDays.map((day, i) => ({
       "auditedBy": "System",
       "auditedTime": "2025-02-07T12:30:46.014",
       "reason": "Create Media Scheduler",
-      "requestData": "{\"mediaPlayerId\":43,\"mediaPlayerName\":\"Media Player351\",\"name\":\"Media PlayerSch351\",\"fromDate\":\"08/02/2025 10:00\",\"toDate\":\"08/02/2025 10:20\",\"cronExpression\":\"* * * * *\"}",
+      "requestData": "{\"mediaPlayerId\":43,\"mediaPlayerName\":\"Media Player351\",\"name\":\"Media PlayerSch351\",\"fromDate\":\"08/02/2025 10:00\",\"toDate\":\"08/02/2025 10:20\",\"cronExpression\":\"*/7 3 * * 3,2\"}",
       "requestType": null,
       "responseData": "{\"status\":\"error\",\"error\":null,\"data\":null,\"message\":\"Start time must be at least 5 minutes from now.\"}",
-      "id": 167
+      "id": 183
  
     }
     this.populateFormWithData(data); 
@@ -493,16 +541,39 @@ daysOptions = this.weekDays.map((day, i) => ({
   }
   
   populateFormWithData(data: any): void {
+    
+    this.daysOptions = this.weekDays.map((day, i) => ({
+      value: i.toString(),
+      displayName: day
+    }));
+    let _data = {
+      data: this.daysOptions,
+      disabled: false
+    }
+    this.weekdaysselect = _data;
 
     const requestData = JSON.parse(data.requestData);
  
       this.ID = data.id;
       this.id_atcontroller=data.responseId;
+
+      this.cronExpression=requestData.cronExpression;
+      try {
+        this.humanReadableCron = cronstrue.toString(this.cronExpression);
+      } catch (error) {
+        console.error("Error converting cron:", error);
+        this.humanReadableCron = "Invalid cron expression";
+      }
+      const cron= this.humanReadableCron;
+
+
       this.vmsId=data.vmsId;
       this.name = requestData.name;
       this.Mpn = requestData.mediaPlayerName;
       this.getMediaPlayerList();
       this.form.patchValue({
+
+
       schedulename: requestData.name,
       
       SelectedControllerId: data.ipAddress,
@@ -511,7 +582,7 @@ daysOptions = this.weekDays.map((day, i) => ({
       globalFromTm: this.convertToTimeObject(requestData.fromDate),
       globalToDt: this.convertToDateObject(requestData.toDate),
       globalToTm: this.convertToTimeObject(requestData.toDate),
-      cronexpression: requestData.cronExpression
+      cronexpression:requestData.cronExpression,
       
     });
     this.getMediaPlayerList();
@@ -523,20 +594,7 @@ daysOptions = this.weekDays.map((day, i) => ({
   }
 
 
-  isNameValid(medianame: string): boolean {
-    const fileType = this.fileService.checkFileType(medianame);
-
-    if (fileType == "image") {
-      return true;
-    }
-    else if (fileType == "video") {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
-
+ 
   get f() { return this.form.controls; }
 
   Getting_id(): void {
@@ -547,43 +605,8 @@ daysOptions = this.weekDays.map((day, i) => ({
     this.OnSaveDetails(this.ID);
   }
 
-  patchTileValue(i: number, j: number, _data: any) {
-    var _tile = this.form.controls['tiles'].controls[i].controls["playlist"].controls[j].controls["textStyle"]
-    //const tile = this.tiles.at(index);
-
-    // Use patchValue to update only the 'name' field
-    _tile.patchValue({
-      fontSize: _data.fontSize,
-      fontColor: _data.fontColor,
-      backgroundColor: _data.backgroundColor
-    });
-  }
-  getPlForCreate(userIndex: number) {
-    const tileFormGroup = this.userDetails.at(userIndex);
-    const playlistFormArray = tileFormGroup.get('playlist') as FormArray;
-    var _len = playlistFormArray.length;
-    return (playlistFormArray.at(_len) as FormArray);
-  }
-  UpdateValidations() {
-
-    const name = this.form.get('name')
-    const tiles = this.form.get('tiles')
-    const tileNo = this.form.get('tileNo')
-
-    const imageTextDuration = this.form.get('imageTextDuration')
-
-    name?.setValidators([Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$"), this.noLeadingEndingWhitespace]);
-    tileNo?.setValidators([Validators.required, Validators.pattern("[0-9][0-9]*$"), this.noLeadingEndingWhitespace]);
-    imageTextDuration?.setValidators([Validators.required]);
-
-    tiles.clearValidators();
-
-    name?.updateValueAndValidity();
-    tiles?.updateValueAndValidity();
-    tileNo?.updateValueAndValidity();
-    imageTextDuration?.updateValueAndValidity();
-  }
-
+ 
+ 
   noLeadingEndingWhitespace(control: FormControl) {
 
     if (control.value && control.value.trimStart().length !== control.value.length) {
@@ -595,45 +618,7 @@ daysOptions = this.weekDays.map((day, i) => ({
     return null;
   }
 
-  addTile(): void {
-    this.currentTile++;
-    let _tileDetails = new SelectedMediaVCMS();
-    _tileDetails.tileNo = this.currentTile;
-    if (this.initiate) {
-      this.initiate = false;
-    }
-    else {
-      this.userDetails.push(this.createUser());
-    }
-  }
-  createUser(): FormGroup {
-    return this.fb.group({
-      tileNo: ['', [Validators.required, Validators.pattern("[1-999][1-999]*$")]],
-      playlistLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
-      playlist: this.fb.array([])
-    });
-  }
-
-  get userDetails(): FormArray {
-    return this.form.get('tiles') as FormArray;
-  }
-
  
-
-
-
-  get tiles(): FormArray {
-    return this.form.get('tiles') as FormArray;
-  }
-
-  getPlaylist(index: number): FormArray {
-    return this.tiles.at(index).get('playlist') as FormArray;
-  }
-
-  removeTiles(index: number): void {
-    this.userDetails.removeAt(index);
-    this.selectedMediaPlaylist.splice(index, 1);
-  }
 
   checkValue(event: any) {
     if (event.target.value <= 0) {
@@ -642,37 +627,9 @@ daysOptions = this.weekDays.map((day, i) => ({
   }
  
  
-  addPlaylist(index: number, ele: any) {
-    //var playlist = this.getPlForCreate(index);
-    //if(playlist == undefined)
-    var playlist = this.getPlaylist(index);
-    const playlistItem = this.createPlaylistItem(ele);
-    playlist.push(playlistItem);
-  }
-  createPlaylistItem(ele: any): FormGroup {
-    return this.fb.group({
-      playOrder: [ele.playOrder, ''],
-      // imageTextDuration:[ele.imageTextDuration],
-      // mediaId:[ele.mediaId,''],
-      // mediaName:[ele.mediaName,''],
-      // videoLoopCount:[ele.videoLoopCount,''],
-      imageTextDuration: [ele.imageTextDuration, [Validators.required]],
-      mediaId: [ele.mediaId, ''],
-      mediaName: [ele.mediaName, ''],
-      videoLoopCount: [ele.videoLoopCount, ''],
-      textStyle: this.fb.group({
-        fontSize: [0],
-        fontColor: [''],
-        backgroundColor: [''],
-      }),
-    });
-  }
-
-  RemoveRow(userIndex: number, id: number) {
-    const playlistArray = this.getPlaylist(userIndex);  // Get the specific playlist FormArray for the user
-    playlistArray.removeAt(id);
-    this.selectedMediaId.splice(id, 1);
-  }
+ 
+ 
+ 
   onSubmit(): void {
     if (this.form.valid) {
       console.log(this.form.value);
