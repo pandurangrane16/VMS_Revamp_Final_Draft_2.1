@@ -111,7 +111,7 @@ import { MedialiveplaylistComponent } from './components/cvms/medialiveplaylist/
 import { MediaschedulerListComponent } from './components/cvms/mediascheduler-list/mediascheduler-list.component';
 import { MediaPlayerEditComponent } from './components/cvms/mediaplayer-edit/mediaplayer-edit.component';
 import { MediaSchedulerEditComponent } from './components/cvms/mediascheduler-edit/mediascheduler-edit.component';
-
+import { ColorPickerModule } from 'ngx-color-picker';
 
 
 
@@ -226,6 +226,7 @@ const config: SocketIoConfig = { url: environment.Socket_URL, options: {} };
     NgMultiSelectDropDownModule,
     ToastModule,
     NgxBootstrapIconsModule.pick(allIcons),
+    ColorPickerModule
     //SocketIoModule.forRoot(config),
   ],
   exports: [TooltipDirective,BlockCopyPasteDirective],

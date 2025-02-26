@@ -30,6 +30,8 @@ import { FileServiceService } from 'src/app/facade/services/vcms/file-service.se
 
 
 export class MediaPlayerCvmsComponent {
+  public colorFont = '#cccccc';
+  public colorBg = '#cccccc';
   isSeqValidate: boolean = false;
   partyDetails: any[] = [];
   tarrifDetails: any[] = [];
@@ -84,15 +86,15 @@ export class MediaPlayerCvmsComponent {
 
   getTariffDetails() {
     let _data = { "currentPage": "0", "pageSize": "0", "startId": "0", "searchItem": null };
-    this.adminFacade.getTarrifs(_data).subscribe(res=>{
-      if(res != null)
+    this.adminFacade.getTarrifs(_data).subscribe(res => {
+      if (res != null)
         this.tarrifDetails = res.data;
     });
   }
   getPartyDetails() {
     let _data = { "currentPage": "0", "pageSize": "0", "startId": "0", "searchItem": null };
-    this.adminFacade.getParties(_data).subscribe(res=>{
-      if(res != null)
+    this.adminFacade.getParties(_data).subscribe(res => {
+      if (res != null)
         this.partyDetails = res.data;
     });
   }
@@ -123,6 +125,9 @@ export class MediaPlayerCvmsComponent {
       isPlayOrder: [0],
       duration: [0],
       mediaLoopCount: [0],
+      partyIdCommon: ['', Validators.required],
+      tarrifIdCommon: ['', Validators.required],
+      fontSizeCommon: [0],
       //playlistLoopCount: ['', ''],
       playlistLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
       playlist: this.fb.array([])
@@ -139,13 +144,12 @@ export class MediaPlayerCvmsComponent {
       mediaId: [ele.mediaId, ''],
       mediaName: [ele.mediaName, ''],
       videoLoopCount: [ele.videoLoopCount, Validators.required],
-      
+      partyId: ['', Validators.required],
+      tarrifId: ['', Validators.required],
       textStyle: this.fb.group({
         fontSize: [0],
         fontColor: [''],
-        backgroundColor: [''],
-        partyId: ['', Validators.required],
-        tarrifId: ['', Validators.required],
+        backgroundColor: ['']
       }),
     });
   }
@@ -603,6 +607,52 @@ export class MediaPlayerCvmsComponent {
     playlistArray.controls.forEach((ele: any) => {
       ele.patchValue({ videoLoopCount: val });
     });
+  }
+
+  ToAllParty(idx: number) {
+    let val = this.registrationForm.controls['tiles'].controls[idx].controls['partyIdCommon'].value;
+    const playlistArray = this.getPlaylist(idx);
+    playlistArray.controls.forEach((ele: any) => {
+      ele.patchValue({ partyId: val });
+    });
+  }
+  ToAllTarrif(idx: number) {
+    let val = this.registrationForm.controls['tiles'].controls[idx].controls['tarrifIdCommon'].value;
+    const playlistArray = this.getPlaylist(idx);
+    playlistArray.controls.forEach((ele: any) => {
+      ele.patchValue({ tarrifId: val });
+    });
+  }
+  ToAllFontSize(idx: number) {
+    let val = this.registrationForm.controls['tiles'].controls[idx].controls['fontSizeCommon'].value;
+    const playlistArray = this.getPlaylist(idx);
+    playlistArray.controls.forEach((ele: any) => {
+      ele.controls['textStyle'].patchValue({ fontSize: val });
+    });
+  }
+  setColor(color: any) {
+    // this.field.update(color, true, true);
+  }
+
+  onChangeColor(color: string, tileIndex: number, playlistIndex: number, colorType: string, type: string) {
+    // Dynamically update the corresponding color field in the form array
+    const control = this.registrationForm.controls['tiles'].at(tileIndex).get('playlist').at(playlistIndex);
+    if (type == "all") {
+      const playlistArray = this.getPlaylist(tileIndex);
+      playlistArray.controls.forEach((ele: any) => {
+        if (!this.isNameValid(ele.get('mediaName')?.value)) {
+          if (colorType === 'fontColor')
+            ele.controls["textStyle"].patchValue({ fontColor: color });
+          else if (colorType === 'backgroundColor')
+            ele.controls["textStyle"].patchValue({ backgroundColor: color });
+        }
+
+      });
+    } else if (colorType === 'fontColor') {
+      control.get('textStyle').patchValue({ fontColor: color });
+    } else if (colorType === 'backgroundColor') {
+      control.get('textStyle').patchValue({ backgroundColor: color });
+    }
   }
 
 }
