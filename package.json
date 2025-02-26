@@ -49,6 +49,7 @@
     "chart.js": "^4.4.0",
     "cors": "^2.8.5",
     "cron-time-generator": "^2.0.3",
+    "cronstrue": "^2.55.0",
     "crypto-js": "^4.2.0",
     "datatables.net-bs": "^1.13.6",
     "datatables.net-dt": "^1.13.6",
