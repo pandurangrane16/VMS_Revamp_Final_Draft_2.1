@@ -125,8 +125,8 @@ export class MediaPlayerCvmsComponent {
       isPlayOrder: [0],
       duration: [0],
       mediaLoopCount: [0],
-      partyIdCommon: ['', Validators.required],
-      tarrifIdCommon: ['', Validators.required],
+      partyIdCommon: [''],
+      tarrifIdCommon: [''],
       fontSizeCommon: [0],
       //playlistLoopCount: ['', ''],
       playlistLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
@@ -627,7 +627,9 @@ export class MediaPlayerCvmsComponent {
     let val = this.registrationForm.controls['tiles'].controls[idx].controls['fontSizeCommon'].value;
     const playlistArray = this.getPlaylist(idx);
     playlistArray.controls.forEach((ele: any) => {
-      ele.controls['textStyle'].patchValue({ fontSize: val });
+      if (!this.isNameValid(ele.get('mediaName')?.value)) {
+        ele.controls['textStyle'].patchValue({ fontSize: val });
+      }
     });
   }
   setColor(color: any) {
