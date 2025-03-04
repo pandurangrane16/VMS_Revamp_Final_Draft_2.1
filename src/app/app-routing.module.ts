@@ -48,6 +48,7 @@ import { MedialiveplaylistComponent } from './components/cvms/medialiveplaylist/
 import { MediaschedulerListComponent } from './components/cvms/mediascheduler-list/mediascheduler-list.component';
 import { MediaPlayerEditComponent } from './components/cvms/mediaplayer-edit/mediaplayer-edit.component';
 import { MediaSchedulerEditComponent } from './components/cvms/mediascheduler-edit/mediascheduler-edit.component';
+import { MediareportComponent } from './components/cvms/mediareport/mediareport.component';
 const routes: Routes = [
   {
     path: "",
@@ -273,6 +274,12 @@ const routes: Routes = [
     path: "cvms/upload-media", 
     component: MediaUploadcvmsComponent,
     data: { title: 'Upload Media' },
+    canActivate: [AuthGuradService]
+  },
+  { 
+    path: "cvms/mediareport", 
+    component: MediareportComponent,
+    data: { title: 'Media Report' },
     canActivate: [AuthGuradService]
   },
   

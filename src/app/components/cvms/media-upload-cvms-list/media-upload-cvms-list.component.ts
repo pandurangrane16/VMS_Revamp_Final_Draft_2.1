@@ -152,6 +152,7 @@ export class MediaUploadCvmsListComponent {
             element.creationTime = _dateStr;
           }
           if (element.status == 1) {
+            console.log(element)
             element.statusdesc = "Sent Successfully"
           }
           else if (element.status == 0) {
@@ -221,7 +222,7 @@ export class MediaUploadCvmsListComponent {
      _vcmsuploadmediadata.medianame=element.mediaName;
  
      let requestData = {
-      mediaId: element.id,
+      mediaId: element.responseId,
       mediaName: element.mediaName
     
     };

@@ -112,7 +112,7 @@ import { MediaschedulerListComponent } from './components/cvms/mediascheduler-li
 import { MediaPlayerEditComponent } from './components/cvms/mediaplayer-edit/mediaplayer-edit.component';
 import { MediaSchedulerEditComponent } from './components/cvms/mediascheduler-edit/mediascheduler-edit.component';
 import { ColorPickerModule } from 'ngx-color-picker';
-
+import { MediareportComponent } from './components/cvms/mediareport/mediareport.component';
 
 
 
@@ -190,7 +190,8 @@ const config: SocketIoConfig = { url: environment.Socket_URL, options: {} };
     MedialiveplaylistComponent,
     MediaschedulerListComponent,
     MediaPlayerEditComponent,
-    MediaSchedulerEditComponent
+    MediaSchedulerEditComponent,
+    MediareportComponent
     
   ],
   imports: [

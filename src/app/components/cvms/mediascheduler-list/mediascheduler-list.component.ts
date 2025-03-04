@@ -114,7 +114,7 @@ export class MediaschedulerListComponent {
              let requestData2 = JSON.parse(element.requestData); // Parse requestData from element
              let mediaName = requestData2.name;
              let requestData = {
-              scheduleId: element.id,
+              scheduleId: element.responseId,
               scheduleName: mediaName
             
             };
@@ -195,11 +195,13 @@ export class MediaschedulerListComponent {
             element.creationTime = _dateStr;
 
             let _data = JSON.parse(element.requestData);
-            element.schedulename = _data.name;
-            element.mediaPlayerName = _data.mediaPlayerName;            
-
-            element.fromdate = _data.fromDate;
-            element.enddate = _data.toDate;
+            if(_data != null) {
+              element.schedulename = _data.name;
+              element.mediaPlayerName = _data.mediaPlayerName;            
+  
+              element.fromdate = _data.fromDate;
+              element.enddate = _data.toDate;
+            }
               
           }
 

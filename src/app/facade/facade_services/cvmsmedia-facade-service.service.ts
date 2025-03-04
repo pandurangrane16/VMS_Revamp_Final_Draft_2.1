@@ -65,6 +65,10 @@ export class CVMSMediaFacadeServiceService {
   getMediaPlayerByIpAdd(ipAdd:string){
     return this._mediaplayer.getMediaPlayerByIpAddress(ipAdd);
   }
+  
+  getMediaPlayer(type:number){
+    return this._mediaplayer.getMediaPlayer(0);
+  }
  
   PlayEmergencyMedia(data:any) {       
     return this._medialive.PlayEmergencyMedia(data);
@@ -94,8 +98,8 @@ export class CVMSMediaFacadeServiceService {
     return this._mediaplayer.getMediaPlayerById(id,body);
   }
   
-  getMediaSchedulerById(id: number,body :any) {
-    return this._mediascheduler.getMediaSchedulerById(id,body);
+  getMediaSchedulerById(id: number) {
+    return this._mediascheduler.getMediaSchedulerById(id);
   }
 
 

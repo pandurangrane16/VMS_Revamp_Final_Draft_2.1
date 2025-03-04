@@ -206,7 +206,7 @@ export class MediaplayerlistComponent {
            let requestData2 = JSON.parse(element.requestData); // Parse requestData from element
            let mediaName = requestData2.name;
            let requestData = {
-            mediaPlayerId: element.id,
+            mediaPlayerId: element.responseId,
             mediaPlayerName: mediaName
           
           };
