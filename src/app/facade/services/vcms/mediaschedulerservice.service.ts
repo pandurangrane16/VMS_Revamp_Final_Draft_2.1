@@ -30,8 +30,8 @@ export class MediaschedulerserviceService {
         return this._httpService._postMethod(_data,'Vcms_API/api/MediaScheduler/GetMediaScheduler?type=' + type);
       }
 
-      getMediaSchedulerById(id: number,body:any) {
-        return this._httpService._postMethod(body,'Vcms_API/api/MediaScheduler/GetMediaScheduler?id=' + id);
+      getMediaSchedulerById(id: number) {
+        return this._httpService._getMethod('Vcms_API/api/MediaScheduler/GetMediaSchedulerById?id=' + id);
       }
       
 }

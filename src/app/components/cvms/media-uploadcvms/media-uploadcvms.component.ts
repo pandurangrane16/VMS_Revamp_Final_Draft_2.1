@@ -138,7 +138,7 @@ export class MediaUploadcvmsComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.vmsIds == undefined || this.vmsIds.length < 1) {
+    if (this.vmsIds== undefined || this.vmsIds.length < 1) {
       this.toast.error("Controller not selected. Please select at least one controller to proceed.");
       return;
     }
@@ -166,6 +166,7 @@ export class MediaUploadcvmsComponent implements OnInit {
             return;
           }
           else {
+            
             this.AddUpdateMedia(element, null, this.vmsId[i]);
           }
         })

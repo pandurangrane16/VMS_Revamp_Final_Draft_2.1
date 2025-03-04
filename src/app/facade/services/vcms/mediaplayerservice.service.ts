@@ -26,6 +26,10 @@ export class MediaplayerserviceService {
   getMediaPlayerByIpAddress(ipAdd: string) {
     return this._httpService._getMethod('Vcms_API/api/Mediaplayer/GetMediaPlayerByIpAddress?_ipAddress=' + ipAdd);
   }
+  getMediaPlayer(type: number) {
+    return this._httpService._getMethod('Vcms_API/api/Mediaplayer/GetFilterData?type='+0)
+
+  }
   getMediaPlayerById(id: number,body:any) {
     return this._httpService._postMethod(body,'Vcms_API/api/Mediaplayer/GetMediaPlayer?id=' + id);
   }

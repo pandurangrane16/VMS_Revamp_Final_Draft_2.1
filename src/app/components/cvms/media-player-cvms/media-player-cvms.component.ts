@@ -475,6 +475,8 @@ export class MediaPlayerCvmsComponent {
       mediaPlayerData.Reason = "Upload Data for new MediaPlayer";
       mediaPlayerData.CreationTime = new Date();
       mediaPlayerData.RequestData = JSON.stringify(this.registrationForm.value);
+      mediaPlayerData.RequestType="";
+
 
       // Save media player data
       this._CVMSfacade.SaveMediaPlayer(mediaPlayerData).subscribe(data => {

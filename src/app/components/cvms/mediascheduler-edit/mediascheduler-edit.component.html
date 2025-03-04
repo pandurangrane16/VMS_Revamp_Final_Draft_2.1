@@ -36,11 +36,27 @@
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-4 col">
-                                <label class="form-label lable-bold">Select Media Player</label>
+                                <label class="form-label lable-bold">Select Media Player</label> 
+
+                                <!-- <cm-multiselect-auto-complt [inputData]="_inputPlayerData" [label]="label2"
+                                [dropdownSettings]="dropdownSettingsVms" formControlName="selectedMediaPlayer"
+                                (selectedItem)="getSelectedVms($event,1)"
+                                (deSelectedItem)="getSelectedVms($event,0)"></cm-multiselect-auto-complt> -->
+
+
+
+
+
+
+
                                 <select class="form-control form-control-sm" formControlName="SelectedMediaPlayer">
                                     <option [ngValue]="null" disabled>Choose Media Player</option>
                                     <option *ngFor="let mediaplayer of _inputPlayerData.data" value="{{mediaplayer.value}}">{{mediaplayer.displayName}}</option>
-                                </select>
+                                </select> 
+
+
+
+
                             </div>
                             </div>
                         </div>
@@ -182,12 +198,6 @@
     </div>
 </div>
 
-
- <!-- Display Generated Cron in a Styled Block -->
-
- 
-
-  
                 </form>
             
             </div>

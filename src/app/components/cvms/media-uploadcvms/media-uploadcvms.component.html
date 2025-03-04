@@ -31,7 +31,7 @@
                             <div class="mb-4 col-6 form-group" *ngIf="isFileTypeText">
                                 <label class="form-label lable-bold">Media Name*</label>
                                 <input type="text" formControlName="mediaName" [(ngModel)]="MediaName"
-                                    (input)="limitInput()" class="form-control"
+                                    maxlength="25" class="form-control"
                                     [ngClass]="{ 'is-invalid': f['mediaName'].touched && f['mediaName'].errors, 'is-valid': f['mediaName'].valid }"
                                     placeholder="Enter Media Name (Max 30 chars)" />
                                 <div *ngIf="f['mediaName'].touched && f['mediaName'].errors" class="invalid-feedback">

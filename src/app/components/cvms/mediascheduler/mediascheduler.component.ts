@@ -228,6 +228,7 @@ export class MediaschedulerComponent {
         });
       }
     }
+    console.log(this.playersIds);
   }
   
 

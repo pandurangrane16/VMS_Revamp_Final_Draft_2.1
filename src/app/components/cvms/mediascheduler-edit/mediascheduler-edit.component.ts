@@ -35,7 +35,7 @@ export class MediaSchedulerEditComponent {
  
   selectedDays: string[] = [];
   //form: any;
-
+  label2: string = "Select Media Player";
   mediaId!: number;
   form: any = [];
   SelectedControllerId: any;
@@ -69,9 +69,9 @@ daysOptions:any =[];
   
   humanReadableCron: string;
   submitting: boolean = false;
-  label2: string = "Select Media Player";
+ 
   selectedMediaPlaylist: any = [];
-  SelectedMediaPlayer:any;
+  SelectedMediaPlayer:any=[];
   currentTile: number = -1;
   mediauploadtype: string;
   _inputVmsData: any;
@@ -89,6 +89,7 @@ daysOptions:any =[];
   ShowSaveBtn: boolean = false;
   rowCount: number;
   dropdownSettingsVms: any;
+  vmsIds: any[] = [];
     // User Selections
     selectedMinutes: string='*'; // Default to every minute
     startHour: string='*'; // Default start hour
@@ -138,21 +139,18 @@ daysOptions:any =[];
           schedulename: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$"), this.noLeadingEndingWhitespace]],
           SelectedControllerId: ['', Validators.required],
           cronexpression: ['', ''],
-          SelectedMediaPlayer: ['', Validators.required],
+          SelectedMediaPlayer: [[], Validators.required],
           selectedMinutes:['', Validators.required],
           startHour: ['', Validators.required],
           endHour: ['', Validators.required],
-          
           weekdaysselect: [[], Validators.required],
-          
-
-
         });
       }
 
   ngOnInit(): void {
   
     this.mediaId = Number(this._ActivatedRoute.snapshot.paramMap.get('id'));
+
     let _date = new Date();
     let _day = _date.getUTCDate();
     let _mon = _date.getMonth() + 1;
@@ -163,7 +161,8 @@ daysOptions:any =[];
       day: _day
     }
     console.log("Days Options: ", this.daysOptions);
-   this.getmockdata(this.mediaId);
+   this.getDataForMediaPlayer(this.mediaId);
+   //this.getmockdata(this.mediaId);
    //this.getMediaPlayerList();
 ;
   console.log("Days Options: ", this.daysOptions); 
@@ -332,6 +331,7 @@ daysOptions:any =[];
         _vcmsmedischedulerdata.Reason = "Create Media Scheduler";
         _vcmsmedischedulerdata.requesttype="/mediaSchedule/updateMediaPlayerScheduler";
         _vcmsmedischedulerdata.id= id;
+        
   
   
         this._CVMSfacade.UpdateMediascheduler(_vcmsmedischedulerdata).pipe(catchError((err) => {
@@ -444,8 +444,47 @@ daysOptions:any =[];
           }
         }
       }
+      getSelectedVms(eve: any, type: any) {
+        if (eve.length > 0) { 
+          if (type == 1) {
+            eve.forEach((vms: any) => {
+              this.playersIds.push(vms.value);
+            });
+          }
+          else {
+            eve.forEach((ele: any) => {
+              var idx = 0;
+              this.playersIds.forEach(element => {
+                if (element == ele.value) {
+                  this.playersIds.splice(idx, 1);
+                }
+                idx++;
+              });
+            });
+          }
+        }
+        else if (eve.length == 0)
+          this.playersIds = [];
+        else {
+          if (type == 1)
+            this.playersIds.push(eve.value);
+          else {
+            var idx = 0;
+            this.playersIds.forEach(element => {
+              if (element == eve.value) {
+                this.playersIds.splice(idx, 1);
+              }
+              idx++;
+            });
+          }
+        }
+        this.form.patchValue({
+          SelectedMediaPlayer:this.playersIds
+        })
+        console.log(this.playersIds);
+      }
       getMediaPlayerList() {
-
+        
         let _vmsIpAdd = this.form.controls['SelectedControllerId'].value;
         this._inputPlayerData = [];
         this._CVMSfacade.getMediaPlayerByIpAdd(_vmsIpAdd).subscribe(res => {
@@ -473,11 +512,12 @@ daysOptions:any =[];
               // If found, store its value into SelectedMediaPlayer
               if (selectedPlayer) {
                 this.form.patchValue({
-                  SelectedMediaPlayer: selectedPlayer.value
+                  SelectedMediaPlayer: selectedPlayer.value 
                 });
+                console.log("in",this.form.controls)
               } 
               console.error('Media player not found for:', selectedPlayer);
-              
+           
 
             }
           }
@@ -511,13 +551,13 @@ daysOptions:any =[];
       "startId": 0,
       "cachekey": "string"
     }
-    this._CVMSfacade.getMediaSchedulerById(id, body).subscribe(response => {
+    this._CVMSfacade.getMediaSchedulerById(id).subscribe(response => {
 
-      const data = response.data[0];
+      //const data = response.data[0];
 
-      if (data) {
+      if (response[0]) {
 
-        this.populateFormWithData(data);  // Populate the form with fetched data
+        this.populateFormWithData(response[0]);  // Populate the form with fetched data
 
       } else {
         this._toast.error('No data found for the selected media player.');
@@ -571,13 +611,14 @@ daysOptions:any =[];
       this.name = requestData.name;
       this.Mpn = requestData.mediaPlayerName;
       this.getMediaPlayerList();
+      console.log("first ",this.form.controls)
       this.form.patchValue({
 
 
       schedulename: requestData.name,
       
       SelectedControllerId: data.ipAddress,
-      SelectedMediaPlayer : requestData.mediaPlayerName,
+      //SelectedMediaPlayer : requestData.mediaPlayerName,
       globalFromDt: this.convertToDateObject(requestData.fromDate),
       globalFromTm: this.convertToTimeObject(requestData.fromDate),
       globalToDt: this.convertToDateObject(requestData.toDate),
@@ -585,6 +626,7 @@ daysOptions:any =[];
       cronexpression:requestData.cronExpression,
       
     });
+    console.log("after",this.form.controls)
     this.getMediaPlayerList();
     
     //this.playersIds.push(requestData.mediaPlayerName)

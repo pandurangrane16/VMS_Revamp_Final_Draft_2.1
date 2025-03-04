@@ -36,7 +36,8 @@ export class MedialiveplaylistComponent {
    
   headerArr = [
       // { "Head": "ID", "FieldName": "id", "type": "number" },
-      { "Head": "Controller Name", "FieldName": "ipAddress", "type": "string" },      
+      { "Head": "Controller Name", "FieldName": "ipAddress", "type": "string" },     
+      { "Head": "MediaPlayerName", "FieldName": "mediaPlayerName", "type": "string" },   
       { "Head": "Status", "FieldName": "statusdesc", "type": "string" },
       { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
       
@@ -103,6 +104,9 @@ export class MedialiveplaylistComponent {
         if (data != null) {
           this.listOfMediaUpload = data.data;
           this.listOfMediaUpload.forEach((element: any) => {
+            let _jsonVal = JSON.parse(element.requestData);
+            element.mediaPlayerName =_jsonVal.mediaPlayerName
+            console.log(_jsonVal);
             if (element.creationTime != null) {
               var _d = new Date(element.creationTime);
               var _dateStr = this.datepipe.transform(_d, "dd-MM-yyyy HH:mm:ss");
