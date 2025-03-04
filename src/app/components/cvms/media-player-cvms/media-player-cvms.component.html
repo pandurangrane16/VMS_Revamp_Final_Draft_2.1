@@ -154,12 +154,14 @@
 
 
                                         </div>
-
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="row">
-                                                    <div style="width: 4% !important;padding: 0 5px;margin: 20px"></div>
-                                                    <div class="col" ></div>
+                                <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="row">
+                                                <div
+                                                    style="width: 2% !important;padding: 0 5px; margin: 0 15px;">
+                                                    &nbsp;
+                                                </div>
+                                                <div class="col" ></div>
                                                     <div class="col"></div>
                                                     <div class="col text-center">
                                                         <input type="number" formControlName="duration"
@@ -193,6 +195,11 @@
                                                                 {{trf.tarrifType}}</option>
                                                         </select>
                                                     </div>
+                                        </div>
+                                        </div>
+                                            <div class="col-md-4">
+                                                <div class="row">
+                                                   
                                                     <div class="col text-center">
                                                         <input type="text" formControlName="fontSizeCommon"
                                                             *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
@@ -219,8 +226,8 @@
                                                 </div>
 
                                             </div>
+                                       
                                         </div>
-
                                         <div formArrayName="playlist">
                                             <div class="row" *ngFor="let row of getPlaylist(i).controls; let j = index"
                                                 [formGroupName]="j">

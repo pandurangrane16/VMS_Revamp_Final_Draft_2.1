@@ -541,6 +541,7 @@ export class MediaPlayerCvmsComponent {
     _vcmsmediplayerdata.Reason = "Upload Data for new MediaPlayer";
     _vcmsmediplayerdata.CreationTime = new Date();
     _vcmsmediplayerdata.RequestData = JSON.stringify(this.registrationForm.value);
+    _vcmsmediplayerdata.RequestType = "/mediaplayer/createMediaPlayerAndPlaylist";
 
     this._CVMSfacade.SaveMediaPlayer(_vcmsmediplayerdata).subscribe(data => {
       if (data == 0) {

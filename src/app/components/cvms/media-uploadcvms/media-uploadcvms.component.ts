@@ -166,7 +166,7 @@ export class MediaUploadcvmsComponent implements OnInit {
             return;
           }
           else {
-            this.AddUpdateMedia(element, null, null);
+            this.AddUpdateMedia(element, null, this.vmsId[i]);
           }
         })
       }
