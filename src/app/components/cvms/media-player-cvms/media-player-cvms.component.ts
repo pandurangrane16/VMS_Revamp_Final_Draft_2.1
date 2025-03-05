@@ -333,7 +333,7 @@ export class MediaPlayerCvmsComponent {
       cnt++;
       this.isvideo= false;
       if (ele.imageTextDuration){
- this.isvideo = true;
+        this.isvideo = true;
       }
       this.addPlaylist(idx, ele, cnt , this.isvideo);
     });
@@ -668,16 +668,18 @@ export class MediaPlayerCvmsComponent {
       playlistArray.controls.forEach((ele: any) => {
         if (!this.isNameValid(ele.get('mediaName')?.value)) {
           if (colorType === 'fontColor')
-            ele.controls["textStyle"].patchValue({ fontColor: color });
+            ele.controls['textStyle'].patchValue({fontColor:color})
+            //control.controls["textStyle"].controls.get('fontColor').patchValue({ fontColor: color });
           else if (colorType === 'backgroundColor')
-            ele.controls["textStyle"].patchValue({ backgroundColor: color });
+            ele.controls['textStyle'].patchValue({backgroundColor:color})
+            //control.controls["textStyle"].controls.get('backgroundColor').patchValue({ backgroundColor: color });
         }
 
       });
     } else if (colorType === 'fontColor') {
-      control.get('textStyle').patchValue({ fontColor: color });
+      control.controls["textStyle"].controls.get('fontColor').patchValue({ fontColor: color });
     } else if (colorType === 'backgroundColor') {
-      control.get('textStyle').patchValue({ backgroundColor: color });
+      control.controls["textStyle"].controls.control.get('backgroundColor').patchValue({ backgroundColor: color });
     }
   }
 
