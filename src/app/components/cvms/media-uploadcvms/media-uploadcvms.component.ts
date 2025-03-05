@@ -38,13 +38,15 @@ export class MediaUploadcvmsComponent implements OnInit {
   formValidations: any;
   formItems !: FormArray;
   medias: any[] = [];
-  FileTypes: any[];
+  FileTypes: any;
   mediatype: string;
   isFileTypeText: boolean = false;
   isFileTypeImage: boolean = false;
+  isFileTypeURL: boolean = false;
   RequestData: JSON;
   label1: string = "Select Controller";
   vmsIds: any[] = [];
+  _configData:any;
   vmsId: any[] = [];
   dropdownSettingsVms: any;
   _inputVmsData: any;
@@ -62,6 +64,7 @@ export class MediaUploadcvmsComponent implements OnInit {
   selectedMedia: any[] = [];
   selectedIds: number[] = [];
   url: string = "";
+  fileTypes: any;
   format: string = "";
   fileName: string = "";
   MediaName: string = "";
@@ -89,7 +92,14 @@ export class MediaUploadcvmsComponent implements OnInit {
       allowSearchFilter: true,
     };
     this.BuildForm();
-    this.FileTypes = this.getFileType();
+    this._CVMSfacade.getKeysDataForConfig("fileTypes").subscribe((data2: any) => {
+      console.log("Data received:", data2); // Check the structure of the received data
+      this.FileTypes = data2.fileTypes; // Extract fileTypes if it's inside an object
+      console.log("FileTypes:", this.FileTypes);
+    });
+    
+    //this.FileTypes = this.getFileType();
+    //getKeysDataForConfig
     this.global.CurrentPage = "Send Media CVMS";
   }
 
@@ -156,7 +166,23 @@ export class MediaUploadcvmsComponent implements OnInit {
           const media = this.selectedMedia[j];
           this.AddUpdateMedia(element, media, this.vmsId[i]);
         }
-      } else {
+      } 
+      // if (this.isFileTypeURL){
+      //   this._CVMSfacade.CheckDuplicateMediaName(this.form.controls.mediaName.value, this.vmsIds[i]).pipe(catchError((error) => {
+      //     this.toast.error("Error occured while checking duplicate Media name " + error);
+      //     throw error;
+      //   })).subscribe(data => {
+      //     if (data) {
+      //       this.toast.error("Media Name is Duplicate. Please set Different Name.");
+      //       return;
+      //     }
+      //     else {
+
+      //       this.AddUpdateMedia(element, null, this.vmsId[i]);
+      //     }
+      //   })
+      // }
+      else {
         this._CVMSfacade.CheckDuplicateMediaName(this.form.controls.mediaName.value, this.vmsIds[i]).pipe(catchError((error) => {
           this.toast.error("Error occured while checking duplicate Media name " + error);
           throw error;
@@ -166,7 +192,7 @@ export class MediaUploadcvmsComponent implements OnInit {
             return;
           }
           else {
-            
+
             this.AddUpdateMedia(element, null, this.vmsId[i]);
           }
         })
@@ -204,6 +230,15 @@ export class MediaUploadcvmsComponent implements OnInit {
       }
       _vcmsuploadmediadata.RequestData = JSON.stringify(_requestTextData);
     }
+    if (this.isFileTypeURL) {
+      let _requestTextData = {
+        type: "text",
+        id: 0,
+        name: this.form.controls.mediaName.value,
+        text: this.form.controls.MediaTextName.value
+      }
+      _vcmsuploadmediadata.RequestData = JSON.stringify(_requestTextData);
+    }
     else {
       let _requestTextData = {
         type: this.form.controls.mediatype.value,
@@ -228,9 +263,9 @@ export class MediaUploadcvmsComponent implements OnInit {
     });
   }
 
-  getFileType() {
-    return ['media', 'text'];
-  }
+  // getFileType() {
+  //   return this._config.fileTypes
+  // }
   onCheckBoxChange(event: any, data: any): void {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
@@ -270,10 +305,18 @@ export class MediaUploadcvmsComponent implements OnInit {
     if (this.mediatype == 'text') {
       this.isFileTypeText = true;
       this.isFileTypeImage = false;
+      this.isFileTypeURL = false;
     }
-    else {
+    if (this.mediatype == 'URL') {
+      this.isFileTypeURL = true;
+      this.isFileTypeImage = false;
+      this.isFileTypeText = false;
+    }
+
+    if(this.mediatype == 'media')  {
       this.isFileTypeImage = true;
       this.isFileTypeText = false;
+      this.isFileTypeURL = false;
     }
 
   }

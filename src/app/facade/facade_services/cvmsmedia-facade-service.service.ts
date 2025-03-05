@@ -76,7 +76,9 @@ export class CVMSMediaFacadeServiceService {
   GetEmergencyMediaList(unit:number,data:any) {       
     return this._medialive.GetEmergencyMediaList(unit,data);
   }
-
+  getKeysDataForConfig(key: string) {
+    return this._mediupload.getKeysDataForConfig(key);
+  }
   getMediaschedulersList(_data: any,type:number) {       
     return this._mediascheduler.getMediaschedulersList(_data,type);
   }

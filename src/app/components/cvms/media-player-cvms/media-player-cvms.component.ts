@@ -248,6 +248,7 @@ export class MediaPlayerCvmsComponent {
       modalRef.componentInstance.data = _reqdata;
       modalRef.componentInstance.selectedId.subscribe((selectedId: any) => {
         //console.log(selectedId);
+
         this.selectedMediaId.push(selectedId);
         this.ShowTables(idx);
       })
@@ -294,12 +295,14 @@ export class MediaPlayerCvmsComponent {
         _plMedia.mediaName = this.selectedMediaId[0][i].mediaDetails.displayname;
         _plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
         _plMedia.videoLoopCount = this.selectedMediaId[0][i].mediaDetails.videoLoopCount;
-
+        _plMedia.imageTextDuration=this.selectedMediaId[0][i].mediaDetails.duration;
+        console.log("video", this.selectedMediaId[0])
       }
       else {
         //_plMedia.imageTextDuration = this.selectedMediaId[0][i].imageTextDuration;
         _plMedia.mediaId = this.selectedMediaId[0][i].id;
         _plMedia.mediaName = this.selectedMediaId[0][i].name;
+        console.log("text", this.selectedMediaId[0])
         //_plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
         //_plMedia.videoLoopCount = this.selectedMediaId[0][i].mediaDetails.videoLoopCount;
       }
@@ -475,7 +478,7 @@ export class MediaPlayerCvmsComponent {
       mediaPlayerData.Reason = "Upload Data for new MediaPlayer";
       mediaPlayerData.CreationTime = new Date();
       mediaPlayerData.RequestData = JSON.stringify(this.registrationForm.value);
-      mediaPlayerData.RequestType="";
+      mediaPlayerData.RequestType="/mediaPlayer/createMediaPlayerAndPlaylist";
 
 
       // Save media player data

@@ -10,6 +10,7 @@ export class MediauploadserviceService {
   constructor(private http: HttpClient,
     private _httpService: HttpService,
     private _http: HttpClient) { }
+    jsonurl: string = '/assets/config/config.json';
 
   GetUploadMediaListDetails(inputReq :any,type : number){
     //return this._httpService._getMethod('Vcms_API/api/MediaUpload/GetVMSMasterUploadDetails_new');
@@ -20,6 +21,9 @@ export class MediauploadserviceService {
   }
   SaveMediaupload(_data: any) {
     return this._httpService._postMethod(_data, 'Vcms_API/api/MediaUpload/SaveMediaUploadMaster');
+  }
+  getKeysDataForConfig(key: string) {
+    return this._http.get(this.jsonurl);
   }
 
   UpdateMediaupload(_data: any) {

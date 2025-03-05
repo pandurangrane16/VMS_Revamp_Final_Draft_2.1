@@ -28,6 +28,7 @@
 
                         </div>
                         <div class="row">
+
                             <div class="mb-4 col-6 form-group" *ngIf="isFileTypeText">
                                 <label class="form-label lable-bold">Media Name*</label>
                                 <input type="text" formControlName="mediaName" [(ngModel)]="MediaName"
@@ -40,6 +41,7 @@
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="mb-3 col-6 form-group" *ngIf="isFileTypeText">
                                 <label class="form-label lable-bold">Media Text *</label>
                                
@@ -53,6 +55,46 @@
                                     </div>
                                 </div>
                             </div>
+
+
+                            <div class="mb-4 col-6 form-group" *ngIf="isFileTypeURL">
+                                <label class="form-label lable-bold">Media Name*</label>
+                                <input type="text" formControlName="mediaName" [(ngModel)]="MediaName"
+                                    maxlength="25" class="form-control"
+                                    [ngClass]="{ 'is-invalid': f['mediaName'].touched && f['mediaName'].errors, 'is-valid': f['mediaName'].valid }"
+                                    placeholder="Enter Media Name (Max 30 chars)" />
+                                <div *ngIf="f['mediaName'].touched && f['mediaName'].errors" class="invalid-feedback">
+                                    <div>{{getErrorMessage('mediaName','mediaName',true,"Invalid data available in Media
+                                        Name or Media Name greater than 30 chars) ")}}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3 col-6 form-group" *ngIf="isFileTypeURL">
+                                <label class="form-label lable-bold">URL *</label>
+                               
+                                <input type="text" formControlName="MediaTextName" class="form-control"
+                                    [ngClass]="{ 'is-invalid': f['MediaTextName'].touched && f['MediaTextName'].errors}"
+                                    placeholder="Media Text" ngModel />
+                                <div *ngIf="f['MediaTextName'].touched && f['MediaTextName'].errors , 'is-valid': f['MediaTextName'].valid "
+                                    class="invalid-feedback">
+                                    <div>{{getErrorMessage('MediaTextName','MediaTextName',true,"Invalid data available
+                                        in Media TextName")}}
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
                             <div class="mb-3 col form-group" *ngIf="isFileTypeImage">
                                 <table class="table table-striped table-bordered table-sm hover tr-dsn">
