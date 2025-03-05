@@ -62,6 +62,8 @@ export class MediaUploadcvmsComponent implements OnInit {
   closeResult!: string;
   isSearch: boolean = false;
   selectedMedia: any[] = [];
+  fontList: string[] = ['Arial', 'Verdana', 'Times New Roman', 'Courier New', 'Georgia'];
+
   selectedIds: number[] = [];
   url: string = "";
   fileTypes: any;
@@ -110,6 +112,7 @@ export class MediaUploadcvmsComponent implements OnInit {
       //MediaTextName: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
       MediaFileName: ['', ''],
       MediaTextName: ['', ''],
+      FontName:['',''],
       mediaName: ['', ''],
       //mediaName: ['', [Validators.required,Validators.maxLength(30) ,Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
       mediatype: ['', ''],
@@ -230,7 +233,7 @@ export class MediaUploadcvmsComponent implements OnInit {
       }
       _vcmsuploadmediadata.RequestData = JSON.stringify(_requestTextData);
     }
-    if (this.isFileTypeURL) {
+    else if (this.isFileTypeURL) {
       let _requestTextData = {
         type: "text",
         id: 0,

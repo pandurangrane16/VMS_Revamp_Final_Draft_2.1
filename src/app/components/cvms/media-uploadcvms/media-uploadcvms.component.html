@@ -56,6 +56,20 @@
                                 </div>
                             </div>
 
+                            <div class="mb-3 col-6 form-group" *ngIf="isFileTypeText">
+                                <label class="form-label lable-bold">Select Font Name *</label>
+                                <select class="form-control" formControlName="FontName">
+                                    <option *ngFor="let font of fontList" [value]="font">{{font}}</option>
+                                    <!-- <option *ngFor="let mediaplayer of _inputPlayerData.data" value="{{mediaplayer.value}}">{{mediaplayer.displayName}}</option> -->
+                                </select>
+                            </div>
+
+
+
+
+
+
+
 
                             <div class="mb-4 col-6 form-group" *ngIf="isFileTypeURL">
                                 <label class="form-label lable-bold">Media Name*</label>

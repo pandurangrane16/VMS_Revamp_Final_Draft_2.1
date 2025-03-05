@@ -33,6 +33,8 @@ export class MediaPlayerCvmsComponent {
   public colorFont = '#cccccc';
   public colorBg = '#cccccc';
   isSeqValidate: boolean = false;
+  isvideo :boolean = false;
+  video:boolean = false;
   partyDetails: any[] = [];
   tarrifDetails: any[] = [];
   currentTile: number = -1;
@@ -133,14 +135,20 @@ export class MediaPlayerCvmsComponent {
       playlist: this.fb.array([])
     });
   }
-  createPlaylistItem(ele: any, cnt: number): FormGroup {
+  createPlaylistItem(ele: any, cnt: number , video:boolean): FormGroup {
     return this.fb.group({
+
+
+     
       playOrder: [{ value: cnt, disabled: true }, Validators.required],
       // imageTextDuration:[ele.imageTextDuration],
       // mediaId:[ele.mediaId,''],
       // mediaName:[ele.mediaName,''],
       // videoLoopCount:[ele.videoLoopCount,''],
-      imageTextDuration: [ele.imageTextDuration, [Validators.required]],
+ 
+      //imageTextDuration: [ele.imageTextDuration, [Validators.required]],
+      imageTextDuration: [{ value: ele.imageTextDuration, disabled: video }, [Validators.required]],
+      
       mediaId: [ele.mediaId, ''],
       mediaName: [ele.mediaName, ''],
       videoLoopCount: [ele.videoLoopCount, Validators.required],
@@ -151,7 +159,8 @@ export class MediaPlayerCvmsComponent {
         fontColor: [''],
         backgroundColor: ['']
       }),
-    });
+    }
+  );
   }
 
 
@@ -273,7 +282,7 @@ export class MediaPlayerCvmsComponent {
   }
   generateRows(idx: number) {
     //console.log(JSON.stringify(this.selectedMediaId))
-
+   
     this.rows = []; // Clear existing rows
     this.rowCount = 0;
     this.rowCount = this.selectedMediaId[0].length;
@@ -281,6 +290,7 @@ export class MediaPlayerCvmsComponent {
     //playlistArray.clear();
     let _plMediaList = [];
     for (let i = 0; i < this.rowCount; i++) {
+     
       // Push a new playlist group (with the selected media) into the respective userDetails playlist array.
       let _plMedia = new PlaylistMedia();
       // Add a new item to the playlist FormArray
@@ -295,14 +305,17 @@ export class MediaPlayerCvmsComponent {
         _plMedia.mediaName = this.selectedMediaId[0][i].mediaDetails.displayname;
         _plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
         _plMedia.videoLoopCount = this.selectedMediaId[0][i].mediaDetails.videoLoopCount;
+        if (this.selectedMediaId[0][i].mediaDetails.duration != null){
         _plMedia.imageTextDuration=this.selectedMediaId[0][i].mediaDetails.duration;
-        console.log("video", this.selectedMediaId[0])
+        
+        }
+       // console.log("video", this.selectedMediaId[0])
       }
       else {
         //_plMedia.imageTextDuration = this.selectedMediaId[0][i].imageTextDuration;
         _plMedia.mediaId = this.selectedMediaId[0][i].id;
         _plMedia.mediaName = this.selectedMediaId[0][i].name;
-        console.log("text", this.selectedMediaId[0])
+        //console.log("text", this.selectedMediaId[0])
         //_plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
         //_plMedia.videoLoopCount = this.selectedMediaId[0][i].mediaDetails.videoLoopCount;
       }
@@ -318,7 +331,11 @@ export class MediaPlayerCvmsComponent {
     var cnt = playlist.length;
     this.selectedMediaPlaylist[idx].playlist.forEach((ele: any) => {
       cnt++;
-      this.addPlaylist(idx, ele, cnt);
+      this.isvideo= false;
+      if (ele.imageTextDuration){
+ this.isvideo = true;
+      }
+      this.addPlaylist(idx, ele, cnt , this.isvideo);
     });
     //console.log(this.selectedMediaPlaylist);
   }
@@ -576,11 +593,12 @@ export class MediaPlayerCvmsComponent {
     });
   }
 
-  addPlaylist(index: number, ele: any, cnt: number) {
+  addPlaylist(index: number, ele: any, cnt: number , video:boolean) {
     //var playlist = this.getPlForCreate(index);
     //if(playlist == undefined)
     var playlist = this.getPlaylist(index);
-    const playlistItem = this.createPlaylistItem(ele, cnt);
+
+    const playlistItem = this.createPlaylistItem(ele, cnt, video);
     playlist.push(playlistItem);
   }
 
