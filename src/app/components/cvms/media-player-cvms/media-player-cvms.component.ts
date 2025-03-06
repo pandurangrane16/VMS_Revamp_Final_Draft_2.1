@@ -33,8 +33,8 @@ export class MediaPlayerCvmsComponent {
   public colorFont = '#cccccc';
   public colorBg = '#cccccc';
   isSeqValidate: boolean = false;
-  isvideo :boolean = false;
-  video:boolean = false;
+  isvideo: boolean = false;
+  video: boolean = false;
   partyDetails: any[] = [];
   tarrifDetails: any[] = [];
   currentTile: number = -1;
@@ -122,8 +122,9 @@ export class MediaPlayerCvmsComponent {
 
   // Function to create a single user form group
   createUser(): FormGroup {
+    let len = this.registrationForm.controls['tiles'].length;
     return this.fb.group({
-      tileNo: ['', [Validators.required, Validators.pattern("[1-999][1-999]*$")]],
+      tileNo: [(len+1), [Validators.required, Validators.pattern("[1-999][1-999]*$")]],
       isPlayOrder: [0],
       duration: [0],
       mediaLoopCount: [0],
@@ -132,23 +133,25 @@ export class MediaPlayerCvmsComponent {
       fontSizeCommon: [0],
       //playlistLoopCount: ['', ''],
       playlistLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
+      colorFont: [''],
+      colorBg: [''],
       playlist: this.fb.array([])
     });
   }
-  createPlaylistItem(ele: any, cnt: number , video:boolean): FormGroup {
+  createPlaylistItem(ele: any, cnt: number, video: boolean): FormGroup {
     return this.fb.group({
 
 
-     
+
       playOrder: [{ value: cnt, disabled: true }, Validators.required],
       // imageTextDuration:[ele.imageTextDuration],
       // mediaId:[ele.mediaId,''],
       // mediaName:[ele.mediaName,''],
       // videoLoopCount:[ele.videoLoopCount,''],
- 
+
       //imageTextDuration: [ele.imageTextDuration, [Validators.required]],
       imageTextDuration: [{ value: ele.imageTextDuration, disabled: video }, [Validators.required]],
-      
+
       mediaId: [ele.mediaId, ''],
       mediaName: [ele.mediaName, ''],
       videoLoopCount: [ele.videoLoopCount, Validators.required],
@@ -160,7 +163,7 @@ export class MediaPlayerCvmsComponent {
         backgroundColor: ['']
       }),
     }
-  );
+    );
   }
 
 
@@ -237,8 +240,15 @@ export class MediaPlayerCvmsComponent {
 
   // Remove a tiles form group from the form array
   removeTiles(index: number): void {
+    this.registrationForm.controls['tiles'].length;
+    let cnt = 0;
+    
     this.userDetails.removeAt(index);
     this.selectedMediaPlaylist.splice(index, 1);
+    this.registrationForm.controls['tiles'].controls.forEach((ele:any) => {
+      cnt = cnt+1;
+      ele.patchValue({tileNo:cnt});
+    });
   }
 
   // Submit the form
@@ -282,7 +292,7 @@ export class MediaPlayerCvmsComponent {
   }
   generateRows(idx: number) {
     //console.log(JSON.stringify(this.selectedMediaId))
-   
+
     this.rows = []; // Clear existing rows
     this.rowCount = 0;
     this.rowCount = this.selectedMediaId[0].length;
@@ -290,7 +300,7 @@ export class MediaPlayerCvmsComponent {
     //playlistArray.clear();
     let _plMediaList = [];
     for (let i = 0; i < this.rowCount; i++) {
-     
+
       // Push a new playlist group (with the selected media) into the respective userDetails playlist array.
       let _plMedia = new PlaylistMedia();
       // Add a new item to the playlist FormArray
@@ -305,11 +315,11 @@ export class MediaPlayerCvmsComponent {
         _plMedia.mediaName = this.selectedMediaId[0][i].mediaDetails.displayname;
         _plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
         _plMedia.videoLoopCount = this.selectedMediaId[0][i].mediaDetails.videoLoopCount;
-        if (this.selectedMediaId[0][i].mediaDetails.duration != null){
-        _plMedia.imageTextDuration=this.selectedMediaId[0][i].mediaDetails.duration;
-        
+        if (this.selectedMediaId[0][i].mediaDetails.duration != null) {
+          _plMedia.imageTextDuration = this.selectedMediaId[0][i].mediaDetails.duration;
+
         }
-       // console.log("video", this.selectedMediaId[0])
+        // console.log("video", this.selectedMediaId[0])
       }
       else {
         //_plMedia.imageTextDuration = this.selectedMediaId[0][i].imageTextDuration;
@@ -331,11 +341,11 @@ export class MediaPlayerCvmsComponent {
     var cnt = playlist.length;
     this.selectedMediaPlaylist[idx].playlist.forEach((ele: any) => {
       cnt++;
-      this.isvideo= false;
-      if (ele.imageTextDuration){
+      this.isvideo = false;
+      if (ele.imageTextDuration) {
         this.isvideo = true;
       }
-      this.addPlaylist(idx, ele, cnt , this.isvideo);
+      this.addPlaylist(idx, ele, cnt, this.isvideo);
     });
     //console.log(this.selectedMediaPlaylist);
   }
@@ -495,7 +505,7 @@ export class MediaPlayerCvmsComponent {
       mediaPlayerData.Reason = "Upload Data for new MediaPlayer";
       mediaPlayerData.CreationTime = new Date();
       mediaPlayerData.RequestData = JSON.stringify(this.registrationForm.value);
-      mediaPlayerData.RequestType="/mediaPlayer/createMediaPlayerAndPlaylist";
+      mediaPlayerData.RequestType = "/mediaPlayer/createMediaPlayerAndPlaylist";
 
 
       // Save media player data
@@ -593,7 +603,7 @@ export class MediaPlayerCvmsComponent {
     });
   }
 
-  addPlaylist(index: number, ele: any, cnt: number , video:boolean) {
+  addPlaylist(index: number, ele: any, cnt: number, video: boolean) {
     //var playlist = this.getPlForCreate(index);
     //if(playlist == undefined)
     var playlist = this.getPlaylist(index);
@@ -668,19 +678,31 @@ export class MediaPlayerCvmsComponent {
       playlistArray.controls.forEach((ele: any) => {
         if (!this.isNameValid(ele.get('mediaName')?.value)) {
           if (colorType === 'fontColor')
-            ele.controls['textStyle'].patchValue({fontColor:color})
-            //control.controls["textStyle"].controls.get('fontColor').patchValue({ fontColor: color });
+            ele.controls['textStyle'].patchValue({ fontColor: color })
+          //control.controls["textStyle"].controls.get('fontColor').patchValue({ fontColor: color });
           else if (colorType === 'backgroundColor')
-            ele.controls['textStyle'].patchValue({backgroundColor:color})
-            //control.controls["textStyle"].controls.get('backgroundColor').patchValue({ backgroundColor: color });
+            ele.controls['textStyle'].patchValue({ backgroundColor: color })
+          //control.controls["textStyle"].controls.get('backgroundColor').patchValue({ backgroundColor: color });
+        }
+        else {
+          this.toast.error("Not able to perform this action, required text.");
+          control.controls["textStyle"].controls.control.get('fontColor').patchValue({ backgroundColor: '#cccccc' });
+          control.controls["textStyle"].controls.control.get('backgroundColor').patchValue({ backgroundColor: '#cccccc' });
         }
 
       });
-    } else if (colorType === 'fontColor') {
-      control.controls["textStyle"].controls.get('fontColor').patchValue({ fontColor: color });
-    } else if (colorType === 'backgroundColor') {
-      control.controls["textStyle"].controls.control.get('backgroundColor').patchValue({ backgroundColor: color });
+    } else if (!this.isNameValid(control.controls['mediaName'].value)) {
+      if (colorType === 'fontColor') {
+        control.controls["textStyle"].controls.control.get('fontColor').patchValue({ fontColor: color });
+      } else if (colorType === 'backgroundColor') {
+        control.controls["textStyle"].controls.control.get('backgroundColor').patchValue({ backgroundColor: color });
+      }
+    } else {
+      this.toast.error("Not able to perform this action, required text.");
+      control.controls["textStyle"].controls.control.get('fontColor').patchValue({ fontColor: '#cccccc' });
+      control.controls["textStyle"].controls.control.get('backgroundColor').patchValue({ backgroundColor: '#cccccc' });
     }
+
   }
 
 }

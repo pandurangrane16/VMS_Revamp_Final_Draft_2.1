@@ -71,7 +71,7 @@
                                             <div class="col-md-3 mb-2">
                                                 <div class="form-group">
                                                     <label for="tileNo lable-bold">Tile No : </label>
-                                                    <input type="number" id="tileNo" formControlName="tileNo" min="1"
+                                                    <input type="number" id="tileNo" formControlName="tileNo" min="1" readonly="true"
                                                         class="form-control" (input)="checkValue($event)" />
 
                                                 </div>
@@ -208,17 +208,18 @@
                                                             (blur)="ToAllFontSize(i)" placeholder="To All" />
                                                     </div>
                                                     <div class="col text-center">
-                                                        <input [(colorPicker)]="colorFont" readonly="true"
+                                                        <input [(colorPicker)]="registrationForm.controls['tiles'].controls[i].colorFont" readonly="true"
                                                         *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
-                                                            [style.background]="colorFont"
-                                                            (colorPickerChange)="onChangeColor($event, 0, 0, 'fontColor','all')" 
+                                                            [style.background]="registrationForm.controls['tiles'].controls[i].colorFont"
+                                                            (colorPickerChange)="onChangeColor($event, i, i, 'fontColor','all')" 
                                                             type="text"
                                                             class="form-control" id="color-id" />
                                                     </div>
                                                     <div class="col text-center">
-                                                        <input [(colorPicker)]="colorBg" [style.background]="colorBg" readonly="true"
+                                                        <input [(colorPicker)]="registrationForm.controls['tiles'].controls[i].colorBg" 
+                                                        [style.background]="registrationForm.controls['tiles'].controls[i].colorBg" readonly="true"
                                                         *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
-                                                        (colorPickerChange)="onChangeColor($event, 0, 0, 'backgroundColor','all')" 
+                                                        (colorPickerChange)="onChangeColor($event,i, i, 'backgroundColor','all')" 
                                                             type="text"
                                                             class="form-control" id="color-id" />
                                                     </div>
@@ -294,6 +295,7 @@
                                                                 class="form-control input-box" placeholder="" /> -->
 
                                                             <input [(colorPicker)]="row.value.textStyle.fontColor"
+                                                            *ngIf="!isNameValid(row.get('mediaName')?.value)"
                                                                 formControlName="fontColor" type="text" readonly="true"
                                                                 [style.background]="row.value.textStyle.fontColor"
                                                                 (colorPickerChange)="onChangeColor($event, i, j, 'fontColor','individual')" 
@@ -304,7 +306,8 @@
                                                                 [readonly]="isNameValid(row.get('mediaName')?.value)"
                                                                 class="form-control input-box" placeholder="" /> -->
                                                             <input [(colorPicker)]="row.value.textStyle.backgroundColor"
-                                                            [style.background]="row.value.textStyle.backgroundColor"
+                                                            [style.background]="row.value.textStyle.backgroundColor" readonly="true"
+                                                            *ngIf="!isNameValid(row.get('mediaName')?.value)"
                                                                 formControlName="backgroundColor"
                                                                 (colorPickerChange)="onChangeColor($event, i, j, 'backgroundColor','individual')" 
                                                                 type="text" class="form-control" [id]="'color-bg'+j" />
