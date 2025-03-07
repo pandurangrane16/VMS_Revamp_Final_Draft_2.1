@@ -91,7 +91,7 @@ export class PlaylistReportComponent {
 
   GetVmsDetails() {
     this._request.currentPage = this.pager;
-    this._request.pageSize = this.recordPerPage;
+    this._request.pageSize = 0;
     this._request.startId = this.startId;
     this._request.searchItem = this.searchText;
 

@@ -77,7 +77,7 @@ export class NetworkReportComponent implements OnInit {
 
   GetVmsDetails() {
     this._request.currentPage = this.pager;
-    this._request.pageSize = this.recordPerPage;
+    this._request.pageSize = 0;
     this._request.startId = this.startId;
     this._request.searchItem = this.searchText;
 
@@ -161,7 +161,7 @@ export class NetworkReportComponent implements OnInit {
   ActionSubmit(type:number) {
     let _reportRequest = new NetworkReport();
     _reportRequest.currentPage = this.pager;
-    _reportRequest.pageSize = this._request.pageSize;
+    _reportRequest.pageSize = this._request.pageSize == 0? 10 : this._request.pageSize;
     _reportRequest.startId = this.startId;
     _reportRequest.fromDate = this.modelFromDate.year + "-" + this.modelFromDate.month + "-" + this.modelFromDate.day + " 00:00:00";
     _reportRequest.toDate = this.modelToDate.year + "-" + this.modelToDate.month + "-" + this.modelToDate.day + " 00:00:00";
