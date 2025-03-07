@@ -235,7 +235,7 @@ export class AiredReportComponent {
   }
 
   GetRequestStatus() {
-    this._reportService.getReportEnquiryDetails(0).subscribe(res => {
+    this._reportService.getReportEnquiryDetails(1).subscribe(res => {
       if (res != null) {
         this.listOfData = res;
         this.listOfData.forEach((element: any) => {
