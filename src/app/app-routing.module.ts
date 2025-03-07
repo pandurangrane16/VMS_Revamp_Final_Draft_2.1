@@ -49,6 +49,7 @@ import { MediaschedulerListComponent } from './components/cvms/mediascheduler-li
 import { MediaPlayerEditComponent } from './components/cvms/mediaplayer-edit/mediaplayer-edit.component';
 import { MediaSchedulerEditComponent } from './components/cvms/mediascheduler-edit/mediascheduler-edit.component';
 import { MediareportComponent } from './components/cvms/mediareport/mediareport.component';
+import { FontUploadComponent } from './components/cvms/font-upload/font-upload.component';
 const routes: Routes = [
   {
     path: "",
@@ -282,7 +283,12 @@ const routes: Routes = [
     data: { title: 'Media Report' },
     canActivate: [AuthGuradService]
   },
-  
+  { 
+    path: "cvms/font-upload", 
+    component: FontUploadComponent,
+    data: { title: 'Font Upload' },
+    canActivate: [AuthGuradService]
+  },
   { 
     path: "cvms/uploadMedia", 
     component: MediaUploadCvmsListComponent,

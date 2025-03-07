@@ -1,1 +1,81 @@
-<p>font-upload works!</p>
+ 
+<div class="p-4">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- <button class="btn btn-primary btn-rounded mb-1" >
+                <i class="icon-arrow-left"></i> Back To List
+            </button> -->
+            <div class="card">
+                <form  [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3 col">
+                                <label class="form-label">Font Name*</label>
+                                <input type="text" formControlName="fontName" class="form-control"
+                                    placeholder="Enter Font Name"
+                                    [ngClass]="{ 'is-invalid': f['fontName'].touched && f['fontName'].errors, 'is-valid': f['fontName'].valid }" />
+                                <div *ngIf="f['fontName'].touched && f['fontName'].errors" class="invalid-feedback">
+                                    <!-- <div>{{getErrorMessage('fontName','Font Name',true,"Invalid Font Name")}}</div> -->
+                                </div>
+                            </div>
+                            <div class="mb-3 col">
+                                <label class="form-label">Upload Font File (.ttf only)*</label>
+
+
+                                <input type="file" class="form-control file-upload-primary"
+                                placeholder="Upload Image"  accept=".ttf"  (change)="save($event)" />
+
+                
+
+                                <!-- <input type="file" formControlName="fontFile" class="form-control"
+                                    accept=".ttf"  (change)="onFileSelected($event)" 
+                                    
+                                    [ngClass]="{ 'is-invalid': f['fontFile'].touched && f['fontFile'].errors, 'is-valid': f['fontFile'].valid }" />-->
+                                <div *ngIf="f['fontFile'].touched && f['fontFile'].errors" class="invalid-feedback">
+                                    <!-- <div>{{getErrorMessage('fontFile','Font File',true,"Only .ttf files are allowed")}}</div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+
+
+
+                            
+                            <div class="row">
+                                <div class="mb-3 col">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Status*</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="switch active">
+                                                <input type="checkbox" formControlName="isActive" [(ngModel)]="active">
+                                                <div class="slider round"></div>
+                                            </label>
+                                        </div>
+                                    </div>
+    
+                                </div>
+                            </div>
+                            
+                            
+
+
+                           
+
+                        </div>
+                    </div>
+                    <div class="card-footer text-right">
+                        <button [disabled]="!form.valid" class="btn btn-primary mr-2">
+                            <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                            Submit
+                        </button>
+                       
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

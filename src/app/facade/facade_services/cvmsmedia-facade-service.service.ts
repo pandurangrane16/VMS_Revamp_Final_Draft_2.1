@@ -4,6 +4,7 @@ import { MediauploadserviceService } from '../services/vcms/mediauploadservice.s
 import { BehaviorSubject, Observable, forkJoin, of, take, tap } from 'rxjs';
 import { MedialiveplayService } from '../services/vcms/medialiveplay.service';
 import { MediaschedulerserviceService } from '../services/vcms/mediaschedulerservice.service';
+import { VmscommService  } from '../services/vcms/vmscomm.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,8 @@ export class CVMSMediaFacadeServiceService {
   constructor(private _mediaplayer: MediaplayerserviceService,
     private _mediascheduler:MediaschedulerserviceService,
     private _mediupload:MediauploadserviceService,
-    private _medialive: MedialiveplayService
+    private _medialive: MedialiveplayService,
+    private _vmscomm :VmscommService
   ) { }
 
   GetMediaPlayer(inputReq :any,) {
@@ -22,6 +24,10 @@ export class CVMSMediaFacadeServiceService {
 
   SaveMediaPlayer(data:any){   
     return this._mediaplayer.SaveMedia(data);
+  }
+
+  AddFontDetails(data:any){   
+    return this._vmscomm.AddFontDetails(data);
   }
 
   UpdateMediaPlayer(data:any){
