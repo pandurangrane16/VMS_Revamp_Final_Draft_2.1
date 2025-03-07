@@ -114,6 +114,7 @@ import { MediaSchedulerEditComponent } from './components/cvms/mediascheduler-ed
 import { ColorPickerModule } from 'ngx-color-picker';
 import { MediareportComponent } from './components/cvms/mediareport/mediareport.component';
 import { FontUploadComponent } from './components/cvms/font-upload/font-upload.component';
+import { AiredReportComponent } from './components/reports/aired-report/aired-report.component';
 
 
 
@@ -193,7 +194,8 @@ const config: SocketIoConfig = { url: environment.Socket_URL, options: {} };
     MediaPlayerEditComponent,
     MediaSchedulerEditComponent,
     MediareportComponent,
-    FontUploadComponent
+    FontUploadComponent,
+    AiredReportComponent
     
   ],
   imports: [
