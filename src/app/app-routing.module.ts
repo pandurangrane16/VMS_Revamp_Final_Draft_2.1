@@ -49,6 +49,7 @@ import { MediaschedulerListComponent } from './components/cvms/mediascheduler-li
 import { MediaPlayerEditComponent } from './components/cvms/mediaplayer-edit/mediaplayer-edit.component';
 import { MediaSchedulerEditComponent } from './components/cvms/mediascheduler-edit/mediascheduler-edit.component';
 import { MediareportComponent } from './components/cvms/mediareport/mediareport.component';
+import { AiredReportComponent } from './components/reports/aired-report/aired-report.component';
 const routes: Routes = [
   {
     path: "",
@@ -262,6 +263,12 @@ const routes: Routes = [
     path: "reports/playlist-report", 
     component: PlaylistReportComponent,
     data: { title: 'Playlist Report' },
+    canActivate: [AuthGuradService]
+  },
+  { 
+    path: "reports/airtimecost-report", 
+    component: AiredReportComponent,
+    data: { title: 'Aired Timed Cost' },
     canActivate: [AuthGuradService]
   },
   { 
