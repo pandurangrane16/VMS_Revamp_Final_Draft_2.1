@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { catchError } from 'rxjs';
 import { CVMSMediaFacadeServiceService } from 'src/app/facade/facade_services/cvmsmedia-facade-service.service';
+import { Globals } from 'src/app/utils/global';
 
 @Component({
   selector: 'app-font-upload',
@@ -24,6 +25,7 @@ import { CVMSMediaFacadeServiceService } from 'src/app/facade/facade_services/cv
     selectedFile: File | null = null;
    constructor(
      // private fb: FormBuilder,
+     private global : Globals,
       private _toast: ToastrService,
   
       private _router: Router,
@@ -99,7 +101,10 @@ import { CVMSMediaFacadeServiceService } from 'src/app/facade/facade_services/cv
       //   this.toast.error("File validation failed.");
       //   return;
       // }
-    
+      if (event.target.files.length > 0) {
+        this.selectedFile = event.target.files[0];
+        this.form.patchValue({ fontFile: this.selectedFile });
+      }
       // Store the valid file
       this.files.push(file);
     
@@ -114,7 +119,8 @@ import { CVMSMediaFacadeServiceService } from 'src/app/facade/facade_services/cv
     
       const formData = new FormData();
       formData.append('fontName', this.form.value.fontName);
-      formData.append('fontFile', this.selectedFile);
+      formData.append("files.files", this.selectedFile);
+      formData.append("createdBy", this.global.UserCode);
       formData.append('isActive', this.form.value.isActive ? 'true' : 'false');
 
     
