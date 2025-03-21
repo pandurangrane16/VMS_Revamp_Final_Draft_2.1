@@ -18,7 +18,7 @@ export class LoaderInterceptor implements HttpInterceptor {
     next: HttpHandler,
     isLoader:boolean=true
   ): Observable<HttpEvent<any>> {
-    let IsSkipLoader=request.headers.has(InterceptorSkipHeader);
+    let IsSkipLoader=request.headers.has("interceptorskipheader");
     isLoader = IsSkipLoader;
     if(!isLoader) {
       this.loaderService.showLoader();

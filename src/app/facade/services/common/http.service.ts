@@ -54,8 +54,8 @@ export class HttpService {
     return this.http.put(this._api_url + _appendUrl, _object, options);
   }
 
-  _getMethod(_appendUrl: string): Observable<any> {
-    return this.http.get(this._api_url + _appendUrl);
+  _getMethod(_appendUrl: string,header?:any): Observable<any> {
+    return this.http.get(this._api_url + _appendUrl,{headers:header});
   }
 
   _getMethodNotCommon(_appendUrl: string, _token: string): Observable<any> {

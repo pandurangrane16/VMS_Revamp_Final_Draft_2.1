@@ -16,7 +16,8 @@ export class DashboardService {
     }
 
     getVmsStatusData(status:any,zone:any) {
-      return this._httpService._getMethod('publish_api/api/PublishDetails/GetVMSStatusData?status='+status+'&zoneid='+zone);
+      const _header = {InterceptorSkipHeader:"X-Skip-Interceptor"};
+      return this._httpService._getMethod('publish_api/api/PublishDetails/GetVMSStatusData?status='+status+'&zoneid='+zone,_header);
     }
 
     getListViewData(){
@@ -25,5 +26,8 @@ export class DashboardService {
 
     addEmergencyData(_data:any) {
       return this._httpService._postMethod(_data,'Publish_API/api/PublishDetails/AddEmergencyAlert');
+    }
+    GetSnapshotData(_data:any) {
+      return this._httpService._getMethod("dashboard_api/api/Dashboard/GetSnapshotData?vmsid="+_data);
     }
 }

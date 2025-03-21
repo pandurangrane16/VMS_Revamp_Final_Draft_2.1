@@ -17,4 +17,7 @@ export class DashboardFacadeService {
   AddEmergencyData(_data:any){
     return this._dashboardService.addEmergencyData(_data);
   }
+  GetSnapShotData(_data:any){
+    return this._dashboardService.GetSnapshotData(_data);
+  }
 }
