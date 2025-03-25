@@ -1,5 +1,5 @@
 
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { event } from 'jquery';
 
 declare var ol: any;
@@ -42,19 +42,21 @@ L.Marker.prototype.options.icon = markerIcon;
 	templateUrl: './cm-leaflet.component.html',
 	styleUrls: ['./cm-leaflet.component.css']
 })
-export class CmLeafletComponent implements AfterViewInit {
+export class CmLeafletComponent implements AfterViewInit, OnDestroy {
 	name = "Angular";
 	markerSource: any;
 	markerStyle: any;
-	options:any;
+	options: any;
+	intervalId: any;
 	@Input() mapType: string = "";
 	@Input() type: string;
 	@Input() selectedZone: any;
 	@Input() selectedStatus: any;
-	@Input() isEdit:any;
+	@Input() isEdit: any;
 	layers: any;
 	vmsData: any;
 	map: any;
+	ss_image: any;
 	lat: number = 0;
 	lon: number = 0;
 	zoom: number = 10;
@@ -87,8 +89,17 @@ export class CmLeafletComponent implements AfterViewInit {
 		private dashboardFacade: DashboardFacadeService,
 		private cdr: ChangeDetectorRef) {
 	}
+	ngOnDestroy(): void {
+		clearInterval(this.intervalId);
+	}
 	ngAfterViewInit(): void {
 		this.cdr.detectChanges();
+	}
+	startApiCall(): void {
+		this.getVMSStatusData();
+		// this.intervalId = setInterval(() => {
+
+		// }, 10000); // Call every 5000 ms (5 seconds)
 	}
 	ngOnInit() {
 		this.adminFacade.getConfiguration().subscribe(res => {
@@ -207,7 +218,7 @@ export class CmLeafletComponent implements AfterViewInit {
 							iconAnchor: [16, 37],
 							popupAnchor: [0, -28],
 						})
-						const customPopup = `<p><img src="https://picsum.photos/200/300" height=150 width=200 /></p>
+						let customPopup = `<p><img src="data:image/png;base64,` + this.ss_image + `" height=150 width=200 /></p>
 											 <p><i class="icon-circle-check"></i> VMS ID : ` + e.vmsId + `<br></p>
 											 <p><i class="icon-circle-check"></i> Description : `+ e.description + `<br></p>
 											 <p><i class="icon-circle-check"></i> IP Address : `+ e.ipAddress + `<br></p>
@@ -218,7 +229,27 @@ export class CmLeafletComponent implements AfterViewInit {
 						const customOptions = { 'className': 'custom-popup' }
 
 						var marker = L.marker([e.latitude, e.longitude], { icon: icon }).addTo(this.map);
-						marker.bindPopup(customPopup, customOptions).on('click', function () { marker.openPopup() });
+
+						marker.bindPopup(customPopup, customOptions).on('click', () => {
+							this.dashboardFacade.GetSnapShotData(e.id).subscribe((res: any) => {
+								if (res != null) {
+									const updatedPopup = `<p><img src="data:image/png;base64,` + res.snapshot + `" height="150" width="200" /></p>
+                                  <p><i class="icon-circle-check"></i> VMS ID : ` + e.vmsId + `<br></p>
+                                  <p><i class="icon-circle-check"></i> Description : `+ e.description + `<br></p>
+                                  <p><i class="icon-circle-check"></i> IP Address : `+ e.ipAddress + `<br></p>
+                                  <p><i class="icon-circle-check"></i> Height : `+ e.height + `<br></p>
+                                  <p><i class="icon-circle-check"></i> Width : `+ e.width + `<br></p>
+                                  <p><i class="icon-circle-check"></i> Latitude : `+ e.latitude + `<br></p>
+                                  <p><i class="icon-circle-check"></i> Longitude : `+ e.longitude + `<br></p>`;
+
+									// Update the marker's popup content with the new image
+									marker.setPopupContent(updatedPopup);
+
+									// Open the popup after updating
+									marker.openPopup();
+								}
+							})
+						});
 						this.markers.push(marker);
 
 
@@ -229,7 +260,7 @@ export class CmLeafletComponent implements AfterViewInit {
 							iconAnchor: [16, 37],
 							popupAnchor: [0, -28],
 						})
-						const customPopup = `<p><img src="https://picsum.photos/200/300" height=150 width=200 /></p>
+						const customPopup = `<p><img src="data:image/png;base64,` + res.snapshot + `" height=150 width=200 /></p>
 											 <p><i class="icon-circle-check"></i> VMS ID : ` + e.vmsId + `<br></p>
 											 <p><i class="icon-circle-check"></i> Description : `+ e.description + `<br></p>
 											 <p><i class="icon-circle-check"></i> IP Address : `+ e.ipAddress + `<br></p>
@@ -240,7 +271,26 @@ export class CmLeafletComponent implements AfterViewInit {
 						const customOptions = { 'className': 'custom-popup' }
 
 						var marker = L.marker([e.latitude, e.longitude], { icon: icon }).addTo(this.map);
-						marker.bindPopup(customPopup, customOptions).on('click', function () { marker.openPopup() });
+						marker.bindPopup(customPopup, customOptions).on('click', () => {
+							this.dashboardFacade.GetSnapShotData(e.id).subscribe((res: any) => {
+								if (res != null) {
+									const updatedPopup = `<p><img src="data:image/png;base64,` + res.snapshot + `" height="150" width="200" /></p>
+                                  <p><i class="icon-circle-check"></i> VMS ID : ` + e.vmsId + `<br></p>
+                                  <p><i class="icon-circle-check"></i> Description : `+ e.description + `<br></p>
+                                  <p><i class="icon-circle-check"></i> IP Address : `+ e.ipAddress + `<br></p>
+                                  <p><i class="icon-circle-check"></i> Height : `+ e.height + `<br></p>
+                                  <p><i class="icon-circle-check"></i> Width : `+ e.width + `<br></p>
+                                  <p><i class="icon-circle-check"></i> Latitude : `+ e.latitude + `<br></p>
+                                  <p><i class="icon-circle-check"></i> Longitude : `+ e.longitude + `<br></p>`;
+
+									// Update the marker's popup content with the new image
+									marker.setPopupContent(updatedPopup);
+
+									// Open the popup after updating
+									marker.openPopup();
+								}
+							})
+						});
 						this.markers.push(marker);
 					}
 				});
@@ -260,7 +310,8 @@ export class CmLeafletComponent implements AfterViewInit {
 			// this.addMarker(lonLat[0], lonLat[1]);
 		});
 		if (type == "map")
-			this.getVMSStatusData();
+			this.startApiCall();
+		//this.getVMSStatusData();
 		//L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
 
 		const baselayers = {
@@ -279,7 +330,7 @@ export class CmLeafletComponent implements AfterViewInit {
 		console.log(this.drawnItems)
 		this.map.addLayer(this.drawnItems);
 
-		if(this.type == "vms") {
+		if (this.type == "vms") {
 			this.options = {
 				position: 'topright',
 				draw: {
@@ -304,18 +355,18 @@ export class CmLeafletComponent implements AfterViewInit {
 					circle: false,
 					circlemarker: false,
 					marker: false,
-					
+
 				},
 				edit: {
 					featureGroup: this.drawnItems, //REQUIRED!!
 					edit: false,
 					remove: false,
-					
+
 				}
 			};
 		}
-		
-		
+
+
 		var drawControl = new L.Control.Draw(this.options);
 		this.map.addControl(drawControl);
 
@@ -393,7 +444,7 @@ export class CmLeafletComponent implements AfterViewInit {
 		//
 
 		this.map.on("singleclick", (event: any) => {
-			if(this.type.toLowerCase() != "zone") {
+			if (this.type.toLowerCase() != "zone") {
 				var lonLat = L.proj.toLonLat(event.coordinate);
 				console.log(lonLat);
 			}
@@ -463,9 +514,8 @@ export class CmLeafletComponent implements AfterViewInit {
 			else
 				console.log('Invalid Value');
 
-				if(this.type.toLowerCase() != "zone")
-					var mp = new L.Marker([lattitude, longitude]).addTo(this.map);
-
+			if (this.type.toLowerCase() != "zone")
+				var mp = new L.Marker([lattitude, longitude]).addTo(this.map);
 		});
 	}
 }

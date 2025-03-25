@@ -53,7 +53,7 @@ export class MedialiveplaylistComponent {
       public datepipe: DatePipe,
       private toast: ToastrService,
       public modalService: NgbModal) {
-      this.global.CurrentPage = "Media Live Play List CVMS";
+      this.global.CurrentPage = "Live Play List CVMS";
       
     }
     OnTabChange(status: number) {
