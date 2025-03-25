@@ -48,8 +48,11 @@ export class MediaUploadcvmsComponent implements OnInit {
   vmsIds: any[] = [];
   _configData:any;
   vmsId: any[] = [];
+  default_dropdownSettingsVms: any;
   dropdownSettingsVms: any;
   _inputVmsData: any;
+  _inputPlayerData: any = [];
+  changeToShow = false;
   pager: number = 0;
   recordPerPage: number = 0;
   startId: number = 0;
@@ -84,6 +87,15 @@ export class MediaUploadcvmsComponent implements OnInit {
     public _router: Router,
     private global: Globals,
   ) {
+    this.default_dropdownSettingsVms = {
+      singleSelection: false,
+      idField: 'value',
+      textField: 'displayName',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 5,
+      allowSearchFilter: true,
+    };
     this.dropdownSettingsVms = {
       singleSelection: false,
       idField: 'value',
@@ -126,6 +138,7 @@ export class MediaUploadcvmsComponent implements OnInit {
   ngOnInit(): void {
     this.GetVmsDetails();
     this.getMedialistData();
+    
   }
 
   BacktoList() {
@@ -149,7 +162,39 @@ export class MediaUploadcvmsComponent implements OnInit {
     MediaName?.updateValueAndValidity();
     MediaTextName?.updateValueAndValidity();
   }
+  getMediaUploadData() {
+    this._request.currentPage = this.pager;
+    this._request.pageSize = this.recordPerPage;
+    this._request.startId = this.startId;
+    this._request.searchItem =this.vmsIds[0].split('|')[0];
+    this.changeToShow = false;
+    this._CVMSfacade.GetFontupload_font(this._request).subscribe(res => {
+      if (res.data != null) {
+        if (res.data.length > 0) {
+          let commonList: CommonSelectList[] = [];
+          res.data.forEach((ele: any) => {
+            let _responseId = ele.responseId;
+            let _data = JSON.parse(ele.requestData);
+            var _commonSelect = new CommonSelectList();
+            _commonSelect.displayName = _data.name;
+            _commonSelect.value = _responseId;
+            commonList.push(_commonSelect);
+          });
+          let _data = {
+            data: commonList,
+            disabled: false
+          }
+          this._inputPlayerData = _data;
 
+         
+          
+       
+
+        }
+      }
+    })
+   
+  }
   onSubmit() {
     if (this.vmsIds== undefined || this.vmsIds.length < 1) {
       this.toast.error("Controller not selected. Please select at least one controller to proceed.");
@@ -163,11 +208,11 @@ export class MediaUploadcvmsComponent implements OnInit {
     }
 
     for (let i = 0; i < this.vmsIds.length; i++) {
-      const element = this.vmsIds[i];
+      const element = this.vmsIds[i].split('|');
       if (this.isFileTypeImage) {
         for (let j = 0; j < this.selectedIds.length; j++) {
           const media = this.selectedMedia[j];
-          this.AddUpdateMedia(element, media, this.vmsId[i]);
+          this.AddUpdateMedia(element[0], media, element[1]);
         }
       } 
       // if (this.isFileTypeURL){
@@ -186,7 +231,7 @@ export class MediaUploadcvmsComponent implements OnInit {
       //   })
       // }
       else {
-        this._CVMSfacade.CheckDuplicateMediaName(this.form.controls.mediaName.value, this.vmsIds[i]).pipe(catchError((error) => {
+        this._CVMSfacade.CheckDuplicateMediaName(this.form.controls.mediaName.value,this.vmsIds[i].split('|')[0]).pipe(catchError((error) => {
           this.toast.error("Error occured while checking duplicate Media name " + error);
           throw error;
         })).subscribe(data => {
@@ -196,13 +241,13 @@ export class MediaUploadcvmsComponent implements OnInit {
           }
           else {
 
-            this.AddUpdateMedia(element, null, this.vmsId[i]);
+            this.AddUpdateMedia(element[0], null, element[1]);
           }
         })
       }
     }
   }
-
+  
 
   AddUpdateMedia(element?: any, media?: any, vmsId?: any ) {
     let _vcmsuploadmediadata = new Vcmsuploadmedia();
@@ -229,7 +274,11 @@ export class MediaUploadcvmsComponent implements OnInit {
         type: this.form.controls.mediatype.value,
         id: 0,
         name: this.form.controls.mediaName.value,
-        text: this.form.controls.MediaTextName.value
+        text: this.form.controls.MediaTextName.value,
+        //fontId:this.form.controls.fontName.value,
+        fontId:this.form.controls["FontName"].value,
+
+
       }
       _vcmsuploadmediadata.RequestData = JSON.stringify(_requestTextData);
     }
@@ -309,17 +358,29 @@ export class MediaUploadcvmsComponent implements OnInit {
       this.isFileTypeText = true;
       this.isFileTypeImage = false;
       this.isFileTypeURL = false;
+      this.dropdownSettingsVms={
+      singleSelection: true,
+      idField: 'value',
+      textField: 'displayName',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 5,
+      allowSearchFilter: true,
+
+      };
     }
     if (this.mediatype == 'URL') {
       this.isFileTypeURL = true;
       this.isFileTypeImage = false;
       this.isFileTypeText = false;
+      this.dropdownSettingsVms=this.default_dropdownSettingsVms;
     }
 
     if(this.mediatype == 'media')  {
       this.isFileTypeImage = true;
       this.isFileTypeText = false;
       this.isFileTypeURL = false;
+      this.dropdownSettingsVms=this.default_dropdownSettingsVms;
     }
 
   }
@@ -361,11 +422,11 @@ export class MediaUploadcvmsComponent implements OnInit {
     if (eve.length > 0) {
       if (type == 1) {
         eve.forEach((vms: any) => {
-          this.vmsIds = [];
+          //this.vmsIds = [];
           this.vmsIds.push(vms.value);
         });
       }
-      else {
+      else { 
         eve.forEach((ele: any) => {
           var idx = 0;
           this.vmsIds.forEach(element => {
@@ -385,20 +446,21 @@ export class MediaUploadcvmsComponent implements OnInit {
       let ipaddress = inputVal[0];
       let vmsid = inputVal[1];
       if (type == 1){
-        this.vmsIds.push(ipaddress),
+        this.vmsIds.push(eve.value),
           this.vmsId.push(vmsid);
          
        }
       else {
         var idx = 0;
         this.vmsIds.forEach(element => {
-          if (element.value == eve.value) {
+          if (element == eve.value) {
             this.vmsIds.splice(idx, 1);
           }
           idx++;
         });
       }
     }
+    this.getMediaUploadData();
 
   }
   async ViewMedia(media: any) {

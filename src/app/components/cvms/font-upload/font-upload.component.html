@@ -8,6 +8,21 @@
             <div class="card">
                 <form  [formGroup]="form" (ngSubmit)="onSubmit()">
                     <div class="card-body">
+
+                        <div class="row">
+                            <div class="mb-3 col">
+                            <cm-multiselect-auto-complt [inputData]="_inputVmsData" [label]="label1"  
+                                [dropdownSettings]="dropdownSettingsVms" (selectedItem)="getSelectedVms($event,1)"
+                                (deSelectedItem)="getSelectedVms($event,0)"></cm-multiselect-auto-complt>
+                        </div>
+                        </div>
+
+
+
+
+
+
+
                         <div class="row">
                             <div class="mb-3 col">
                                 <label class="form-label">Font Name*</label>
@@ -78,4 +93,30 @@
             </div>
         </div>
     </div>
+
+
+
+
+
+
+    <div class="row mb-3">
+        <div class="col-xl-12 stretch-card" id="listView">
+            <div class="card  border-0">
+                <div class="card-body p-2 bgTable" style="border-radius: 0 0;">
+
+                    <app-cm-table [headArr]="headerArr" [gridArr]="listOfMediaSet" [totalRecords]="totalRecords"
+                        [totalPages]="totalPages" [perPage]="recordPerPage" (pager)="onPager($event)"
+                        [btnArray]="btnArray" [collectionSize]="totalRecords"
+                        (recordPerPage)="onRecordPageChange($event)" link="masters/add-party" fieldName="id"
+                        (search)="onPageSearch($event)" (btnAction)="ButtonAction($event)" [isSearch]="isSearch"
+                        (searchWithId)="SearchWithId($event)">
+                    </app-cm-table>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
 </div>

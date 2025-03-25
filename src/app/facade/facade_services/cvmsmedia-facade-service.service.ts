@@ -29,6 +29,36 @@ export class CVMSMediaFacadeServiceService {
   AddFontDetails(data:any){   
     return this._vmscomm.AddFontDetails(data);
   }
+  
+  UpdateFontMasterStatus(isdeleted: boolean, fontName: string){   
+    return this._vmscomm.UpdateFontMasterStatus(isdeleted,fontName);
+  }
+  CheckFontName(fontName: string) {
+    return this._vmscomm.CheckFontName(fontName);
+  }
+  GetFontMaster(data:any){   
+    return this._vmscomm.GetFontMaster(data);
+  }
+  
+  AddFontUploadDetails(data:any){   
+    return this._vmscomm.AddFontUploadDetails(data);
+  }
+ 
+  SaveFontuploadMaster(data:any){   
+    return this._vmscomm.SaveFontuploadMaster(data);
+  }
+  
+  GetFontupload(data:any){   
+    return this._vmscomm.GetFontupload(data);
+  }
+  GetFontuploaddata(data:any){   
+    return this._vmscomm.GetFontuploaddata(data);
+  }
+  
+  
+  GetFontupload_font(data:any){   
+    return this._vmscomm.GetFontupload_font(data);
+  }
 
   UpdateMediaPlayer(data:any){
     return this._mediaplayer.UpdateMedia(data);

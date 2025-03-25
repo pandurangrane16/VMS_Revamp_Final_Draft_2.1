@@ -44,4 +44,8 @@ export class CmMultiselectAutoCompltComponent implements OnInit {
     }
   }
 
+  ChangeMultiSelect(evt:any){
+    console.log(evt);
+  }
+
 }

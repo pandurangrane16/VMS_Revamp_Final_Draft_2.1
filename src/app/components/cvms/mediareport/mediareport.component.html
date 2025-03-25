@@ -8,14 +8,13 @@
         <div class="row">
             <div class="col-md-3">
 
-                <label class="form-label lable-bold">Select Media Player</label> 
+                <!-- <label class="form-label lable-bold">Select Media Player</label>  -->
 
                            
 
-                                <select class="form-control form-control-sm"  [(ngModel)]="Selectedmediaplayer">
-                                    <option [ngValue]="null" disabled>Choose Media Player</option>
-                                    <option *ngFor="let mediaplayer of _inputPlayerData.data" value="{{mediaplayer.value}}">{{mediaplayer.displayName}}</option>
-                                </select> 
+                <cm-multiselect-auto-complt [inputData]="_inputVmsData" [label]="label1"  
+                [dropdownSettings]="dropdownSettingsVms" (selectedItem)="getSelectedVms($event,1)"
+                (deSelectedItem)="getSelectedVms($event,0)"></cm-multiselect-auto-complt>
  
 
 
@@ -104,6 +103,12 @@
                 <button class="btn btn-primary mr-1" (click)="ActionSubmit(0)">
                     Submit
                 </button>
+                <button *ngIf="listOfData != undefined" class="btn btn-danger mr-1" (click)="ActionSubmit(1)">
+                    <i class="fa fa-file-pdf-o"></i>  PDF
+                  </button>
+                  <button *ngIf="listOfData != undefined" class="btn btn-success" (click)="ActionSubmit(2)">
+                      <i class="fa fa-file-excel-o"></i> Excel
+                  </button>
                
                
             </div>

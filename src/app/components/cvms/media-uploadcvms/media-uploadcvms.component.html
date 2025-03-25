@@ -13,17 +13,18 @@
                         <div class="row">
                             
                             <div class="mb-4 col">
-                                <cm-multiselect-auto-complt [inputData]="_inputVmsData" [label]="label1"  
-                                    [dropdownSettings]="dropdownSettingsVms" (selectedItem)="getSelectedVms($event,1)"
-                                    (deSelectedItem)="getSelectedVms($event,0)"></cm-multiselect-auto-complt>
+                         
+                                    <label class="form-label lable-bold">Select Media Upload Type*</label>
+                                    <select required [(ngModel)]="mediatype" class="form-control form-control-sm"
+                                        (change)="onUploadTypeChange($event)" formControlName="mediatype">
+                                        <option [ngValue]="null" disabled>Choose your Upload Type</option>
+                                        <option *ngFor="let type of FileTypes" [ngValue]="type">{{type}}</option>
+                                    </select>
                             </div>
                             <div class="mb-4 col form-group">
-                                <label class="form-label lable-bold">Select Media Upload Type*</label>
-                                <select required [(ngModel)]="mediatype" class="form-control form-control-sm"
-                                    (change)="onUploadTypeChange($event)" formControlName="mediatype">
-                                    <option [ngValue]="null" disabled>Choose your Upload Type</option>
-                                    <option *ngFor="let type of FileTypes" [ngValue]="type">{{type}}</option>
-                                </select>
+                                <cm-multiselect-auto-complt [inputData]="_inputVmsData" [label]="label1"  
+                                [dropdownSettings]="dropdownSettingsVms" (selectedItem)="getSelectedVms($event,1)"
+                                (deSelectedItem)="getSelectedVms($event,0)"></cm-multiselect-auto-complt>
                             </div>
 
                         </div>
@@ -59,8 +60,8 @@
                             <div class="mb-3 col-6 form-group" *ngIf="isFileTypeText">
                                 <label class="form-label lable-bold">Select Font Name *</label>
                                 <select class="form-control" formControlName="FontName">
-                                    <option *ngFor="let font of fontList" [value]="font">{{font}}</option>
-                                    <!-- <option *ngFor="let mediaplayer of _inputPlayerData.data" value="{{mediaplayer.value}}">{{mediaplayer.displayName}}</option> -->
+                                    <option value="" disabled selected>Select an Option</option>
+                                     <option *ngFor="let mediaplayer of _inputPlayerData.data" value="{{mediaplayer.value}}">{{mediaplayer.displayName}}</option>
                                 </select>
                             </div>
 
