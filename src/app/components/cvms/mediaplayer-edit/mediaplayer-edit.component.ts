@@ -362,7 +362,7 @@ export class MediaPlayerEditComponent {
           this.patchTileValue(i, j, formattedTextStyle);
         });
       });
-
+      this.RemovePlaylist();
       if (!this.editForm.valid) {
         this.toast.error("There was a problem saving your data. Please review your input for any errors.");
         return;
@@ -690,51 +690,6 @@ export class MediaPlayerEditComponent {
 
 
   }
-  // generateRows2(idx: number) {
-  //   //console.log(JSON.stringify(this.selectedMediaId))
-
-  //   this.rows = []; // Clear existing rows
-  //   this.rowCount = 0;
-  //   this.rowCount = this.selectedMediaId[0].length;
-  //   const playlistArray = this.getPlaylist(idx); // Get the playlist form array for the last user
-  //   //playlistArray.clear();
-  //   let _plMediaList = [];
-  //   for (let i = 0; i < this.rowCount; i++) {
-  //     // Push a new playlist group (with the selected media) into the respective userDetails playlist array.
-  //     let _plMedia = new PlaylistMedia();
-  //     // Add a new item to the playlist FormArray
-  //     let _textStyle = {
-  //       "fontSize": 0,
-  //       "fontColor": "",
-  //       "backgroundColor": ""
-  //     }
-  //     if (this.selectedMediaId[0][i].mediaDetails != null) {
-  //       _plMedia.imageTextDuration = this.selectedMediaId[0][i].mediaDetails.imageTextDuration;
-  //       _plMedia.mediaId = this.selectedMediaId[0][i].resposneId;
-  //       _plMedia.mediaName = this.selectedMediaId[0][i].mediaDetails.displayname;
-  //       _plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
-  //       _plMedia.videoLoopCount = this.selectedMediaId[0][i].mediaDetails.videoLoopCount;
-
-  //     }
-  //     else {
-  //       //_plMedia.imageTextDuration = this.selectedMediaId[0][i].imageTextDuration;
-  //       _plMedia.mediaId = this.selectedMediaId[0][i].id;
-  //       _plMedia.mediaName = this.selectedMediaId[0][i].name;
-  //       //_plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
-  //       //_plMedia.videoLoopCount = this.selectedMediaId[0][i].mediaDetails.videoLoopCount;
-  //     }
-  //     _plMedia.textStyle = _textStyle;
-  //     _plMediaList.push(_plMedia);
-
-  //   }
-
-  //   this.selectedMediaId = [];
-  //   this.selectedMediaPlaylist[idx].playlist = _plMediaList;
-  //   this.selectedMediaPlaylist[idx].playlist.forEach((ele: any) => {
-  //     this.addPlaylist(idx, ele);
-  //   });
-  //   //console.log(this.selectedMediaPlaylist);
-  // }
   generateRows(idx: number) {
     //console.log(JSON.stringify(this.selectedMediaId))
 
@@ -936,5 +891,57 @@ export class MediaPlayerEditComponent {
     if (this.editForm.valid) {
       console.log(this.editForm.value);
     }
+  }
+
+  RemovePlaylist(){
+//     let _vcmsuploadmediadata = new Mediaplayer();
+
+//     _vcmsuploadmediadata.controllerName = this.editForm.controls["controllerName"].value;
+//    // _vcmsuploadmediadata.IpAddress = this.vmsIds[0];
+
+//     _vcmsuploadmediadata.IpAddress = this.editForm.controls["controllerName"].value;
+//     _vcmsuploadmediadata.VmsId=this.editForm.controls["vmsId"].value;
+
+//    // _vcmsuploadmediadata.VmsId = Number.parseInt(this.vmsId[0]);
+
+//     _vcmsuploadmediadata.status = 0;
+//     _vcmsuploadmediadata.AuditedBy = "System";
+//     _vcmsuploadmediadata.IsAudited = true;
+//     _vcmsuploadmediadata.AuditedTime = new Date();
+//     _vcmsuploadmediadata.Reason = "Upload Data for test";
+//     //_vcmsuploadmediadata.createddate = new Date();
+//     _vcmsuploadmediadata.CreationTime = new Date();
+//     _vcmsuploadmediadata.RequestType ="/mediaPlayer/deleteMediaPlayer"
+//     _vcmsuploadmediadata.medianame=element.mediaName;
+   
+//     let requestData2 = JSON.parse(element.requestData); // Parse requestData from element
+//     let mediaName = requestData2.name;
+//     let requestData = {
+//      mediaPlayerId: element.responseId,
+//      mediaPlayerName: mediaName
+   
+//    };
+//    _vcmsuploadmediadata.RequestData = JSON.stringify(requestData);
+//      // _vcmsuploadmediadata.RequestData = JSON.stringify(_requestTextData);
+    
+
+
+//     this.mediaFacade.SaveMediaPlayer(_vcmsuploadmediadata).subscribe(data => {
+//       if (data == 0) {
+//         this.toast.error("Error occured while saving data for ");
+//       }
+//       else {
+//        this.listOfMediaUpload = this.listOfMediaUpload.filter((media: any) => media.id !== element.id);
+
+
+
+//  this.toast.success("Data deleted successfully ");
+
+ 
+//   this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+//    this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
+//   });
+//       }
+//     });
   }
 }
