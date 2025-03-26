@@ -11,7 +11,7 @@
                     <span class="spinner-border-sm me-1"></span>
                     <i class="icon-plus"></i> Add New Media Player 
                 </button>
-                <app-cm-table [headArr]="headerArr" [gridArr]="listOfMediaUpload"
+                <app-cm-table [headArr]="headerArr" [gridArr]="listOfMediaUpload" SearchLable="Search With Controller IP or Media Player name"
                 [totalRecords]="totalRecords" [totalPages]="totalPages"
                 [perPage]="recordPerPage" (pager)="onPager($event)" [btnArray]="btnArray"
                 (btnAction)="ButtonAction($event)" [collectionSize]="totalRecords"

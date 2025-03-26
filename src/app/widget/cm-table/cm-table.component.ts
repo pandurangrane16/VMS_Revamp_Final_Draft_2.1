@@ -7,10 +7,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./cm-table.component.css']
 })
 export class CmTableComponent implements OnChanges {
-
   listOfData: any;
   tooltip: string = "";
   searchText: string = "";
+  @Input() SearchLable : string = "Search Here";
   @Input() pagination:boolean =true;
   @Input() isSearch: boolean = false;
   @Output() pager = new EventEmitter<number>();

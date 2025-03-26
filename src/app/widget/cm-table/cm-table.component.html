@@ -1,6 +1,6 @@
 <div class="text-center w-100">
   <input class="form-control col-8 float-right mt-2 mb-2" *ngIf="isSearchBox" type="text" [(ngModel)]="searchText" (input)="Search()"
-    placeholder="Search Here" />
+    [placeholder]="SearchLable" />
   <table class="table table-striped table-bordered table-sm row-border hover" id="datatableexample">
     <thead class="table-dark">
       <tr>

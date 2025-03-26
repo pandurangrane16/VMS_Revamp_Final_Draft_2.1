@@ -37,7 +37,7 @@ export class MediaplayerlistComponent {
   _request: any = new InputRequest();
    
   headerArr = [      
-      { "Head": "Controller Name", "FieldName": "ipAddress", "type": "string" },      
+      { "Head": "Controller IP", "FieldName": "ipAddress", "type": "string" },      
       { "Head": "Media Player Name", "FieldName": "name", "type": "string" },   
       { "Head": "Media Player Status", "FieldName": "statusdesc", "type": "string" },
       { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
