@@ -330,11 +330,11 @@ daysOptions:any =[];
         _vcmsmedischedulerdata.status = 0;
         _vcmsmedischedulerdata.Reason = "Create Media Scheduler";
         _vcmsmedischedulerdata.requesttype="/mediaSchedule/updateMediaPlayerScheduler";
-        _vcmsmedischedulerdata.id= id;
+        // _vcmsmedischedulerdata.id= id;
         
   
   
-        this._CVMSfacade.UpdateMediascheduler(_vcmsmedischedulerdata).pipe(catchError((err) => {
+        this._CVMSfacade.SaveMediaScheduler(_vcmsmedischedulerdata).pipe(catchError((err) => {
           this._toast.error("Error occured while saving data for " + err);
           throw err;
         })).subscribe(data => {
