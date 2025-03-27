@@ -96,83 +96,6 @@ export class MediaPlayerEditComponent {
     //   }
 
   }
-
-  ToAllDuration(idx: number) {
-    let val = this.editForm.controls['tiles'].controls[idx].controls['duration'].value;
-    const playlistArray = this.getPlaylist(idx);
-    playlistArray.controls.forEach((ele: any) => {
-      ele.patchValue({ imageTextDuration: val });
-    });
-  }
-  ToAllLoop(idx: number) {
-    let val = this.editForm.controls['tiles'].controls[idx].controls['mediaLoopCount'].value;
-    const playlistArray = this.getPlaylist(idx);
-    playlistArray.controls.forEach((ele: any) => {
-      ele.patchValue({ videoLoopCount: val });
-    });
-  }
-
-  ToAllParty(idx: number) {
-    let val = this.editForm.controls['tiles'].controls[idx].controls['partyIdCommon'].value;
-    const playlistArray = this.getPlaylist(idx);
-    playlistArray.controls.forEach((ele: any) => {
-      ele.patchValue({ partyId: val });
-    });
-  }
-  ToAllTarrif(idx: number) {
-    let val = this.editForm.controls['tiles'].controls[idx].controls['tarrifIdCommon'].value;
-    const playlistArray = this.getPlaylist(idx);
-    playlistArray.controls.forEach((ele: any) => {
-      ele.patchValue({ tarrifId: val });
-    });
-  }
-  ToAllFontSize(idx: number) {
-    let val = this.editForm.controls['tiles'].controls[idx].controls['fontSizeCommon'].value;
-    const playlistArray = this.getPlaylist(idx);
-    playlistArray.controls.forEach((ele: any) => {
-      if (!this.isNameValid(ele.get('mediaName')?.value)) {
-        ele.controls['textStyle'].patchValue({ fontSize: val });
-      }
-    });
-  }
-  setColor(color: any) {
-    // this.field.update(color, true, true);
-  }
-
-  onChangeColor(color: string, tileIndex: number, playlistIndex: number, colorType: string, type: string) {
-    // Dynamically update the corresponding color field in the form array
-    const control = this.editForm.controls['tiles'].at(tileIndex).get('playlist').at(playlistIndex);
-    if (type == "all") {
-      const playlistArray = this.getPlaylist(tileIndex);
-      playlistArray.controls.forEach((ele: any) => {
-        if (!this.isNameValid(ele.get('mediaName')?.value)) {
-          if (colorType === 'fontColor')
-            ele.controls['textStyle'].patchValue({ fontColor: color })
-          //control.controls["textStyle"].controls.get('fontColor').patchValue({ fontColor: color });
-          else if (colorType === 'backgroundColor')
-            ele.controls['textStyle'].patchValue({ backgroundColor: color })
-          //control.controls["textStyle"].controls.get('backgroundColor').patchValue({ backgroundColor: color });
-        }
-        else {
-          this.toast.error("Not able to perform this action, required text.");
-          control.controls["textStyle"].controls.control.get('fontColor').patchValue({ backgroundColor: '#cccccc' });
-          control.controls["textStyle"].controls.control.get('backgroundColor').patchValue({ backgroundColor: '#cccccc' });
-        }
-
-      });
-    } else if (!this.isNameValid(control.controls['mediaName'].value)) {
-      if (colorType === 'fontColor') {
-        control.controls["textStyle"].controls.control.get('fontColor').patchValue({ fontColor: color });
-      } else if (colorType === 'backgroundColor') {
-        control.controls["textStyle"].controls.control.get('backgroundColor').patchValue({ backgroundColor: color });
-      }
-    } else {
-      this.toast.error("Not able to perform this action, required text.");
-      control.controls["textStyle"].controls.control.get('fontColor').patchValue({ fontColor: '#cccccc' });
-      control.controls["textStyle"].controls.control.get('backgroundColor').patchValue({ backgroundColor: '#cccccc' });
-    }
-
-  }
   getTariffDetails() {
     let _data = { "currentPage": "0", "pageSize": "0", "startId": "0", "searchItem": null };
     this.adminFacade.getTarrifs(_data).subscribe(res => {
@@ -243,12 +166,23 @@ export class MediaPlayerEditComponent {
       tilesFormArray.push(this.fb.group({
         tileNo: [tile.tileNo],
         playlistLoopCount: [tile.playlistLoopCount],
+        isPlayOrder: [0],
+        duration: [0],
+        mediaLoopCount: [0],
+        partyIdCommon: [''],
+        tarrifIdCommon: [''],
+        fontSizeCommon: [0],
+        colorFont: [''],
+        colorBg: [''],
+
         playlist: this.fb.array(tile.playlist.map((item: any) => this.fb.group({
           playOrder: [item.playOrder],
           imageTextDuration: [item.imageTextDuration],
           mediaId: [item.mediaId],
           mediaName: [item.mediaName],
           videoLoopCount: [item.videoLoopCount],
+          partyId: [item.partyId],
+          tarrifId: [item.tarrifId],
           textStyle: this.fb.group({
             fontSize: [item.textStyle.fontSize],
             fontColor: [item.textStyle.fontColor],
@@ -330,7 +264,7 @@ export class MediaPlayerEditComponent {
   OnSavePlaylistDetails_new(id: number): void {
     this.validateFields();
     if (this.isSeqValidate) {
-      const ipAddress = this.SelectedControllerId[0];
+      const ipAddress = this.editForm.controls["SelectedControllerId"].value;
       const mediaPlayerName = this.editForm.controls["name"].value;
 
       // Check for duplicate media player name
@@ -370,7 +304,7 @@ export class MediaPlayerEditComponent {
 
       // Create and populate Mediaplayer object
       const mediaPlayerData = new Mediaplayer();
-      mediaPlayerData.VmsId = Number.parseInt(this.SelectedControllerId[1]);
+      mediaPlayerData.VmsId = this.vmsid;
       mediaPlayerData.IpAddress = ipAddress;
       mediaPlayerData.mediaplayername = mediaPlayerName;
       mediaPlayerData.status = 0;
@@ -943,5 +877,83 @@ export class MediaPlayerEditComponent {
 //   });
 //       }
 //     });
+  }
+
+
+  ToAllDuration(idx: number) {
+    let val = this.editForm.controls['tiles'].controls[idx].controls['duration'].value;
+    const playlistArray = this.getPlaylist(idx);
+    playlistArray.controls.forEach((ele: any) => {
+      ele.patchValue({ imageTextDuration: val });
+    });
+  }
+  ToAllLoop(idx: number) {
+    let val = this.editForm.controls['tiles'].controls[idx].controls['mediaLoopCount'].value;
+    const playlistArray = this.getPlaylist(idx);
+    playlistArray.controls.forEach((ele: any) => {
+      ele.patchValue({ videoLoopCount: val });
+    });
+  }
+
+  ToAllParty(idx: number) {
+    let val = this.editForm.controls['tiles'].controls[idx].controls['partyIdCommon'].value;
+    const playlistArray = this.getPlaylist(idx);
+    playlistArray.controls.forEach((ele: any) => {
+      ele.patchValue({ partyId: val });
+    });
+  }
+  ToAllTarrif(idx: number) {
+    let val = this.editForm.controls['tiles'].controls[idx].controls['tarrifIdCommon'].value;
+    const playlistArray = this.getPlaylist(idx);
+    playlistArray.controls.forEach((ele: any) => {
+      ele.patchValue({ tarrifId: val });
+    });
+  }
+  ToAllFontSize(idx: number) {
+    let val = this.editForm.controls['tiles'].controls[idx].controls['fontSizeCommon'].value;
+    const playlistArray = this.getPlaylist(idx);
+    playlistArray.controls.forEach((ele: any) => {
+      if (!this.isNameValid(ele.get('mediaName')?.value)) {
+        ele.controls['textStyle'].patchValue({ fontSize: val });
+      }
+    });
+  }
+  setColor(color: any) {
+    // this.field.update(color, true, true);
+  }
+
+  onChangeColor(color: string, tileIndex: number, playlistIndex: number, colorType: string, type: string) {
+    // Dynamically update the corresponding color field in the form array
+    const control = this.editForm.controls['tiles'].at(tileIndex).get('playlist').at(playlistIndex);
+    if (type == "all") {
+      const playlistArray = this.getPlaylist(tileIndex);
+      playlistArray.controls.forEach((ele: any) => {
+        if (!this.isNameValid(ele.get('mediaName')?.value)) {
+          if (colorType === 'fontColor')
+            ele.controls['textStyle'].patchValue({ fontColor: color })
+          //control.controls["textStyle"].controls.get('fontColor').patchValue({ fontColor: color });
+          else if (colorType === 'backgroundColor')
+            ele.controls['textStyle'].patchValue({ backgroundColor: color })
+          //control.controls["textStyle"].controls.get('backgroundColor').patchValue({ backgroundColor: color });
+        }
+        else {
+          this.toast.error("Not able to perform this action, required text.");
+          control.controls["textStyle"].controls.control.get('fontColor').patchValue({ backgroundColor: '#cccccc' });
+          control.controls["textStyle"].controls.control.get('backgroundColor').patchValue({ backgroundColor: '#cccccc' });
+        }
+
+      });
+    } else if (!this.isNameValid(control.controls['mediaName'].value)) {
+      if (colorType === 'fontColor') {
+        control.controls["textStyle"].controls.control.get('fontColor').patchValue({ fontColor: color });
+      } else if (colorType === 'backgroundColor') {
+        control.controls["textStyle"].controls.control.get('backgroundColor').patchValue({ backgroundColor: color });
+      }
+    } else {
+      this.toast.error("Not able to perform this action, required text.");
+      control.controls["textStyle"].controls.control.get('fontColor').patchValue({ fontColor: '#cccccc' });
+      control.controls["textStyle"].controls.control.get('backgroundColor').patchValue({ backgroundColor: '#cccccc' });
+    }
+
   }
 }
