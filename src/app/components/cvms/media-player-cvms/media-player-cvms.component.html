@@ -71,8 +71,9 @@
                                             <div class="col-md-3 mb-2">
                                                 <div class="form-group">
                                                     <label for="tileNo lable-bold">Tile No : </label>
-                                                    <input type="number" id="tileNo" formControlName="tileNo" min="1" readonly="true"
-                                                        class="form-control" (input)="checkValue($event)" />
+                                                    <input type="number" id="tileNo" formControlName="tileNo" min="1"
+                                                        readonly="true" class="form-control"
+                                                        (input)="checkValue($event)" />
 
                                                 </div>
 
@@ -154,14 +155,13 @@
 
 
                                         </div>
-                                <div class="row">
-                                        <div class="col-md-8">
-                                            <div class="row">
-                                                <div
-                                                    style="width: 2% !important;padding: 0 5px; margin: 0 15px;">
-                                                    &nbsp;
-                                                </div>
-                                                <div class="col" ></div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="row">
+                                                    <div style="width: 2% !important;padding: 0 5px; margin: 0 15px;">
+                                                        &nbsp;
+                                                    </div>
+                                                    <div class="col"></div>
                                                     <div class="col"></div>
                                                     <div class="col text-center">
                                                         <input type="number" formControlName="duration"
@@ -179,7 +179,7 @@
                                                     </div>
                                                     <div class="col">
                                                         <select class="form-control-sm" formControlName="partyIdCommon"
-                                                        *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
+                                                            *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
                                                             (change)="ToAllParty(i)">
                                                             <option value="0">Select Party</option>
                                                             <option *ngFor="let prt of partyDetails" [value]="prt.id">
@@ -188,18 +188,18 @@
                                                     </div>
                                                     <div class="col">
                                                         <select class="form-control-sm" formControlName="tarrifIdCommon"
-                                                        *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
+                                                            *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
                                                             (change)="ToAllTarrif(i)">
                                                             <option value="0">Select Tarrif</option>
                                                             <option *ngFor="let trf of tarrifDetails" [value]="trf.id">
                                                                 {{trf.tarrifType}}</option>
                                                         </select>
                                                     </div>
-                                        </div>
-                                        </div>
+                                                </div>
+                                            </div>
                                             <div class="col-md-4">
                                                 <div class="row">
-                                                   
+
                                                     <div class="col text-center">
                                                         <input type="text" formControlName="fontSizeCommon"
                                                             *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
@@ -208,26 +208,28 @@
                                                             (blur)="ToAllFontSize(i)" placeholder="To All" />
                                                     </div>
                                                     <div class="col text-center">
-                                                        <input [(colorPicker)]="registrationForm.controls['tiles'].controls[i].colorFont" readonly="true"
-                                                        *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
+                                                        <input
+                                                            [(colorPicker)]="registrationForm.controls['tiles'].controls[i].colorFont"
+                                                            readonly="true"
+                                                            *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
                                                             [style.background]="registrationForm.controls['tiles'].controls[i].colorFont"
-                                                            (colorPickerChange)="onChangeColor($event, i, i, 'fontColor','all')" 
-                                                            type="text"
-                                                            class="form-control" id="color-id" />
+                                                            (colorPickerChange)="onChangeColor($event, i, i, 'fontColor','all')"
+                                                            type="text" class="form-control" id="color-id" />
                                                     </div>
                                                     <div class="col text-center">
-                                                        <input [(colorPicker)]="registrationForm.controls['tiles'].controls[i].colorBg" 
-                                                        [style.background]="registrationForm.controls['tiles'].controls[i].colorBg" readonly="true"
-                                                        *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
-                                                        (colorPickerChange)="onChangeColor($event,i, i, 'backgroundColor','all')" 
-                                                            type="text"
-                                                            class="form-control" id="color-id" />
+                                                        <input
+                                                            [(colorPicker)]="registrationForm.controls['tiles'].controls[i].colorBg"
+                                                            [style.background]="registrationForm.controls['tiles'].controls[i].colorBg"
+                                                            readonly="true"
+                                                            *ngIf="registrationForm.controls['tiles'].controls[i].controls['playlist'].length != 0"
+                                                            (colorPickerChange)="onChangeColor($event,i, i, 'backgroundColor','all')"
+                                                            type="text" class="form-control" id="color-id" />
                                                     </div>
                                                     <div class="col"></div>
                                                 </div>
 
                                             </div>
-                                       
+
                                         </div>
                                         <div formArrayName="playlist">
                                             <div class="row" *ngFor="let row of getPlaylist(i).controls; let j = index"
@@ -256,7 +258,6 @@
                                                         <div class="col text-center">
                                                             <input type="number" formControlName="imageTextDuration"
                                                                 min="1" (input)="checkValue($event)"
-                                                                
                                                                 class="form-control input-box" placeholder="" />
                                                         </div>
                                                         <div class="col">
@@ -295,10 +296,10 @@
                                                                 class="form-control input-box" placeholder="" /> -->
 
                                                             <input [(colorPicker)]="row.value.textStyle.fontColor"
-                                                            *ngIf="!isNameValid(row.get('mediaName')?.value)"
+                                                                *ngIf="!isNameValid(row.get('mediaName')?.value)"
                                                                 formControlName="fontColor" type="text" readonly="true"
                                                                 [style.background]="row.value.textStyle.fontColor"
-                                                                (colorPickerChange)="onChangeColor($event, i, j, 'fontColor','individual')" 
+                                                                (colorPickerChange)="onChangeColor($event, i, j, 'fontColor','individual')"
                                                                 class="form-control" [id]="'color-fc'+j" />
                                                         </div>
                                                         <div class="col">
@@ -306,10 +307,11 @@
                                                                 [readonly]="isNameValid(row.get('mediaName')?.value)"
                                                                 class="form-control input-box" placeholder="" /> -->
                                                             <input [(colorPicker)]="row.value.textStyle.backgroundColor"
-                                                            [style.background]="row.value.textStyle.backgroundColor" readonly="true"
-                                                            *ngIf="!isNameValid(row.get('mediaName')?.value)"
+                                                                [style.background]="row.value.textStyle.backgroundColor"
+                                                                readonly="true"
+                                                                *ngIf="!isNameValid(row.get('mediaName')?.value)"
                                                                 formControlName="backgroundColor"
-                                                                (colorPickerChange)="onChangeColor($event, i, j, 'backgroundColor','individual')" 
+                                                                (colorPickerChange)="onChangeColor($event, i, j, 'backgroundColor','individual')"
                                                                 type="text" class="form-control" [id]="'color-bg'+j" />
                                                         </div>
 
@@ -368,9 +370,9 @@
                                     </button>
                                 </div>
                                 <div class="col-sm-6 col-md-6 col">
-                                    <button ngClass="btn btn-success" *ngIf="ShowSaveBtn" [disabled]="!this.registrationForm.valid"
-                                        (click)=" OnSavePlaylistDetails_new()" style="width: 45%"
-                                        class="form-control">Save
+                                    <button ngClass="btn btn-success" *ngIf="ShowSaveBtn"
+                                        [disabled]="!this.registrationForm.valid" (click)=" OnSavePlaylistDetails_new()"
+                                        style="width: 45%" class="form-control">Save
                                         Details</button>
                                 </div>
                             </div>

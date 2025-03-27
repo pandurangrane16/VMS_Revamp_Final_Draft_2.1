@@ -18,3 +18,41 @@ export class Mediaplayer {
     medianame!:string;
     createddate!:Date;
 }
+
+export class mediaPlayerSave{
+    name:string;
+    mediaLoopCount:string;
+    controllerName! :string;
+    tiles : any[];
+}
+ export class MediaPlayerTiles {
+    tileNo:number;
+    isPlayOrder:boolean;
+    duration: number;
+    mediaLoopCount:number;
+    partyIdCommon:string;
+    tarrifIdCommon: string;
+    fontSizeCommon: string;
+    //playlistLoopCount: ['', ''],
+    playlistLoopCount:number;
+    colorFont: string;
+    colorBg: string;
+    playlist: any[];
+ }
+
+ export class mpPlaylist{
+    playOrder:number;
+    imageTextDuration: number;
+    mediaId: number;
+    mediaName: string;
+    videoLoopCount: string;
+    partyId: string;
+    tarrifId: string;
+    textStyle: any;
+ }
+
+ export class mpTextStyle{
+    fontSize :number;
+    fontColor : string;
+    backgroundColor :string;
+ }

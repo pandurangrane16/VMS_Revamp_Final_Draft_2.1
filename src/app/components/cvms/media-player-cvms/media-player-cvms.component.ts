@@ -7,7 +7,7 @@ import { getErrorMsg } from 'src/app/utils/utils';
 import { CVMSMediaModalComponent } from '../cvmsmedia-modal/cvmsmedia-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlaylistMedia, SelectedMediaVCMS } from 'src/app/models/vcms/selectedMedia';
-import { Mediaplayer } from 'src/app/models/vcms/mediaplayer';
+import { Mediaplayer, mediaPlayerSave, MediaPlayerTiles, mpPlaylist } from 'src/app/models/vcms/mediaplayer';
 import { CVMSMediaFacadeServiceService } from 'src/app/facade/facade_services/cvmsmedia-facade-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { event } from 'jquery';
@@ -124,7 +124,7 @@ export class MediaPlayerCvmsComponent {
   createUser(): FormGroup {
     let len = this.registrationForm.controls['tiles'].length;
     return this.fb.group({
-      tileNo: [(len+1), [Validators.required, Validators.pattern("[1-999][1-999]*$")]],
+      tileNo: [(len + 1), [Validators.required, Validators.pattern("[1-999][1-999]*$")]],
       isPlayOrder: [0],
       duration: [0],
       mediaLoopCount: [0],
@@ -140,18 +140,8 @@ export class MediaPlayerCvmsComponent {
   }
   createPlaylistItem(ele: any, cnt: number, video: boolean): FormGroup {
     return this.fb.group({
-
-
-
-      playOrder: [{ value: cnt, disabled: true }, Validators.required],
-      // imageTextDuration:[ele.imageTextDuration],
-      // mediaId:[ele.mediaId,''],
-      // mediaName:[ele.mediaName,''],
-      // videoLoopCount:[ele.videoLoopCount,''],
-
-      //imageTextDuration: [ele.imageTextDuration, [Validators.required]],
+      playOrder: [{ value: cnt }, [Validators.required]],
       imageTextDuration: [{ value: ele.imageTextDuration, disabled: video }, [Validators.required]],
-
       mediaId: [ele.mediaId, ''],
       mediaName: [ele.mediaName, ''],
       videoLoopCount: [ele.videoLoopCount, Validators.required],
@@ -242,12 +232,12 @@ export class MediaPlayerCvmsComponent {
   removeTiles(index: number): void {
     this.registrationForm.controls['tiles'].length;
     let cnt = 0;
-    
+
     this.userDetails.removeAt(index);
     this.selectedMediaPlaylist.splice(index, 1);
-    this.registrationForm.controls['tiles'].controls.forEach((ele:any) => {
-      cnt = cnt+1;
-      ele.patchValue({tileNo:cnt});
+    this.registrationForm.controls['tiles'].controls.forEach((ele: any) => {
+      cnt = cnt + 1;
+      ele.patchValue({ tileNo: cnt });
     });
   }
 
@@ -326,7 +316,7 @@ export class MediaPlayerCvmsComponent {
         _plMedia.mediaId = this.selectedMediaId[0][i].id;
         _plMedia.mediaName = this.selectedMediaId[0][i].name;
         //console.log("text", this.selectedMediaId[0])
-        //_plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
+        _plMedia.playOrder = 0;
         //_plMedia.videoLoopCount = this.selectedMediaId[0][i].mediaDetails.videoLoopCount;
       }
       _plMedia.textStyle = _textStyle;
@@ -494,6 +484,41 @@ export class MediaPlayerCvmsComponent {
       }
 
       // Create and populate Mediaplayer object
+      let _newPlayer = new mediaPlayerSave();
+      _newPlayer.controllerName = ipAddress;
+      _newPlayer.mediaLoopCount = this.registrationForm.controls["mediaLoopCount"].value;
+      _newPlayer.name = this.registrationForm.controls["name"].value;
+
+      let tileLength = this.registrationForm.controls.tiles.controls.length;
+      let _playerArray :any[]=[];
+      for (var i = 0; i < tileLength; i++) {
+        let _plArray : any[]=[];
+        let _tiles = new MediaPlayerTiles();
+        _tiles.playlistLoopCount = this.registrationForm.controls.tiles.controls[i].controls.playlistLoopCount.value;
+        _tiles.tileNo = this.registrationForm.controls.tiles.controls[i].controls.tileNo.value;
+        let plLength = this.registrationForm.controls.tiles.controls[i].controls.playlist.length;
+        for (var j = 0; j < plLength; j++) {
+          let plData = new mpPlaylist();
+          plData.playOrder = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.playOrder.value;
+          plData.imageTextDuration = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.imageTextDuration.value;
+          plData.mediaId = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.mediaId.value;
+          plData.mediaName = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.mediaName.value;
+          plData.partyId = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.partyId.value;
+          plData.tarrifId = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.tarrifId.value;
+          plData.videoLoopCount = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.videoLoopCount.value;
+          plData.textStyle = {
+            fontSize : this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.textStyle.controls['fontSize'].value,
+            fontColor : this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.textStyle.controls['fontColor'].value,
+            backgroundColor : this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.textStyle.controls['backgroundColor'].value
+          }
+
+          _plArray.push(plData);
+        }
+        _tiles.playlist = _plArray;
+        _playerArray.push(_tiles);
+      }
+      _newPlayer.tiles = _playerArray;
+      //console.log(_newPlayer);
       const mediaPlayerData = new Mediaplayer();
       mediaPlayerData.VmsId = Number.parseInt(this.SelectedControllerId[1]);
       mediaPlayerData.IpAddress = ipAddress;
@@ -504,9 +529,8 @@ export class MediaPlayerCvmsComponent {
       mediaPlayerData.AuditedTime = new Date();
       mediaPlayerData.Reason = "Upload Data for new MediaPlayer";
       mediaPlayerData.CreationTime = new Date();
-      mediaPlayerData.RequestData = JSON.stringify(this.registrationForm.value);
+      mediaPlayerData.RequestData = JSON.stringify(_newPlayer);
       mediaPlayerData.RequestType = "/mediaPlayer/createMediaPlayerAndPlaylist";
-
 
       // Save media player data
       this._CVMSfacade.SaveMediaPlayer(mediaPlayerData).subscribe(data => {
