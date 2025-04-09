@@ -140,7 +140,7 @@ export class MediaPlayerCvmsComponent {
   }
   createPlaylistItem(ele: any, cnt: number, video: boolean): FormGroup {
     return this.fb.group({
-      playOrder: [{ value: cnt }, [Validators.required]],
+      playOrder: [{ value: cnt, disabled: true }, [Validators.required]],
       imageTextDuration: [{ value: ele.imageTextDuration, disabled: video }, [Validators.required]],
       mediaId: [ele.mediaId, ''],
       mediaName: [ele.mediaName, ''],
