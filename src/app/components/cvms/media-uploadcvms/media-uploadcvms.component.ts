@@ -114,7 +114,7 @@ export class MediaUploadcvmsComponent implements OnInit {
     
     //this.FileTypes = this.getFileType();
     //getKeysDataForConfig
-    this.global.CurrentPage = "Send Media CVMS";
+    this.global.CurrentPage = "Media Upload CVMS";
   }
 
 

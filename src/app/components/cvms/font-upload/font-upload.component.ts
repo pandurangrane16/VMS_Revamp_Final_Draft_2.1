@@ -60,6 +60,7 @@ import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-
       ) 
       
       {
+        this.global.CurrentPage="Font Upload CVMS";
         this.dropdownSettingsVms = {
           singleSelection: false,
           idField: 'value',
@@ -70,7 +71,6 @@ import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-
           allowSearchFilter: true,
         };
           this.BuildForm();
-        
       }
 
       headerArr = [

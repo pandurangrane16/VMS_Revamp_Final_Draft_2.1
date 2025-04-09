@@ -62,7 +62,7 @@ export class MediaPlayerEditComponent {
     private _CVMSfacade: CVMSMediaFacadeServiceService,
     private fileService: FileServiceService,
     private modalService: NgbModal,) {
-    this.global.CurrentPage = "Create Media Player CVMS";
+    this.global.CurrentPage = "Media Player Management";
   }
 
   ngOnInit(): void {

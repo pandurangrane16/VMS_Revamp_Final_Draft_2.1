@@ -66,7 +66,7 @@ export class MediaPlayerCvmsComponent {
     private _CVMSfacade: CVMSMediaFacadeServiceService,
     private fileService: FileServiceService,
     private modalService: NgbModal,) {
-    this.global.CurrentPage = "Create Media Player CVMS";
+    this.global.CurrentPage = "Media Player Management";
   }
 
   ngOnInit(): void {
@@ -665,12 +665,8 @@ export class MediaPlayerCvmsComponent {
   
     playlistArray.controls.forEach((ele: any) => {
       const mediaName: string = ele.get('mediaName')?.value || '';
-      
-  
-      const isVideo = mediaName.toLowerCase().endsWith('.mp4') ;
-  
-      // Only patch if NOT video
-      if (!isVideo) {
+      if(!mediaName.toLowerCase().endsWith('.mp4') || !mediaName.toLowerCase().endsWith('.avi') || !mediaName.toLowerCase().endsWith('.mkv')) 
+      {
         ele.patchValue({ imageTextDuration: val });
       }
     });
