@@ -1,7 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataTableDirective } from 'angular-datatables';
 import { DashboardFacadeService } from 'src/app/facade/facade_services/dashboard-facade.service';
+import { ScreenshotListviewComponent } from '../screenshot-listview/screenshot-listview.component';
 
 @Component({
   selector: 'app-list-view',
@@ -11,9 +13,8 @@ import { DashboardFacadeService } from 'src/app/facade/facade_services/dashboard
 export class ListViewComponent {
   @ViewChild(DataTableDirective)
   datatableElement: DataTableDirective;
-  dtOptions: any = {};
   listViewData : any[]=[];
-  constructor(private router: Router,
+  constructor(private router: Router,private modalService: NgbModal,
     private _dashboardFacade: DashboardFacadeService) { }
 
 
@@ -40,5 +41,13 @@ export class ListViewComponent {
 
   BackToList() {
     this.router.navigate(['map-view']);
+  }
+  ViewScreenshot(data:any){
+    console.log(data);
+
+     const modalRef = this.modalService.open(ScreenshotListviewComponent, { ariaLabelledBy: 'modal-basic-title', size: 'xl' });
+          modalRef.componentInstance.data = data;
+          modalRef.componentInstance.passEntry.subscribe((receivedEntry: any) => {
+          })
   }
 }
