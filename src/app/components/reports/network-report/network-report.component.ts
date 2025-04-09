@@ -10,6 +10,7 @@ import { NetworkReport } from 'src/app/models/reports/networkreport';
 import { InputRequest } from 'src/app/models/request/inputReq';
 import { Globals } from 'src/app/utils/global';
 
+
 @Component({
   selector: 'app-network-report',
   templateUrl: './network-report.component.html',

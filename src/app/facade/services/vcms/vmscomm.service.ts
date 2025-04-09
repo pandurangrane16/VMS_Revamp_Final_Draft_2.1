@@ -23,7 +23,7 @@ GetFontupload(_data:any) {
     return this._httpService._postMethod(_data,'Vcms_API/api/VMSComm/GetFontupload');
 }
 GetFontuploaddata(_data:any) {       
-  return this._httpService._postMethod(_data,'Vcms_API/api/VMSComm/GetFontuploadData');
+  return this._httpService._postMethod(_data,'Vcms_API/api/VMSComm/');
 }
 GetFontupload_font(_data:any) {       
   return this._httpService._postMethod(_data,'Vcms_API/api/VMSComm/GetFontupload?type=1');

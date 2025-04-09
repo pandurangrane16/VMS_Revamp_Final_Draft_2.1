@@ -175,20 +175,60 @@ export class MediaPlayerEditComponent {
         colorFont: [''],
         colorBg: [''],
 
-        playlist: this.fb.array(tile.playlist.map((item: any) => this.fb.group({
-          playOrder: [item.playOrder],
-          imageTextDuration: [item.imageTextDuration],
-          mediaId: [item.mediaId],
-          mediaName: [item.mediaName],
-          videoLoopCount: [item.videoLoopCount],
-          partyId: [item.partyId],
-          tarrifId: [item.tarrifId],
-          textStyle: this.fb.group({
-            fontSize: [item.textStyle.fontSize],
-            fontColor: [item.textStyle.fontColor],
-            backgroundColor: [item.textStyle.backgroundColor]
-          })
-        })))
+        // playlist: this.fb.array(tile.playlist.map((item: any) => this.fb.group({
+
+        //   const  isVideo = item.mediaName?.toLowerCase().endsWith('.mp4'),
+
+        //    const formGroup = this.fb.group({
+
+        //   playOrder: [item.playOrder],
+        //   imageTextDuration: [item.imageTextDuration],
+        //   mediaId: [item.mediaId],
+        //   mediaName: [item.mediaName],
+        //   videoLoopCount: [item.videoLoopCount],
+        //   partyId: [item.partyId],
+        //   tarrifId: [item.tarrifId],
+        //   textStyle: this.fb.group({
+        //     fontSize: [item.textStyle.fontSize],
+        //     fontColor: [item.textStyle.fontColor],
+        //     backgroundColor: [item.textStyle.backgroundColor]
+
+
+
+        //   })
+        // })
+
+        // if (isVideo) {
+        //   formGroup.get('imageTextDuration')?.disable();
+        // }
+        // })))
+        playlist: this.fb.array(tile.playlist.map((item: any) => {
+          // Define inside the map function
+          const isVideo = item.mediaName?.toLowerCase().endsWith('.mp4');
+        
+          const formGroup = this.fb.group({
+            playOrder: [item.playOrder],
+            imageTextDuration: [item.imageTextDuration],
+            mediaId: [item.mediaId],
+            mediaName: [item.mediaName],
+            videoLoopCount: [item.videoLoopCount],
+            partyId: [item.partyId],
+            tarrifId: [item.tarrifId],
+            textStyle: this.fb.group({
+              fontSize: [item.textStyle.fontSize],
+              fontColor: [item.textStyle.fontColor],
+              backgroundColor: [item.textStyle.backgroundColor]
+            })
+          });
+        
+          // Conditionally disable the control based on isVideo
+          if (isVideo) {
+            formGroup.get('imageTextDuration')?.disable();
+          }
+        
+          return formGroup;
+        }))
+        
       }));
 
 
@@ -644,7 +684,7 @@ export class MediaPlayerEditComponent {
         "backgroundColor": ""
       }
       if (this.selectedMediaId[0][i].mediaDetails != null) {
-        _plMedia.imageTextDuration = this.selectedMediaId[0][i].mediaDetails.imageTextDuration;
+        _plMedia.imageTextDuration = this.selectedMediaId[0][i].mediaDetails.duration;
         _plMedia.mediaId = this.selectedMediaId[0][i].resposneId;
         _plMedia.mediaName = this.selectedMediaId[0][i].mediaDetails.displayname;
         _plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
@@ -881,10 +921,19 @@ export class MediaPlayerEditComponent {
 
 
   ToAllDuration(idx: number) {
-    let val = this.editForm.controls['tiles'].controls[idx].controls['duration'].value;
+    const val = this.editForm.controls['tiles'].controls[idx].get('duration')?.value;
     const playlistArray = this.getPlaylist(idx);
+  
     playlistArray.controls.forEach((ele: any) => {
-      ele.patchValue({ imageTextDuration: val });
+      const mediaName: string = ele.get('mediaName')?.value || '';
+      
+  
+      const isVideo = mediaName.toLowerCase().endsWith('.mp4') ;
+  
+      // Only patch if NOT video
+      if (!isVideo) {
+        ele.patchValue({ imageTextDuration: val });
+      }
     });
   }
   ToAllLoop(idx: number) {

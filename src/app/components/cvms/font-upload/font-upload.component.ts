@@ -100,7 +100,7 @@ import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-
   
     GetVmsDetails() {
       this._request.currentPage = this.pager;
-      this._request.pageSize = this.recordPerPage;
+      this._request.pageSize = Number(this.recordPerPage);
       this._request.startId = this.startId;
       this._request.searchItem = this.searchText;
   
@@ -199,15 +199,15 @@ import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-
       }
     }
     onPager(pager: number) {
-      this._request.pageSize = this.recordPerPage;
+      this._request.pageSize = Number(this.recordPerPage);
       this.pager = pager;
-      this.startId = (this.pager - 1) * this.recordPerPage;
+      this.startId = (this.pager - 1) * Number(this.recordPerPage);
       this.getMediaUploadData();
     }
     onRecordPageChange(recordPerPage: number) {
-      this._request.pageSize = recordPerPage;
-      this.pager = recordPerPage;
-      this.recordPerPage = recordPerPage;
+      this._request.pageSize =Number(recordPerPage);
+      this.pager = Number(recordPerPage);
+      this.recordPerPage = Number(recordPerPage);
       this.startId = 0;
       this.pager = 1;
       console.log(this.recordPerPage);
@@ -294,7 +294,7 @@ import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-
     }
     getMediaUploadData() {
       this._request.currentPage = this.pager;
-      this._request.pageSize = this.recordPerPage;
+      this._request.pageSize = Number(this.recordPerPage);
       this._request.startId = this.startId;
       this._request.searchItem = this.searchText;
       this.changeToShow = false;
@@ -322,9 +322,9 @@ import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-
 
           });
           this.listOfMediaSet = res.data;
-          var _length = res.totalRecords / this.recordPerPage;
+          var _length = res.totalRecords / Number(this.recordPerPage);
           if (_length > Math.floor(_length) && Math.floor(_length) != 0)
-            this.totalRecords = this.recordPerPage * (_length);
+            this.totalRecords = Number(this.recordPerPage) * (_length);
           else if (Math.floor(_length) == 0)
             this.totalRecords = 10;
           else

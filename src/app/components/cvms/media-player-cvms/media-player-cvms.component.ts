@@ -300,7 +300,7 @@ export class MediaPlayerCvmsComponent {
         "backgroundColor": ""
       }
       if (this.selectedMediaId[0][i].mediaDetails != null) {
-        _plMedia.imageTextDuration = this.selectedMediaId[0][i].mediaDetails.imageTextDuration;
+        _plMedia.imageTextDuration = this.selectedMediaId[0][i].mediaDetails.duration;
         _plMedia.mediaId = this.selectedMediaId[0][i].resposneId;
         _plMedia.mediaName = this.selectedMediaId[0][i].mediaDetails.displayname;
         _plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
@@ -652,13 +652,30 @@ export class MediaPlayerCvmsComponent {
     return null;
   }
 
-  ToAllDuration(idx: number) {
+  ToAllDuration2(idx: number) {
     let val = this.registrationForm.controls['tiles'].controls[idx].controls['duration'].value;
     const playlistArray = this.getPlaylist(idx);
     playlistArray.controls.forEach((ele: any) => {
       ele.patchValue({ imageTextDuration: val });
     });
   }
+  ToAllDuration(idx: number) {
+    const val = this.registrationForm.controls['tiles'].controls[idx].get('duration')?.value;
+    const playlistArray = this.getPlaylist(idx);
+  
+    playlistArray.controls.forEach((ele: any) => {
+      const mediaName: string = ele.get('mediaName')?.value || '';
+      
+  
+      const isVideo = mediaName.toLowerCase().endsWith('.mp4') ;
+  
+      // Only patch if NOT video
+      if (!isVideo) {
+        ele.patchValue({ imageTextDuration: val });
+      }
+    });
+  }
+  
   ToAllLoop(idx: number) {
     let val = this.registrationForm.controls['tiles'].controls[idx].controls['mediaLoopCount'].value;
     const playlistArray = this.getPlaylist(idx);

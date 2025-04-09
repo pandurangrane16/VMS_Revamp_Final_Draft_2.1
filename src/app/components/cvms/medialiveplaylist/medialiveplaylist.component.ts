@@ -65,17 +65,17 @@ export class MedialiveplaylistComponent {
   
     //Common Functionalities
     onPager(pager: number) {
-      this._request.pageSize = this.recordPerPage;
+      this._request.pageSize = Number(this.recordPerPage);
       this.pager = pager;
-      this.startId = (this.pager - 1) * this.recordPerPage;
+      this.startId = (this.pager - 1) * Number(this.recordPerPage);
       this.getMediaDetails();
     }
   
     onRecordPageChange(recordPerPage: number) {
       console.log("Record Per Page : " + recordPerPage);
-      this._request.pageSize = recordPerPage;
-      this.pager = recordPerPage;
-      this.recordPerPage = recordPerPage;
+      this._request.pageSize = Number(recordPerPage);
+      this.pager = Number(recordPerPage);
+      this.recordPerPage = Number(recordPerPage);
       this.startId = 0;
       this.pager = 1;
       this.getMediaDetails();
@@ -97,7 +97,7 @@ export class MedialiveplaylistComponent {
     }
     getMediaDetails() {
       this._request.currentPage = this.pager;
-      this._request.pageSize = this.recordPerPage;
+      this._request.pageSize = Number(this.recordPerPage);
       this._request.startId = this.startId;
       this._request.searchItem = this.searchText;
       this.mediaFacade.GetEmergencyMediaList(this.tabno,this._request).subscribe(data => {
@@ -122,9 +122,9 @@ export class MedialiveplaylistComponent {
               element.statusdesc = "Sent Failed"
             }
           });
-          var _length = data.totalRecords / this.recordPerPage;
+          var _length = data.totalRecords / Number(this.recordPerPage);
           if (_length > Math.floor(_length) && Math.floor(_length) != 0)
-            this.totalRecords = this.recordPerPage * (_length);
+            this.totalRecords = Number(this.recordPerPage) * (_length);
           else if (Math.floor(_length) == 0)
             this.totalRecords = 10;
           else
