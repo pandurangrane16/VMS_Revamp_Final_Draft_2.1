@@ -115,8 +115,12 @@
                                 <table class="table table-striped table-bordered table-sm hover tr-dsn">
                                     <thead class="thead-dark">
                                         <tr class="tr-dsn">
-                                            <th colspan="3">
+                                            <th colspan="2">
                                                 <span style="font-size: large;">Medias</span>
+                                            </th>
+                                            <th>
+                                                <input class="form-control col-8 float-right mt-2 mb-2" type="text" formControlName="MediaSearch" (input)="SearchMediaName()"
+                                                placeholder="Search Media by Name" />
                                             </th>
                                         </tr>
                                         <tr class="tr-dsn">

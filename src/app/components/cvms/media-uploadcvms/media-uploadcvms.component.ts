@@ -29,7 +29,7 @@ declare var $: any;
   styleUrls: ['./media-uploadcvms.component.css']
 })
 export class MediaUploadcvmsComponent implements OnInit {
-
+  MediaSearch:string="";
   form: any = [];
   _request: any = new InputRequest();
   active: boolean = false;
@@ -60,6 +60,7 @@ export class MediaUploadcvmsComponent implements OnInit {
   filterVms: any;
   page: any;
   listOfMedialist: any;
+  listOfSearchMedialist: any;
   totalPages: number = 1;
   totalRecords!: number;
   closeResult!: string;
@@ -128,6 +129,7 @@ export class MediaUploadcvmsComponent implements OnInit {
       mediaName: ['', ''],
       //mediaName: ['', [Validators.required,Validators.maxLength(30) ,Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
       mediatype: ['', ''],
+      MediaSearch:['',''],
     });
 
     this.form.get('mediatype')?.valueChanges.subscribe((Method: any) => {
@@ -346,6 +348,7 @@ export class MediaUploadcvmsComponent implements OnInit {
     this._media.getAllMediaDetails().subscribe(res => {
       if (res != null && res.length > 0) {
         this.listOfMedialist = res;
+        this.listOfSearchMedialist = res;
       }
       else
         this.toast.error("Failed to failed media details.", "Error", { positionClass: "toast-bottom-right" });
@@ -515,6 +518,13 @@ export class MediaUploadcvmsComponent implements OnInit {
     const truncatedBaseName = baseName.substring(0, 25);
     return truncatedBaseName + extension;
   }
-
+  SearchMediaName(){
+    let searchVal = this.form.controls.MediaSearch.value;
+    if(searchVal != ""){
+      this.listOfMedialist = this.listOfSearchMedialist.filter((x:any)=>x.displayName.toLocaleLowerCase().includes(searchVal.toLocaleLowerCase()));
+    } else {
+      this.listOfMedialist = this.listOfSearchMedialist;
+    }
+  }
 
 }
