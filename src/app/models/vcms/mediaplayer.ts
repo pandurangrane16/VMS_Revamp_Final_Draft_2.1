@@ -38,6 +38,7 @@ export class mediaPlayerSave{
     colorFont: string;
     colorBg: string;
     playlist: any[];
+    filesize :number;
  }
 
  export class mpPlaylist{
@@ -49,6 +50,7 @@ export class mediaPlayerSave{
     partyId: string;
     tarrifId: string;
     textStyle: any;
+    filesize:any;
  }
 
  export class mpTextStyle{

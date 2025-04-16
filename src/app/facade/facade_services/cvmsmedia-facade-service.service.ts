@@ -80,6 +80,11 @@ export class CVMSMediaFacadeServiceService {
    
     return this._mediupload.SaveMediaupload(data);
   }
+  SpaceCheck(ipadd:any){
+   
+    return this._mediupload.SpaceCheck(ipadd);
+  }
+  
   SaveMediaScheduler(data:any){
     
     return this._mediascheduler.SaveMediascheduler(data);

@@ -9,5 +9,6 @@ export class PlaylistMedia{
     playOrder :number;
     imageTextDuration:number;
     videoLoopCount:number;
-    textStyle :{}
+    textStyle :{};
+    filesize :number;
 }

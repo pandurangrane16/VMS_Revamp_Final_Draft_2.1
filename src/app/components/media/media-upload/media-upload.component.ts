@@ -134,10 +134,10 @@ export class MediaUploadComponent implements OnInit {
     for (let i = 0; i < files.length; i++) {
       let file = files[i];
       
-      if(file.type.toLocaleLowerCase().includes("gif")){
-        this.toast.error("Only images and video files are allowed.");
-        break;
-      }
+      // if(file.type.toLocaleLowerCase().includes("gif")){
+      //   this.toast.error("Only images and video files are allowed.");
+      //   break;
+      // }
       if (file.type.toLocaleLowerCase().includes("video")) {
         var val = this.ValidateVDOFile(file);
         console.log('val->: ' + val);
@@ -194,7 +194,7 @@ export class MediaUploadComponent implements OnInit {
 
         if (this.selectedFiles.length > 0) {
           for (var i = 0; i < this.selectedFiles.length; i++) {
-            if (this.selectedFiles[i].type.includes('image') || this.selectedFiles[i].type.includes('video')) {
+            if (this.selectedFiles[i].type.includes('image')||this.selectedFiles[i].type.includes('GIF') || this.selectedFiles[i].type.includes('video')) {
               size += this.selectedFiles[i].size;
             }
             else {

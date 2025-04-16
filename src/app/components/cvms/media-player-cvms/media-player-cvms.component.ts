@@ -143,6 +143,7 @@ export class MediaPlayerCvmsComponent {
       playOrder: [{ value: cnt }, [Validators.required]],
       imageTextDuration: [{ value: ele.imageTextDuration, disabled: video }, [Validators.required]],
       mediaId: [ele.mediaId, ''],
+      filesize :[ele.filesize,''],
       mediaName: [ele.mediaName, ''],
       videoLoopCount: [ele.videoLoopCount, Validators.required],
       partyId: ['', Validators.required],
@@ -301,6 +302,7 @@ export class MediaPlayerCvmsComponent {
       }
       if (this.selectedMediaId[0][i].mediaDetails != null) {
         _plMedia.imageTextDuration = this.selectedMediaId[0][i].mediaDetails.duration;
+        _plMedia.filesize= this.selectedMediaId[0][i].mediaDetails.filesize;
         _plMedia.mediaId = this.selectedMediaId[0][i].resposneId;
         _plMedia.mediaName = this.selectedMediaId[0][i].mediaDetails.displayname;
         _plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
@@ -506,6 +508,7 @@ export class MediaPlayerCvmsComponent {
           plData.partyId = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.partyId.value;
           plData.tarrifId = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.tarrifId.value;
           plData.videoLoopCount = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.videoLoopCount.value;
+          plData.filesize = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.filesize.value;
           plData.textStyle = {
             fontSize : this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.textStyle.controls['fontSize'].value,
             fontColor : this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.textStyle.controls['fontColor'].value,
@@ -518,6 +521,8 @@ export class MediaPlayerCvmsComponent {
         _playerArray.push(_tiles);
       }
       _newPlayer.tiles = _playerArray;
+
+
       //console.log(_newPlayer);
       const mediaPlayerData = new Mediaplayer();
       mediaPlayerData.VmsId = Number.parseInt(this.SelectedControllerId[1]);
@@ -533,6 +538,29 @@ export class MediaPlayerCvmsComponent {
       mediaPlayerData.RequestType = "/mediaPlayer/createMediaPlayerAndPlaylist";
 
       // Save media player data
+
+      
+const obj = JSON.parse( mediaPlayerData.RequestData);
+
+// Sum all the filesizes
+let totalFileSize = 0;
+
+obj.tiles.forEach((tile:any)=> {
+  tile.playlist.forEach((item :any)=> {
+    if (item.filesize) {
+      totalFileSize += item.filesize;
+    }
+  });
+});
+const totalFileSizeInGB = +(totalFileSize / (1024 ** 3)).toFixed(2);;
+console.log("Total File Size (in GB):", totalFileSizeInGB);
+
+this._CVMSfacade.SpaceCheck(ipAddress).subscribe(data => {
+ 
+});
+
+
+
       this._CVMSfacade.SaveMediaPlayer(mediaPlayerData).subscribe(data => {
         if (data === 0) {
           this.toast.error(`Error occurred while saving data for ${mediaPlayerData.IpAddress}`);

@@ -42,10 +42,13 @@ export class MediaschedulerComponent {
   dropdownSettingsVms: any;
   playersIds: any[] = [];
   label2: string = "Select Media Player";
+  showCustomize: boolean = false;
+
 
   selectedMinutes: string='*'; // Default to every minute
   startHour: string='*'; // Default start hour
   endHour: string ='*'; // Default end hour
+  Duration : any;
   selectedDays: string[] = [];
   weekdaysselect :any=[]
 
@@ -96,11 +99,12 @@ export class MediaschedulerComponent {
       globalToDt: ["", Validators.required],
       globalToTm: ["", Validators.required],
       schedulename: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$"), this.noLeadingEndingWhitespace]],
-      selectedMinutes:['', Validators.required],
-      startHour: ['', Validators.required],
-      endHour: ['', Validators.required],
-      weekdaysselect: [[], Validators.required],
-      cronexpression: ['', Validators.required],
+      selectedMinutes:[''],
+      startHour: [''],
+      endHour: [''],
+      weekdaysselect: [[]],
+      cronexpression: [''],
+      Duration:[''],
     });
   }
 
@@ -305,9 +309,31 @@ export class MediaschedulerComponent {
           res.forEach((ele: any) => {
             let _responseId = ele.responseId;
             let _data = JSON.parse(ele.requestData);
+
+            // let  total_duration=0;
+            // if (Array.isArray(_data.tiles)) {
+            //   _data.tiles.forEach((tile:any) => {
+            //     // Check if playlist exists and is an array
+            //     if (Array.isArray(tile.playlist)) {
+            //       tile.playlist.forEach((item:any) => {
+            //         const duration = Number(item.imageTextDuration) || 0;
+            //         total_duration += duration;
+            //       });
+            //     } else {
+            //       console.log('tile.playlist is not an array:', tile.playlist);
+            //     }
+            //   });
+            // } else {
+            //   console.log('_data.tiles is not an array:', _data.tiles);
+            // }
+            
+
+            // console.log("Total Image Text Duration:", total_duration);
+
             var _commonSelect = new CommonSelectList();
             _commonSelect.displayName = _data.name;
             _commonSelect.value = _responseId;
+           //  _commonSelect.Tduration=total_duration
             commonList.push(_commonSelect);
           });
           let _data = {
@@ -315,11 +341,40 @@ export class MediaschedulerComponent {
             disabled: false
           }
           this._inputPlayerData = _data;
+          console.log("inputplayerdata:",_data)
         }
       }
     })
   }
-
+  toggleCustomize() {
+    this.showCustomize = !this.showCustomize;
+  
+      // if (this.showCustomize) {
+      // // Add validators when Customize is shown
+      // this.form.get('selectedMinutes')?.setValidators([Validators.required]);
+      // this.form.get('startHour')?.setValidators([Validators.required]);
+      // this.form.get('endHour')?.setValidators([Validators.required]);
+      // this.form.get('Duration')?.setValidators([Validators.required, Validators.min(1)]);
+      // this.form.get('weekdaysselect')?.setValidators([Validators.required]);
+      // this.form.get('cronexpression')?.setValidators([Validators.required]);
+      // }
+    //   else {
+    //   // Remove validators when hidden
+    //   this.form.get('selectedMinutes')?.clearValidators();
+    //   this.form.get('startHour')?.clearValidators();
+    //   this.form.get('endHour')?.clearValidators();
+    //   this.form.get('Duration')?.clearValidators();
+    //   this.form.get('weekdaysselect')?.setValidators([Validators.required]);
+    //   this.form.get('cronexpression')?.setValidators([Validators.required]);
+    
+  
+     
+    // }
+  
+    // // Update the form's validity
+    // this.form.updateValueAndValidity();
+  }
+  
   OnSaveDetails() {
 
     if (this.SelectedControllerId == undefined || this.SelectedControllerId.length < 1) {
@@ -342,6 +397,32 @@ export class MediaschedulerComponent {
       this._toast.error("Either To Date or Time missing, Please select To Date and Time for Media Scheduler. ");
       return; 
     }
+
+      // if (this.showCustomize) {
+      // // Add validators when Customize is shown
+      // this.form.get('selectedMinutes')?.setValidators([Validators.required]);
+      // this.form.get('startHour')?.setValidators([Validators.required]);
+      // this.form.get('endHour')?.setValidators([Validators.required]);
+      // this.form.get('Duration')?.setValidators([Validators.required, Validators.min(1)]);
+      // this.form.get('weekdaysselect')?.setValidators([Validators.required]);
+      // this.form.get('cronexpression')?.setValidators([Validators.required]);
+      
+      // }
+      if (this.showCustomize) {
+        const fields = ['selectedMinutes', 'startHour', 'endHour', 'Duration', 'weekdaysselect', 'cronexpression'];
+        fields.forEach(field => {
+          this.form.get(field)?.setValidators([Validators.required]);
+          this.form.get(field)?.updateValueAndValidity();
+        });
+      }
+
+      if (!this.showCustomize) {
+        const fields = ['selectedMinutes', 'startHour', 'endHour', 'Duration', 'weekdaysselect', 'cronexpression'];
+        fields.forEach(field => {
+          this.form.get(field)?.clearValidators();
+          this.form.get(field)?.updateValueAndValidity();
+        });
+      }
 
     if (this.form.valid) {
 
@@ -406,6 +487,8 @@ export class MediaschedulerComponent {
         "fromDate": jsonfromdate,
         "toDate": jsontodate,
         "cronExpression": this.cronExpression,
+        "playerDuration" : this.form.controls["Duration"].value,
+
       }
       _vcmsmedischedulerdata.IpAddress = this.SelectedControllerId[0];
       _vcmsmedischedulerdata.VmsId = Number.parseInt(this.SelectedControllerId[1]);

@@ -22,6 +22,9 @@ export class MediauploadserviceService {
   SaveMediaupload(_data: any) {
     return this._httpService._postMethod(_data, 'Vcms_API/api/MediaUpload/SaveMediaUploadMaster');
   }
+  SpaceCheck(ipadd: any) {
+    return this._httpService._postMethod(undefined,"Vcms_API/api/DeviceDetails/SpaceCheck?ipadd="+ ipadd);
+  }
   getKeysDataForConfig(key: string) {
     return this._http.get(this.jsonurl);
   }

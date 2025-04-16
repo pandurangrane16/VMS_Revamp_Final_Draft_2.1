@@ -6,7 +6,7 @@
         "PreviewPath": "https://172.19.32.51:8025/mediaLists/playlists/",
         "Socket_URL": "http://172.19.32.51:8030",
         "cronexpression":"*/3 * * * *",
-        "fileTypes": ["media", "text", "URL"],
+        "fileTypes": ["VIDEO_FILE", "IMAGE", "GIF", "TEXT", "URL", "YOUTUBE_LIVE_VIDEO", "YOUTUBE_VIDEO", "RTSP_URL"],
 
 
         

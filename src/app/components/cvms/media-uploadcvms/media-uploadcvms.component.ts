@@ -40,9 +40,15 @@ export class MediaUploadcvmsComponent implements OnInit {
   medias: any[] = [];
   FileTypes: any;
   mediatype: string;
-  isFileTypeText: boolean = false;
-  isFileTypeImage: boolean = false;
+  isFileTypeVIDEO_FILE: boolean = false;
+  isFileTypeIMAGE: boolean = false;
+  isFileTypeGIF: boolean = false;
+  isFileTypeTEXT: boolean = false;
   isFileTypeURL: boolean = false;
+  isFileTypeYOUTUBE_LIVE_VIDEO: boolean = false;
+  isFileTypeYOUTUBE_VIDEO: boolean = false;
+  isFileTypeRTSP_URL: boolean = false;
+
   RequestData: JSON;
   label1: string = "Select Controller";
   vmsIds: any[] = [];
@@ -60,6 +66,12 @@ export class MediaUploadcvmsComponent implements OnInit {
   filterVms: any;
   page: any;
   listOfMedialist: any;
+  videoList:any;
+  imageList :any;
+  gifList :any;
+
+
+
   totalPages: number = 1;
   totalRecords!: number;
   closeResult!: string;
@@ -107,8 +119,8 @@ export class MediaUploadcvmsComponent implements OnInit {
     };
     this.BuildForm();
     this._CVMSfacade.getKeysDataForConfig("fileTypes").subscribe((data2: any) => {
-      console.log("Data received:", data2); // Check the structure of the received data
-      this.FileTypes = data2.fileTypes; // Extract fileTypes if it's inside an object
+      console.log("Data received:", data2); 
+      this.FileTypes = data2.fileTypes; 
       console.log("FileTypes:", this.FileTypes);
     });
     
@@ -200,7 +212,7 @@ export class MediaUploadcvmsComponent implements OnInit {
       this.toast.error("Controller not selected. Please select at least one controller to proceed.");
       return;
     }
-    if (this.isFileTypeImage) {
+    if (this.isFileTypeIMAGE || this.isFileTypeVIDEO_FILE || this.isFileTypeGIF) {
       if (this.selectedIds.length < 1) {
         this.toast.error("Media/Text not selected.Please select at least one Media/Text to proceed.");
         return;
@@ -209,7 +221,7 @@ export class MediaUploadcvmsComponent implements OnInit {
 
     for (let i = 0; i < this.vmsIds.length; i++) {
       const element = this.vmsIds[i].split('|');
-      if (this.isFileTypeImage) {
+      if (this.isFileTypeIMAGE || this.isFileTypeVIDEO_FILE || this.isFileTypeGIF) {
         for (let j = 0; j < this.selectedIds.length; j++) {
           const media = this.selectedMedia[j];
           this.AddUpdateMedia(element[0], media, element[1]);
@@ -250,6 +262,21 @@ export class MediaUploadcvmsComponent implements OnInit {
   
 
   AddUpdateMedia(element?: any, media?: any, vmsId?: any ) {
+    
+    if(media !== null){
+const fileSizeBytes = media.fileSize;
+
+if (fileSizeBytes !== undefined && fileSizeBytes !== null) {
+  const fileSizeGB = +(fileSizeBytes / (1024 ** 3)).toFixed(2); // Convert bytes to GB and round to 2 decimals
+  console.log(`File size: ${fileSizeGB} GB`);
+} else {
+  console.error("fileSize not found in media object.");
+}
+
+this._CVMSfacade.SpaceCheck(element).subscribe(data => {
+ 
+})}
+
     let _vcmsuploadmediadata = new Vcmsuploadmedia();
     _vcmsuploadmediadata.controllerName = element;
     _vcmsuploadmediadata.IpAddress = element;
@@ -269,9 +296,9 @@ export class MediaUploadcvmsComponent implements OnInit {
     _vcmsuploadmediadata.CreationTime = new Date();
     _vcmsuploadmediadata.requesttype ="/media/uploadMedia"
 
-    if (this.isFileTypeText) {
+    if (this.isFileTypeTEXT) {
       let _requestTextData = {
-        type: this.form.controls.mediatype.value,
+        mediaType: this.form.controls.mediatype.value,
         id: 0,
         name: this.form.controls.mediaName.value,
         text: this.form.controls.MediaTextName.value,
@@ -282,24 +309,27 @@ export class MediaUploadcvmsComponent implements OnInit {
       }
       _vcmsuploadmediadata.RequestData = JSON.stringify(_requestTextData);
     }
-    else if (this.isFileTypeURL) {
+   else  if (this.isFileTypeVIDEO_FILE || this.isFileTypeIMAGE || this.isFileTypeGIF ) {
       let _requestTextData = {
-        type: "text",
+        mediaType: this.form.controls.mediatype.value,
+        id: media.id,
+        name: this.extractFileName(media.fileName),
+        file: media.uploadSetId + '/' + media.fileName
+
+
+      }
+      _vcmsuploadmediadata.RequestData = JSON.stringify(_requestTextData);
+    }
+    else {
+      let _requestTextData = {
+        mediaType: this.form.controls.mediatype.value,
         id: 0,
         name: this.form.controls.mediaName.value,
         text: this.form.controls.MediaTextName.value
       }
       _vcmsuploadmediadata.RequestData = JSON.stringify(_requestTextData);
     }
-    else {
-      let _requestTextData = {
-        type: this.form.controls.mediatype.value,
-        id: media.id,
-        name: this.extractFileName(media.fileName),
-        file: media.uploadSetId + '/' + media.fileName
-      }
-      _vcmsuploadmediadata.RequestData = JSON.stringify(_requestTextData);
-    }
+    
 
 
     this._CVMSfacade.SaveMediaUpload(_vcmsuploadmediadata).subscribe(data => {
@@ -345,7 +375,23 @@ export class MediaUploadcvmsComponent implements OnInit {
   getMedialistData() {
     this._media.getAllMediaDetails().subscribe(res => {
       if (res != null && res.length > 0) {
-        this.listOfMedialist = res;
+       // this.listOfMedialist = res;
+        this.videoList = res.filter((item:any) => item.fileType === 'Video');
+        this.imageList = res.filter((item:any) => item.fileType === 'Image');
+        this.gifList = res.filter((item:any) => item.fileType === 'GIF');
+
+        if(this.isFileTypeIMAGE){
+          this.listOfMedialist = this.imageList;
+        }
+        if(this.isFileTypeVIDEO_FILE){
+          this.listOfMedialist = this.videoList;
+        }
+        if(this.isFileTypeGIF){
+          this.listOfMedialist = this.gifList;
+        }
+
+
+
       }
       else
         this.toast.error("Failed to failed media details.", "Error", { positionClass: "toast-bottom-right" });
@@ -354,10 +400,13 @@ export class MediaUploadcvmsComponent implements OnInit {
 
   onUploadTypeChange(value: any) {
 
-    if (this.mediatype == 'text') {
-      this.isFileTypeText = true;
-      this.isFileTypeImage = false;
+    if (this.mediatype == 'TEXT') {
+      this.isFileTypeTEXT = true;
       this.isFileTypeURL = false;
+      this.isFileTypeVIDEO_FILE = false;
+      this.isFileTypeIMAGE = false;
+      this.isFileTypeGIF = false;
+     
       this.dropdownSettingsVms={
       singleSelection: true,
       idField: 'value',
@@ -370,18 +419,73 @@ export class MediaUploadcvmsComponent implements OnInit {
       };
     }
     if (this.mediatype == 'URL') {
+      this.isFileTypeTEXT = false;
       this.isFileTypeURL = true;
-      this.isFileTypeImage = false;
-      this.isFileTypeText = false;
+      this.isFileTypeVIDEO_FILE = false;
+      this.isFileTypeIMAGE = false;
+      this.isFileTypeGIF = false;
+     
       this.dropdownSettingsVms=this.default_dropdownSettingsVms;
     }
-
-    if(this.mediatype == 'media')  {
-      this.isFileTypeImage = true;
-      this.isFileTypeText = false;
+    if (this.mediatype == 'YOUTUBE_LIVE_VIDEO') {
+      this.isFileTypeTEXT = false;
+      this.isFileTypeURL = true;
+      this.isFileTypeVIDEO_FILE = false;
+      this.isFileTypeIMAGE = false;
+      this.isFileTypeGIF = false;
+    
+      this.dropdownSettingsVms=this.default_dropdownSettingsVms;
+    }
+    if (this.mediatype == 'YOUTUBE_VIDEO') {
+      this.isFileTypeTEXT = false;
+      this.isFileTypeURL = true;
+      this.isFileTypeVIDEO_FILE = false;
+      this.isFileTypeIMAGE = false;
+      this.isFileTypeGIF = false;
+     
+      this.dropdownSettingsVms=this.default_dropdownSettingsVms;
+    }
+    if (this.mediatype == 'RTSP_URL') {
+      this.isFileTypeTEXT = false;
+      this.isFileTypeURL = true;
+      this.isFileTypeVIDEO_FILE = false;
+      this.isFileTypeIMAGE = false;
+      this.isFileTypeGIF = false;
+    
+      this.dropdownSettingsVms=this.default_dropdownSettingsVms;
+    }
+    if (this.mediatype == 'VIDEO_FILE') {
+      this.isFileTypeTEXT = false;
       this.isFileTypeURL = false;
+      this.isFileTypeVIDEO_FILE = true;
+      this.isFileTypeIMAGE = false;
+      this.isFileTypeGIF = false;
+     
+      this.listOfMedialist = this.videoList;
+    
       this.dropdownSettingsVms=this.default_dropdownSettingsVms;
     }
+    if (this.mediatype == 'IMAGE') {
+      this.isFileTypeTEXT = false;
+      this.isFileTypeURL = false;
+      this.isFileTypeVIDEO_FILE = false;
+      this.isFileTypeIMAGE = true;
+      this.isFileTypeGIF = false;
+      this.listOfMedialist = this.imageList;
+     
+      this.dropdownSettingsVms=this.default_dropdownSettingsVms;
+    }
+    if (this.mediatype == 'GIF') {
+      this.isFileTypeTEXT = false;
+      this.isFileTypeURL = false;
+      this.isFileTypeVIDEO_FILE = false;
+      this.isFileTypeIMAGE = false;
+      this.isFileTypeGIF = true;
+      this.listOfMedialist = this.gifList;
+     
+      this.dropdownSettingsVms=this.default_dropdownSettingsVms;
+    }
+    
 
   }
 

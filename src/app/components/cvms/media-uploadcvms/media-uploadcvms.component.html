@@ -30,7 +30,7 @@
                         </div>
                         <div class="row">
 
-                            <div class="mb-4 col-6 form-group" *ngIf="isFileTypeText">
+                            <div class="mb-4 col-6 form-group" *ngIf="isFileTypeTEXT">
                                 <label class="form-label lable-bold">Media Name*</label>
                                 <input type="text" formControlName="mediaName" [(ngModel)]="MediaName"
                                     maxlength="25" class="form-control"
@@ -43,7 +43,7 @@
                                 </div>
                             </div>
                             
-                            <div class="mb-3 col-6 form-group" *ngIf="isFileTypeText">
+                            <div class="mb-3 col-6 form-group" *ngIf="isFileTypeTEXT">
                                 <label class="form-label lable-bold">Media Text *</label>
                                
                                 <input type="text" formControlName="MediaTextName" class="form-control"
@@ -57,7 +57,7 @@
                                 </div>
                             </div>
 
-                            <div class="mb-3 col-6 form-group" *ngIf="isFileTypeText">
+                            <div class="mb-3 col-6 form-group" *ngIf="isFileTypeTEXT">
                                 <label class="form-label lable-bold">Select Font Name *</label>
                                 <select class="form-control" formControlName="FontName">
                                     <option value="" disabled selected>Select an Option</option>
@@ -73,7 +73,7 @@
 
 
                             <div class="mb-4 col-6 form-group" *ngIf="isFileTypeURL">
-                                <label class="form-label lable-bold">Media Name*</label>
+                                <label class="form-label lable-bold"> Name*</label>
                                 <input type="text" formControlName="mediaName" [(ngModel)]="MediaName"
                                     maxlength="25" class="form-control"
                                     [ngClass]="{ 'is-invalid': f['mediaName'].touched && f['mediaName'].errors, 'is-valid': f['mediaName'].valid }"
@@ -111,7 +111,77 @@
 
 
 
-                            <div class="mb-3 col form-group" *ngIf="isFileTypeImage">
+                            <div class="mb-3 col form-group" *ngIf="isFileTypeIMAGE">
+                                <table class="table table-striped table-bordered table-sm hover tr-dsn">
+                                    <thead class="thead-dark">
+                                        <tr class="tr-dsn">
+                                            <th colspan="3">
+                                                <span style="font-size: large;">Medias</span>
+                                            </th>
+                                        </tr>
+                                        <tr class="tr-dsn">
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tr *ngFor="let m of listOfMedialist" class="tr-dsn">
+                                        <td>{{m.id}}</td>
+                                        <td>{{m.displayName}}</td>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <button placement="top" delay="500" (click)="ViewMedia(m)"
+                                                        type="button" class="btn btn-inverse-primary btn-sm">
+                                                        <i class="icon-eye"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-6 chkCls">
+                                                    <input class="form-check-input" style="background-color: #FF5722;"
+                                                        (change)="onCheckBoxChange($event,m)" type="checkbox"
+                                                        [checked]="m.isChecked" id="defaultCheck1">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="mb-3 col form-group" *ngIf="isFileTypeGIF">
+                                <table class="table table-striped table-bordered table-sm hover tr-dsn">
+                                    <thead class="thead-dark">
+                                        <tr class="tr-dsn">
+                                            <th colspan="3">
+                                                <span style="font-size: large;">Medias</span>
+                                            </th>
+                                        </tr>
+                                        <tr class="tr-dsn">
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tr *ngFor="let m of listOfMedialist" class="tr-dsn">
+                                        <td>{{m.id}}</td>
+                                        <td>{{m.displayName}}</td>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <button placement="top" delay="500" (click)="ViewMedia(m)"
+                                                        type="button" class="btn btn-inverse-primary btn-sm">
+                                                        <i class="icon-eye"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-6 chkCls">
+                                                    <input class="form-check-input" style="background-color: #FF5722;"
+                                                        (change)="onCheckBoxChange($event,m)" type="checkbox"
+                                                        [checked]="m.isChecked" id="defaultCheck1">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="mb-3 col form-group" *ngIf="isFileTypeVIDEO_FILE">
                                 <table class="table table-striped table-bordered table-sm hover tr-dsn">
                                     <thead class="thead-dark">
                                         <tr class="tr-dsn">
