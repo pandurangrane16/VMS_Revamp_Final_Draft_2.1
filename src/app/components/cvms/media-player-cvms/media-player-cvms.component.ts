@@ -693,7 +693,7 @@ this._CVMSfacade.SpaceCheck(ipAddress).subscribe(data => {
   
     playlistArray.controls.forEach((ele: any) => {
       const mediaName: string = ele.get('mediaName')?.value || '';
-      if(!mediaName.toLowerCase().endsWith('.mp4') || !mediaName.toLowerCase().endsWith('.avi') || !mediaName.toLowerCase().endsWith('.mkv')) 
+      if(!mediaName.toLowerCase().endsWith('.mp4') && !mediaName.toLowerCase().endsWith('.avi') && !mediaName.toLowerCase().endsWith('.mkv')) 
       {
         ele.patchValue({ imageTextDuration: val });
       }
