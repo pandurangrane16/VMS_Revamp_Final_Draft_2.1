@@ -31,7 +31,7 @@ export class UploadmedialistComponent {
     private modalService: NgbModal,
     private _commonFacade: CommonFacadeService,
     private router: Router){
-
+      this.global.CurrentPage="Media Upload List";
   }
   headerArr = [
     { "Head": "ID", "FieldName": "id", "type": "number" },

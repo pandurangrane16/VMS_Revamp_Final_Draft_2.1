@@ -231,8 +231,8 @@ export class MediaUploadComponent implements OnInit {
         
       }
      
-      if(size != 0 && size > 25000000) {
-        this.toast.error("File size should be less than 25 MB", "Error", { positionClass: "toast-bottom-right" });
+      if(size != 0 && size > 100000000) {
+        this.toast.error("File size should be less than 100 MB", "Error", { positionClass: "toast-bottom-right" });
       }
       else {
         this._mediaFacade.uploadMedia(formData).subscribe(res => {

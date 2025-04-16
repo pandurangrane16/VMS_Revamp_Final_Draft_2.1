@@ -29,8 +29,9 @@ declare var $: any;
   styleUrls: ['./media-uploadcvms.component.css']
 })
 export class MediaUploadcvmsComponent implements OnInit {
-
+  MediaSearch:string="";
   form: any = [];
+  listOfSearchMedialist:any;
   _request: any = new InputRequest();
   active: boolean = false;
   loading: boolean = false;
@@ -126,7 +127,7 @@ export class MediaUploadcvmsComponent implements OnInit {
     
     //this.FileTypes = this.getFileType();
     //getKeysDataForConfig
-    this.global.CurrentPage = "Send Media CVMS";
+    this.global.CurrentPage = "Media Upload CVMS";
   }
 
 
@@ -140,6 +141,7 @@ export class MediaUploadcvmsComponent implements OnInit {
       mediaName: ['', ''],
       //mediaName: ['', [Validators.required,Validators.maxLength(30) ,Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
       mediatype: ['', ''],
+      MediaSearch:['',''],
     });
 
     this.form.get('mediatype')?.valueChanges.subscribe((Method: any) => {
@@ -619,6 +621,13 @@ this._CVMSfacade.SpaceCheck(element).subscribe(data => {
     const truncatedBaseName = baseName.substring(0, 25);
     return truncatedBaseName + extension;
   }
-
+  SearchMediaName(){
+    let searchVal = this.form.controls.MediaSearch.value;
+    if(searchVal != ""){
+      this.listOfMedialist = this.listOfSearchMedialist.filter((x:any)=>x.displayName.toLocaleLowerCase().includes(searchVal.toLocaleLowerCase()));
+    } else {
+      this.listOfMedialist = this.listOfSearchMedialist;
+    }
+  }
 
 }
