@@ -123,6 +123,11 @@ export class CVMSMediaFacadeServiceService {
   getMediaschedulersList(_data: any,type:number) {       
     return this._mediascheduler.getMediaschedulersList(_data,type);
   }
+ 
+
+  GetPlaybackDetails(_data:any,fromdate: string, todate: string, ipadd?: string, type?: string ,pdf_excel?:string){   
+    return this._vmscomm.GetPlaybackDetails(_data,fromdate,todate,ipadd,type,pdf_excel);
+  }
 
   GenerateToken(ipAdd:string) {
     return this._mediupload.generateToken(ipAdd);

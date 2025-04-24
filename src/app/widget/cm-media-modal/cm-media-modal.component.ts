@@ -83,8 +83,9 @@ export class CmMediaModalComponent implements OnInit {
             if (type == "Video")
               this.isImage = false;
             else
-              this.isImage = true;
-            this.imgData = res;
+            {  this.isImage = true;}
+              this.imgData = res;
+            
           }
           else {
             this._toast.error("Something is wrong, Please contact sytem administration", "Error", { positionClass: "toast-right-bottom" });

@@ -47,10 +47,12 @@ export class MediaUploadCvmsListComponent {
   headerArr = [
     // { "Head": "ID", "FieldName": "id", "type": "number" },
     { "Head": "Controller Name", "FieldName": "ipAddress", "type": "string" },
+    { "Head": "Media Type", "FieldName": "mediatype", "type": "string" },
     { "Head": "Media Name", "FieldName": "mediaName", "type": "string" },
     { "Head": "Status", "FieldName": "statusdesc", "type": "string" },
     { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
     { "Head": "Action", "FieldName": "actions", "type": "button" },
+   
   ];
   listOfMedialist: any = [];
   //btnArray: any[] = [];
@@ -150,6 +152,10 @@ export class MediaUploadCvmsListComponent {
             var _d = new Date(element.creationTime);
             var _dateStr = this.datepipe.transform(_d, "dd-MM-yyyy HH:mm:ss");
             element.creationTime = _dateStr;
+            const parsedData = JSON.parse(element.requestData);
+            const mediaType = parsedData.mediaType;
+            element.mediatype=mediaType;
+            
           }
           if (element.status == 1) {
             console.log(element)

@@ -24,8 +24,8 @@
             <div class="col-md-3">
                 <label>Type</label>
                 <select class="form-control" [(ngModel)]="selectedStatus">
-                    <option value="0">Live</option>
-                    <option value="1">Scheduled</option>
+                    <option value="LIVE">Live</option>
+                    <option value="Scheduled">Scheduled</option>
                    
                 </select>
             </div>
@@ -100,16 +100,16 @@
 
         <div class="row text-right">
             <div class="col-md-12 mb-1">
-                <button class="btn btn-primary mr-1" (click)="ActionSubmit(0)">
+                <button class="btn btn-primary mr-1" (click)="ActionSubmit('data')">
                     Submit
                 </button>
-                <button *ngIf="listOfData != undefined" class="btn btn-danger mr-1" (click)="ActionSubmit(1)">
+                <button class="btn btn-danger mr-1" (click)="ActionSubmit('pdf')">
                     <i class="fa fa-file-pdf-o"></i>  PDF
                   </button>
-                  <button *ngIf="listOfData != undefined" class="btn btn-success" (click)="ActionSubmit(2)">
+                  <button class="btn btn-success" (click)="ActionSubmit('excel')">
                       <i class="fa fa-file-excel-o"></i> Excel
                   </button>
-               
+                  <!-- *ngIf="listOfData != undefined" -->
                
             </div>
         </div>

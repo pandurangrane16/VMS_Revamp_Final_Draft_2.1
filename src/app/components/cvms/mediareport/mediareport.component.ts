@@ -40,6 +40,9 @@ export class MediareportComponent {
     _request: any = new InputRequest();
     imgData: any;
     minDate: any;
+    data:any;
+    pdf:any;
+    excel:any;
     selectedStatus: string;
     modelFromDate: NgbDateStruct;
     modelFromTime:{ hour: 0, minute: 0, second: 0 };
@@ -48,7 +51,7 @@ export class MediareportComponent {
     modelToDate: NgbDateStruct;
     unitType: string = "second";
     unitValue: any;
-    pager: number = 0;
+    pager: number = 1;
     recordPerPage: number = 10;
     startId: number = 0;
     searchText: string = "";
@@ -136,1638 +139,139 @@ export class MediareportComponent {
     //       }
     //     })
     //   }
-        ActionSubmit(type: number) { 
+        ActionSubmit(type: string) { 
           let plReq = new Mediareport();
          
-          plReq.pageSize = this.recordPerPage == 0 ? 10 : this.recordPerPage;
+         // plReq.pageSize = this.recordPerPage == 0 ? 10 : this.recordPerPage;
+
          
+          
           if (this.modelFromDate  && this.modelToDate )
-            
+           
           {
             plReq.fromDate = this.modelFromDate.year + "-" + ("0" + this.modelFromDate.month).slice(-2) + "-" + ("0" + this.modelFromDate.day).slice(-2) + " 00:00:00";
             plReq.toDate = this.modelToDate.year + "-" + ("0" + this.modelToDate.month).slice(-2) + "-" + ("0" + this.modelToDate.day).slice(-2) + " 23:59:59";
         
          
           }
+
           else {
             this._toast.error("From Date and To Date are required.");
             return;
-          }         
-     
+          }   
           
           plReq.type = this.selectedStatus;
+
+          let ipAddressesString = this.vmsIds.map(item => item.split('|')[0]).join(', ');
           
-         
-          if (this.vmsIds.length > 0) {
+          this._request.currentPage = this.pager;
+          this._request.pageSize = this.recordPerPage;
+          this._request.startId = this.startId;
+
+          // if (this.vmsIds.length > 0) {
             plReq.vmsid = this.vmsIds;
-            if(type == 0) {
+            if(type == "data") {
+
+              this._CVMSfacade.GetPlaybackDetails( this._request,plReq.fromDate, plReq.toDate,ipAddressesString,this.selectedStatus).subscribe(data2 => {
+                if (!data2.data || data2.data.length === 0) {
+                  this._toast.error("No data available.");
+                }
+                else {
+                 
+                  let data = data2.data.map((item:any) => JSON.parse(item));
+                  this.listOfData=data;
 
 
-          let data = [
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            },
-            {
-              id: 54,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 199,
-              mediaName: "4_c893c82f-6557-4ba5-a215.png",
-              startTime: "2025-02-12T10:37:41.566519",
-              endTime: "2025-02-12T10:37:46.57069",
-              durationPlayed: 5.0041711,
-              status: "Completed"
-            },
-            {
-              id: 53,
-              type: "LIVE",
-              mediaPlayerSchedulerId: null,
-              mediaPlayerSchedulerName: null,
-              mediaPlayerId: 61,
-              mediaPlayerName: "testduplicateplayorder",
-              tileNo: 1,
-              mediaId: 200,
-              mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-              startTime: "2025-02-12T10:37:36.517155",
-              endTime: "2025-02-12T10:37:41.519517",
-              durationPlayed: 5.002362,
-              status: "Completed"
-            }
+                  this.listOfData.forEach((element: any) => {
+        
+                    var _s = new Date(element.startTime);
+                    var _dateStr = this.datepipe.transform(_s, "dd-MM-yyyy HH:mm:ss");
+                    element.startTime = _dateStr;
+        
+                    var _e = new Date(element.endTime);
+                    var _dateStr = this.datepipe.transform(_e, "dd-MM-yyyy HH:mm:ss");
+                    element.endTime = _dateStr;
+                  
+        
+                });
+
+                var _length = data2.totalRecords / Number(this.recordPerPage);
+                if (_length > Math.floor(_length) && Math.floor(_length) != 0)
+                  this.totalRecords = Number(this.recordPerPage) * (_length);
+                else if (Math.floor(_length) == 0)
+                  this.totalRecords = 10;
+                else
+                  this.totalRecords = data2.totalRecords;
+                this.totalPages = this.totalRecords / this.pager;
+                }
+              });
           
-
-
-          ];
-          this.listOfData=data;
-
-
-          this.listOfData.forEach((element: any) => {
-
-            var _s = new Date(element.startTime);
-            var _dateStr = this.datepipe.transform(_s, "dd-MM-yyyy HH:mm:ss");
-            element.startTime = _dateStr;
-
-            var _e = new Date(element.endTime);
-            var _dateStr = this.datepipe.transform(_e, "dd-MM-yyyy HH:mm:ss");
-            element.endTime = _dateStr;
-          
-
-        });
+       
       }
       else {
-        let data = [
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          },
-          {
-            id: 54,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 199,
-            mediaName: "4_c893c82f-6557-4ba5-a215.png",
-            startTime: "2025-02-12T10:37:41.566519",
-            endTime: "2025-02-12T10:37:46.57069",
-            durationPlayed: 5.0041711,
-            status: "Completed"
-          },
-          {
-            id: 53,
-            type: "LIVE",
-            mediaPlayerSchedulerId: null,
-            mediaPlayerSchedulerName: null,
-            mediaPlayerId: 61,
-            mediaPlayerName: "testduplicateplayorder",
-            tileNo: 1,
-            mediaId: 200,
-            mediaName: "3_d53371bc-e5f9-4489-8d6c.png",
-            startTime: "2025-02-12T10:37:36.517155",
-            endTime: "2025-02-12T10:37:41.519517",
-            durationPlayed: 5.002362,
-            status: "Completed"
-          }
-        
-
-
-        ];
-          if (data != null) {
-            if(type == 1)
-           {
-            this.exportToPDF(data, 'PlaybackReport.pdf');
+         
+         
+            if(type == "pdf")
+           { this._request.pageSize =0;
+            this._CVMSfacade.GetPlaybackDetails(
+              this._request,
+              plReq.fromDate,
+              plReq.toDate,
+              ipAddressesString,
+              this.selectedStatus,
+              "pdf"
+            ).subscribe({
+              next: (response: any) => {
+                const fileUrl = response?.fileUrl;
+            
+                if (!fileUrl) {
+                  this._toast.error("Error occurred while generating the PDF.");
+                } else {
+                  // Open the file in a new tab (or download it)
+                  window.open(fileUrl, '_blank');
+                  this._toast.success("PDF generated successfully!");
+                }
+              },
+              error: () => {
+                this._toast.error("Something went wrong while calling the API.");
+              }
+            });
+            
            }
+           if(type == "excel")
+            { this._request.pageSize =0;
+             this._CVMSfacade.GetPlaybackDetails(
+               this._request,
+               plReq.fromDate,
+               plReq.toDate,
+               ipAddressesString,
+               this.selectedStatus,
+               "excel"
+             ).subscribe({
+               next: (response: any) => {
+                 const fileUrl = response?.fileUrl;
              
-            if(type == 2)
-             {
-              this.exportToExcel(data, 'PlaybackReport.xlsx');
-             }
-          } else {
-            this._toast.error("Something went wrong.");
-          }
+                 if (!fileUrl) {
+                   this._toast.error("Error occurred while generating the Excel.");
+                 } else {
+                   // Open the file in a new tab (or download it)
+                   window.open(fileUrl, '_blank');
+                   this._toast.success("Excel generated successfully!");
+                 }
+               },
+               error: () => {
+                 this._toast.error("Something went wrong while calling the API.");
+               }
+             });
+             
+            }
+             
+          
         
       }
-    }
-      else
-      this._toast.error("Controller not selected.");
+   // }
+      // else
+      // this._toast.error("Controller not selected.");
 
 
 
@@ -1924,7 +428,7 @@ exportToExcel(data: any[], fileName: string = 'ExportedData.xlsx') {
         this._request.pageSize = this.recordPerPage;
         this.pager = pager;
         this.startId = (this.pager - 1) * this.recordPerPage;
-        this.ActionSubmit(0);
+        this.ActionSubmit("data");
     }
 
     onRecordPageChange(recordPerPage: number) {
@@ -1934,12 +438,12 @@ exportToExcel(data: any[], fileName: string = 'ExportedData.xlsx') {
         this.startId = 0;
         this.pager = 1;
         console.log(this.recordPerPage);
-        this.ActionSubmit(0);
+        this.ActionSubmit("data");
     }
 
     onPageSearch(search: string) {
         this.searchText = search;
-        this.ActionSubmit(0);
+        this.ActionSubmit("data");
     }
 
    

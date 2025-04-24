@@ -25,6 +25,30 @@ GetFontupload(_data:any) {
 GetFontuploaddata(_data:any) {       
   return this._httpService._postMethod(_data,'Vcms_API/api/VMSComm/GetFontuploaddata');
 }
+
+GetPlaybackDetails2(fromdate: string, todate: string, ipadd?: string, type?: string){
+  return this._httpService._postMethod(null,"Vcms_API/api/PlaybackDetails/GetPlaybackDetails?type=" + type + "&ipadd="+ipadd+ "&Fromdate="+ fromdate+ "&Todate"+ todate);
+}
+
+GetPlaybackDetails(_data:any,fromdate: string, todate: string, ipadd?: string, type?: string ,pdf_excel?:string) {
+  let url = `Vcms_API/api/PlaybackDetails/GetPlaybackDetails?Fromdate=${fromdate}&Todate=${todate}`;
+
+  if (type) {
+    url += `&type2=${type}`;
+  }
+
+  if (ipadd) {
+    url += `&ipadd=${ipadd}`;
+  }
+  if (pdf_excel) {
+    url += `&pdf_excel=${pdf_excel}`;
+  }
+
+  return this._httpService._postMethod(_data, url);
+}
+
+
+
 GetFontupload_font(_data:any) {       
   return this._httpService._postMethod(_data,'Vcms_API/api/VMSComm/GetFontupload?type=1');
 }

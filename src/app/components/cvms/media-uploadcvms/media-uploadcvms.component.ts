@@ -180,6 +180,7 @@ export class MediaUploadcvmsComponent implements OnInit {
     this._request.currentPage = this.pager;
     this._request.pageSize = this.recordPerPage;
     this._request.startId = this.startId;
+    
     this._request.searchItem =this.vmsIds[0].split('|')[0];
     this.changeToShow = false;
     this._CVMSfacade.GetFontupload_font(this._request).subscribe(res => {
