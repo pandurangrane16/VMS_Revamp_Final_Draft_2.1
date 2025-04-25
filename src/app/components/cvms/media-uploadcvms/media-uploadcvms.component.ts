@@ -32,6 +32,7 @@ export class MediaUploadcvmsComponent implements OnInit {
   MediaSearch:string="";
   form: any = [];
   listOfSearchMedialist:any;
+  filteredMedialist :any;
   _request: any = new InputRequest();
   active: boolean = false;
   loading: boolean = false;
@@ -70,6 +71,7 @@ export class MediaUploadcvmsComponent implements OnInit {
   videoList:any;
   imageList :any;
   gifList :any;
+  mediaRows:any;
 
 
 
@@ -86,6 +88,7 @@ export class MediaUploadcvmsComponent implements OnInit {
   format: string = "";
   fileName: string = "";
   MediaName: string = "";
+  mediaName2: string ="";
 
 
   get f() { return this.form.controls; }
@@ -142,6 +145,9 @@ export class MediaUploadcvmsComponent implements OnInit {
       //mediaName: ['', [Validators.required,Validators.maxLength(30) ,Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$")]],
       mediatype: ['', ''],
       MediaSearch:['',''],
+      mediaName2: ['', [Validators.maxLength(30)]],
+     
+    
     });
 
     this.form.get('mediatype')?.valueChanges.subscribe((Method: any) => {
@@ -152,12 +158,17 @@ export class MediaUploadcvmsComponent implements OnInit {
   ngOnInit(): void {
     this.GetVmsDetails();
     this.getMedialistData();
+   
+
+
     
   }
 
   BacktoList() {
     this._router.navigate(['cvms/uploadMedia']);
   }
+ 
+  
 
   UpdateValidations(method: string) {
 
@@ -285,10 +296,10 @@ this._CVMSfacade.SpaceCheck(element).subscribe(data => {
     _vcmsuploadmediadata.IpAddress = element;
     _vcmsuploadmediadata.VmsId = Number.parseInt(vmsId);
     if (media != null) {
-      _vcmsuploadmediadata.medianame = media.displayName;
+      _vcmsuploadmediadata.medianame = this.form.controls.mediaName2.value;
     }
     else {
-      _vcmsuploadmediadata.medianame = this.form.controls.mediaName.value;
+      _vcmsuploadmediadata.medianame = this.form.controls.mediaNamevalue;
     }
 
     _vcmsuploadmediadata.status = 0;
@@ -313,10 +324,13 @@ this._CVMSfacade.SpaceCheck(element).subscribe(data => {
       _vcmsuploadmediadata.RequestData = JSON.stringify(_requestTextData);
     }
    else  if (this.isFileTypeVIDEO_FILE || this.isFileTypeIMAGE || this.isFileTypeGIF ) {
-      let _requestTextData = {
+    let mediaName = this.form.controls.mediaName2.value?.trim()
+    ? this.form.controls.mediaName2.value.trim()
+    : this.extractFileName(media.fileName);
+    let _requestTextData = {
         mediaType: this.form.controls.mediatype.value,
         id: media.id,
-        name: this.extractFileName(media.fileName),
+        name: mediaName,
         file: media.uploadSetId + '/' + media.fileName
 
 
@@ -393,11 +407,14 @@ this._CVMSfacade.SpaceCheck(element).subscribe(data => {
           this.listOfMedialist = this.gifList;
         }
 
+        this.filteredMedialist = this.listOfMedialist;
+
 
 
       }
+      
       else
-        this.toast.error("Failed to failed media details.", "Error", { positionClass: "toast-bottom-right" });
+        {this.toast.error("Failed to failed media details.", "Error", { positionClass: "toast-bottom-right" });}
     }, (err) => { console.log(err) });
   }
 
@@ -465,6 +482,7 @@ this._CVMSfacade.SpaceCheck(element).subscribe(data => {
       this.isFileTypeGIF = false;
      
       this.listOfMedialist = this.videoList;
+      this.filteredMedialist= this.listOfMedialist;
     
       this.dropdownSettingsVms=this.default_dropdownSettingsVms;
     }
@@ -475,6 +493,7 @@ this._CVMSfacade.SpaceCheck(element).subscribe(data => {
       this.isFileTypeIMAGE = true;
       this.isFileTypeGIF = false;
       this.listOfMedialist = this.imageList;
+      this.filteredMedialist= this.listOfMedialist;
      
       this.dropdownSettingsVms=this.default_dropdownSettingsVms;
     }
@@ -485,11 +504,18 @@ this._CVMSfacade.SpaceCheck(element).subscribe(data => {
       this.isFileTypeIMAGE = false;
       this.isFileTypeGIF = true;
       this.listOfMedialist = this.gifList;
+      this.filteredMedialist= this.listOfMedialist;
      
       this.dropdownSettingsVms=this.default_dropdownSettingsVms;
     }
-    
+    this.fillMediaNameInput();
 
+  }
+
+  fillMediaNameInput(){
+    this.form.controls.forEach((ele:any) => {
+      
+    });
   }
 
   getErrorMessage(_controlName: any, _controlLable: any, _isPattern: boolean = false, _msg: string) {
@@ -622,13 +648,22 @@ this._CVMSfacade.SpaceCheck(element).subscribe(data => {
     const truncatedBaseName = baseName.substring(0, 25);
     return truncatedBaseName + extension;
   }
-  SearchMediaName(){
+  SearchMediaName2(){
     let searchVal = this.form.controls.MediaSearch.value;
     if(searchVal != ""){
       this.listOfMedialist = this.listOfSearchMedialist.filter((x:any)=>x.displayName.toLocaleLowerCase().includes(searchVal.toLocaleLowerCase()));
     } else {
       this.listOfMedialist = this.listOfSearchMedialist;
     }
+  }
+
+
+  SearchMediaName() {
+     let searchVal = this.form.controls.MediaSearch.value;
+    const query = searchVal.toLowerCase(); 
+    this.listOfMedialist = this.filteredMedialist.filter((media:any) =>
+      media.displayName.toLowerCase().includes(query)
+    );
   }
 
 }
