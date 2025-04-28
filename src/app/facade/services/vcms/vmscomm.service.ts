@@ -50,7 +50,7 @@ GetPlaybackDetails(_data:any,fromdate: string, todate: string, ipadd?: string, t
 
 
 GetFontupload_font(_data:any) {       
-  return this._httpService._postMethod(_data,'Vcms_API/api/VMSComm/GetFontupload?type=1');
+  return this._httpService._postMethod(_data,'Vcms_API/api/VMSComm/GetFontupload?type=2');
 }
 AddFontUploadDetails(_data:any) {       
   return this._httpService._postMethod(_data,'Vcms_API/api/VMSComm/AddFontUploadDetails');

@@ -296,12 +296,15 @@ this._CVMSfacade.SpaceCheck(element).subscribe(data => {
     _vcmsuploadmediadata.IpAddress = element;
     _vcmsuploadmediadata.VmsId = Number.parseInt(vmsId);
     if (media != null) {
-      _vcmsuploadmediadata.medianame = this.form.controls.mediaName2.value;
+      let mediaName = this.form.controls.mediaName2.value?.trim()
+      ? this.form.controls.mediaName2.value.trim()
+      : this.extractFileName(media.fileName);
+      _vcmsuploadmediadata.medianame = mediaName;
     }
     else {
       _vcmsuploadmediadata.medianame = this.form.controls.mediaNamevalue;
     }
-
+    
     _vcmsuploadmediadata.status = 0;
     _vcmsuploadmediadata.AuditedBy = "System";
     _vcmsuploadmediadata.IsAudited = true;
@@ -396,7 +399,6 @@ this._CVMSfacade.SpaceCheck(element).subscribe(data => {
         this.videoList = res.filter((item:any) => item.fileType === 'Video');
         this.imageList = res.filter((item:any) => item.fileType === 'Image');
         this.gifList = res.filter((item:any) => item.fileType === 'GIF');
-
         if(this.isFileTypeIMAGE){
           this.listOfMedialist = this.imageList;
         }
@@ -406,10 +408,7 @@ this._CVMSfacade.SpaceCheck(element).subscribe(data => {
         if(this.isFileTypeGIF){
           this.listOfMedialist = this.gifList;
         }
-
         this.filteredMedialist = this.listOfMedialist;
-
-
 
       }
       
@@ -504,6 +503,7 @@ this._CVMSfacade.SpaceCheck(element).subscribe(data => {
       this.isFileTypeIMAGE = false;
       this.isFileTypeGIF = true;
       this.listOfMedialist = this.gifList;
+
       this.filteredMedialist= this.listOfMedialist;
      
       this.dropdownSettingsVms=this.default_dropdownSettingsVms;

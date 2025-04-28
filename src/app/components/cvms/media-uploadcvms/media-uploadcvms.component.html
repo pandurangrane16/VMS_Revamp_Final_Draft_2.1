@@ -123,7 +123,7 @@
                                         <td>{{m.id}}</td>
                                         <td>{{m.displayName}}</td>
                                         <td>  <input type="text" [placeholder]="m.displayName"
-                                            maxlength="25" class="form-control" 
+                                            maxlength="25" class="form-control" formControlName="mediaName2" 
                                             placeholder="Enter Media Name (Max 25 chars)" />
                                         <div *ngIf="f['mediaName2'].touched && f['mediaName2'].errors" class="invalid-feedback">
                                             <div>{{getErrorMessage('mediaName2','mediaName2',true,"Invalid data available in Media
@@ -172,9 +172,8 @@
                                     <tr *ngFor="let m of listOfMedialist" class="tr-dsn">
                                         <td>{{m.id}}</td>
                                         <td>{{m.displayName}}</td>
-                                        <td>  <input type="text" formControlName="mediaName2" 
-                                            maxlength="25" class="form-control"
-                                           
+                                        <td>  <input type="text" [placeholder]="m.displayName"
+                                            maxlength="25" class="form-control" formControlName="mediaName2" 
                                             placeholder="Enter Media Name (Max 25 chars)" />
                                         <div *ngIf="f['mediaName2'].touched && f['mediaName2'].errors" class="invalid-feedback">
                                             <div>{{getErrorMessage('mediaName2','mediaName2',true,"Invalid data available in Media
@@ -221,9 +220,8 @@
                                     <tr *ngFor="let m of listOfMedialist" class="tr-dsn">
                                         <td>{{m.id}}</td>
                                         <td>{{m.displayName}}</td>
-                                        <td>  <input type="text" formControlName="mediaName2" 
-                                            maxlength="25" class="form-control"
-                                           
+                                        <td>  <input type="text" [placeholder]="m.displayName"
+                                            maxlength="25" class="form-control" formControlName="mediaName2" 
                                             placeholder="Enter Media Name (Max 25 chars)" />
                                         <div *ngIf="f['mediaName2'].touched && f['mediaName2'].errors" class="invalid-feedback">
                                             <div>{{getErrorMessage('mediaName2','mediaName2',true,"Invalid data available in Media
