@@ -77,14 +77,23 @@ import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-
         { "Head": "ID", "FieldName": "id", "type": "number" },
         { "Head": "Font Name", "FieldName": "fontName", "type": "string" },
        
-      
+       
        
       
         { "Head": "Status", "FieldName": "statusText", "type": "bool" },
+     
       
         { "Head": "Action", "FieldName": "actions", "type": "button" }
       ];
-      btnArray: any[] = [{ "name": "Remove", "icon": "icon-trash", "tip": "Click to Remove", "action": "delete","condition": (row: any) => row.status === 1  }];
+      btnArray: any[] = [{ "name": "Remove", "icon": "icon-trash", "tip": "Click to Remove", "action": "delete","condition": (row: any) => row.status === 1  },
+        { 
+          "name": "Error", 
+          "icon": "icon-eye",  
+          "tip": "View Error Message", 
+          "action": "error", 
+          "condition": (row: any) => row.status === 2 
+        }
+      ];
    
     BuildForm() {
       this.form = this.formBuilder.group({
@@ -222,6 +231,9 @@ import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-
       if (actiondata.action === "delete") {
         this.deleteRecord(actiondata.data);
       }
+      if (actiondata.action === "error") {
+        this.Show_error(actiondata.data);
+      }
     }
       deleteRecord(element?: any) {
         this.confirmationDialogService.confirm('Please confirm..', 'Do you really want to remove this media... ?')
@@ -305,6 +317,11 @@ import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-
           res.data.forEach((ele: any) => {
             let requestData = ele.requestData ? JSON.parse(ele.requestData) : null;
             ele.fontName = requestData.name;  
+            if(ele.status == 2)
+              {    const parsedData2 = JSON.parse(ele.responseData);
+              const message= parsedData2.message;
+              ele.ErrorMessage=message;}
+          
             if (ele.status == 0) {
               ele.statusText = "Sent Pending";
              
@@ -332,6 +349,26 @@ import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-
           this.totalPages = this.totalRecords / this.pager;
         }
       })
+    }
+    Show_error(element?: any) {
+      if (!element || !element.responseData) {
+        alert("No error information available.");
+        return;
+      }
+    
+      try {
+        const responseObj = JSON.parse(element.responseData);
+        const message = responseObj.message || "No message field in response.";
+      
+        this.confirmationDialogService
+          .confirm('Error Message', message)
+          .catch(() => {}); 
+      } catch (err) {
+        this.confirmationDialogService
+          .confirm('Error', 'Failed to parse error message.')
+          .catch(() => {});
+      }
+    
     }
     save(event: any): void {
       this.selectedFiles = event.target.files[0];

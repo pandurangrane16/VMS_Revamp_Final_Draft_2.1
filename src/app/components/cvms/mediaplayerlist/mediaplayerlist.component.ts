@@ -40,6 +40,7 @@ export class MediaplayerlistComponent {
       { "Head": "Controller IP", "FieldName": "ipAddress", "type": "string" },      
       { "Head": "Media Player Name", "FieldName": "name", "type": "string" },   
       { "Head": "Media Player Status", "FieldName": "statusdesc", "type": "string" },
+    
       { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
       { "Head": "Action", "FieldName": "actions", "type": "button" },
     ];
@@ -115,7 +116,12 @@ export class MediaplayerlistComponent {
             let _data = JSON.parse(element.requestData);
             element.schedulename = _data.name;
             element.mediaPlayerName = _data.mediaPlayerName;
-            element.name = _data.name;;
+            element.name = _data.name;
+
+            if(element.status == 2)
+              {    const parsedData2 = JSON.parse(element.responseData);
+              const message= parsedData2.message;
+              element.ErrorMessage=message;}
             if (element.creationTime != null) {
               var _d = new Date(element.creationTime);
               var _dateStr = this.datepipe.transform(_d, "dd-MM-yyyy HH:mm:ss");
@@ -153,12 +159,18 @@ export class MediaplayerlistComponent {
         this.listOfMediaUploadRejected = this.listOfMediaUpload.filter((x: any) => x.status == 2);
       }
     }
-    btnArray: any[] = [{ "name": "View", "icon": "icon-eye", "tip": "Click to View", "action": "update","condition": (row: any) => row.status === 1   },
-       { "name": "Remove", "icon": "icon-trash", "tip": "Click to Remove", "action": "delete" ,"condition": (row: any) => row.status === 1  },
-      {"name":"Update", "icon": "icon-write",  
-    "tip": "Click to Update", 
-    "action": "update", 
-    "condition": (row: any) => row.status === 1 }]; 
+    btnArray: any[] = [
+      { "name": "View", "icon": "icon-eye", "tip": "Click to View", "action": "update","condition": (row: any) => row.status === 1   },
+      { "name": "Remove", "icon": "icon-trash", "tip": "Click to Remove", "action": "delete" ,"condition": (row: any) => row.status === 1  },
+      {"name":"Update", "icon": "icon-write","tip": "Click to Update","action": "update", "condition": (row: any) => row.status === 1 },
+      { 
+        "name": "Error", 
+        "icon": "icon-eye",  
+        "tip": "View Error Message", 
+        "action": "error", 
+        "condition": (row: any) => row.status === 2 
+      }
+    ]; 
 
       ButtonAction(actiondata: any) { 
         if (actiondata.action === "delete") {
@@ -167,7 +179,31 @@ export class MediaplayerlistComponent {
         if (actiondata.action === "update") {
           this.updateRecord(actiondata.data);
         }
+        if (actiondata.action === "error") {
+          this.Show_error(actiondata.data);
+        }
       }
+      Show_error(element?: any) {
+        if (!element || !element.responseData) {
+          alert("No error information available.");
+          return;
+        }
+      
+        try {
+          const responseObj = JSON.parse(element.responseData);
+          const message = responseObj.message || "No message field in response.";
+        
+          this.confirmationDialogService
+            .confirm('Error Message', message)
+            .catch(() => {}); 
+        } catch (err) {
+          this.confirmationDialogService
+            .confirm('Error', 'Failed to parse error message.')
+            .catch(() => {});
+        }
+      
+      }
+      
       updateRecord(element?: any){
         const id= element.id;
         if (id) {

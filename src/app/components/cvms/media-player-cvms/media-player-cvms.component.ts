@@ -72,7 +72,7 @@ export class MediaPlayerCvmsComponent {
   ngOnInit(): void {
     this.registrationForm = this.fb.group({
       name: ['', ''],
-      mediaLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
+      mediaLoopCount: ['', [Validators.pattern("[0-9][0-9]*$")]],
       tiles: this.fb.array([])
     });
 
@@ -132,7 +132,7 @@ export class MediaPlayerCvmsComponent {
       tarrifIdCommon: [''],
       fontSizeCommon: [0],
       //playlistLoopCount: ['', ''],
-      playlistLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
+      playlistLoopCount: ['', [ Validators.pattern("[0-9][0-9]*$")]],
       colorFont: [''],
       colorBg: [''],
       playlist: this.fb.array([])
@@ -145,7 +145,7 @@ export class MediaPlayerCvmsComponent {
       mediaId: [ele.mediaId, ''],
       filesize :[ele.filesize,''],
       mediaName: [ele.mediaName, ''],
-      videoLoopCount: [ele.videoLoopCount, Validators.required],
+      videoLoopCount: [ele.videoLoopCount],
       partyId: ['', Validators.required],
       tarrifId: ['', Validators.required],
       textStyle: this.fb.group({

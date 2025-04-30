@@ -302,7 +302,7 @@ this._CVMSfacade.SpaceCheck(element).subscribe(data => {
       _vcmsuploadmediadata.medianame = mediaName;
     }
     else {
-      _vcmsuploadmediadata.medianame = this.form.controls.mediaNamevalue;
+      _vcmsuploadmediadata.medianame = this.form.controls.mediaName.value;
     }
     
     _vcmsuploadmediadata.status = 0;

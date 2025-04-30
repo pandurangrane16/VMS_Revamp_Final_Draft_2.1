@@ -50,6 +50,7 @@ export class MediaUploadCvmsListComponent {
     { "Head": "Media Type", "FieldName": "mediatype", "type": "string" },
     { "Head": "Media Name", "FieldName": "mediaName", "type": "string" },
     { "Head": "Status", "FieldName": "statusdesc", "type": "string" },
+   
     { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
     { "Head": "Action", "FieldName": "actions", "type": "button" },
    
@@ -57,7 +58,14 @@ export class MediaUploadCvmsListComponent {
   listOfMedialist: any = [];
   //btnArray: any[] = [];
   btnArray: any[] = [
-  { "name": "Remove", "icon": "icon-trash", "tip": "Click to Remove", "action": "delete" ,"condition": (row: any) => row.status === 1  },]; 
+  { "name": "Remove", "icon": "icon-trash", "tip": "Click to Remove", "action": "delete" ,"condition": (row: any) => row.status === 1  },
+  { 
+    "name": "Error", 
+    "icon": "icon-eye",  
+    "tip": "View Error Message", 
+    "action": "error", 
+    "condition": (row: any) => row.status === 2 
+  }]; 
 
 
 
@@ -92,7 +100,26 @@ export class MediaUploadCvmsListComponent {
     this.isSearch = false;
     this.getMediaDetails();
   }
-
+  Show_error(element?: any) {
+    if (!element || !element.responseData) {
+      alert("No error information available.");
+      return;
+    }
+  
+    try {
+      const responseObj = JSON.parse(element.responseData);
+      const message = responseObj.message || "No message field in response.";
+    
+      this.confirmationDialogService
+        .confirm('Error Message', message)
+        .catch(() => {}); 
+    } catch (err) {
+      this.confirmationDialogService
+        .confirm('Error', 'Failed to parse error message.')
+        .catch(() => {});
+    }
+  
+  }
   //Common Functionalities
   onPager(pager: number) {
     this._request.pageSize = Number(this.recordPerPage);
@@ -153,6 +180,10 @@ export class MediaUploadCvmsListComponent {
             var _dateStr = this.datepipe.transform(_d, "dd-MM-yyyy HH:mm:ss");
             element.creationTime = _dateStr;
             const parsedData = JSON.parse(element.requestData);
+            if(element.status == 2)
+              {    const parsedData2 = JSON.parse(element.responseData);
+              const message= parsedData2.message;
+              element.ErrorMessage=message;}
             const mediaType = parsedData.mediaType;
             element.mediatype=mediaType;
             
@@ -198,6 +229,9 @@ export class MediaUploadCvmsListComponent {
   ButtonAction(actiondata: any) { 
     if (actiondata.action === "delete") {
       this.deleteRecord(actiondata.data);
+    }
+    if (actiondata.action === "error") {
+      this.Show_error(actiondata.data);
     }
   }
   deleteRecord(element?: any) {

@@ -39,11 +39,20 @@ export class MedialiveplaylistComponent {
       { "Head": "Controller Name", "FieldName": "ipAddress", "type": "string" },     
       { "Head": "MediaPlayerName", "FieldName": "mediaPlayerName", "type": "string" },   
       { "Head": "Status", "FieldName": "statusdesc", "type": "string" },
+      { "Head": "Action", "FieldName": "actions", "type": "button" },
       { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
       
     ];
     listOfMedialist:any=[];
-    btnArray: any[] = [];
+    btnArray: any[] = [
+      { 
+        "name": "Error", 
+        "icon": "icon-eye",  
+        "tip": "View Error Message", 
+        "action": "error", 
+        "condition": (row: any) => row.status === 2 
+      }
+    ];
   
     constructor(private _commonFacade: CommonFacadeService,
       private global: Globals,
@@ -70,7 +79,26 @@ export class MedialiveplaylistComponent {
       this.startId = (this.pager - 1) * Number(this.recordPerPage);
       this.getMediaDetails();
     }
-  
+    Show_error(element?: any) {
+      if (!element || !element.responseData) {
+        alert("No error information available.");
+        return;
+      }
+    
+      try {
+        const responseObj = JSON.parse(element.responseData);
+        const message = responseObj.message || "No message field in response.";
+      
+        this.confirmationDialogService
+          .confirm('Error Message', message)
+          .catch(() => {}); 
+      } catch (err) {
+        this.confirmationDialogService
+          .confirm('Error', 'Failed to parse error message.')
+          .catch(() => {});
+      }
+    
+    }
     onRecordPageChange(recordPerPage: number) {
       console.log("Record Per Page : " + recordPerPage);
       this._request.pageSize = Number(recordPerPage);
@@ -106,6 +134,10 @@ export class MedialiveplaylistComponent {
           this.listOfMediaUpload.forEach((element: any) => {
             let _jsonVal = JSON.parse(element.requestData);
             element.mediaPlayerName =_jsonVal.mediaPlayerName
+            if(element.status == 2)
+              {    const parsedData2 = JSON.parse(element.responseData);
+              const message= parsedData2.message;
+              element.ErrorMessage=message;}
             console.log(_jsonVal);
             if (element.creationTime != null) {
               var _d = new Date(element.creationTime);
@@ -146,5 +178,9 @@ export class MedialiveplaylistComponent {
       }
     }
 
-    ButtonAction(actiondata: any) { }
+    ButtonAction(actiondata: any) { 
+      if (actiondata.action === "error") {
+        this.Show_error(actiondata.data);
+      }
+    }
 }
