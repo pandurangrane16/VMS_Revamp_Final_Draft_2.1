@@ -55,7 +55,7 @@ export class MediaschedulerListComponent {
   {"name":"Update", "icon": "icon-write", "tip": "Click to Update","action": "update","condition": (row: any) => row.status === 1 },
   { 
     "name": "Error", 
-    "icon": "icon-eye",  
+    "icon": "icon-cross",  
     "tip": "View Error Message", 
     "action": "error", 
     "condition": (row: any) => row.status === 2 

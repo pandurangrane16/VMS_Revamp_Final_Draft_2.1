@@ -11,6 +11,10 @@
                     <span class="spinner-border-sm me-1"></span>
                     <i class="icon-plus"></i> Add New Media Player 
                 </button>
+                <div class="text-right">
+                    <button class="btn reload" (click)="getMediaDetails()"><i class="icon-reload"></i>
+                        Reload</button>
+                </div>
                 <app-cm-table [headArr]="headerArr" [gridArr]="listOfMediaUpload" SearchLable="Search With Controller IP or Media Player name"
                 [totalRecords]="totalRecords" [totalPages]="totalPages"
                 [perPage]="recordPerPage" (pager)="onPager($event)" [btnArray]="btnArray"

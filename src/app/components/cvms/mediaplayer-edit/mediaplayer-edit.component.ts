@@ -15,6 +15,8 @@ import { ToastrService } from 'ngx-toastr';
 import { FileServiceService } from 'src/app/facade/services/vcms/file-service.service';
 import { CommonSelectList } from 'src/app/models/common/cmSelectList';
 import { InputRequest } from 'src/app/models/request/inputReq';
+
+declare var $: any;
 @Component({
   selector: 'app-mediaplayer-edit',
   templateUrl: './mediaplayer-edit.component.html',
@@ -50,6 +52,11 @@ export class MediaPlayerEditComponent {
 
   ShowSaveBtn: boolean = false;
   rowCount: number;
+
+  url: string = "";
+  
+  format: string = "";
+  fileName: string = "";
 
   constructor(
     private fb: FormBuilder,
@@ -110,6 +117,32 @@ export class MediaPlayerEditComponent {
         this.partyDetails = res.data;
     });
   }
+
+  async ViewMedia(userIndex: number, id: number) {
+    const playlistArray = this.getPlaylist(userIndex); 
+    const mediaName = playlistArray.at(0)?.get('mediaName')?.value;
+
+    const filepath = playlistArray.at(0)?.get('filepath')?.value;
+    const baseUrl = 'https://172.19.32.51:8025/medialists';
+
+    // Extract folder and file name from the local path
+    const parts = filepath.split('\\');
+    const folderName = parts[2]; // Assuming the 3rd part is the folder name
+    const fileName = parts[3];   // The last part is the file name
+  
+    // Construct the URL
+    const url = `${baseUrl}/${folderName}/${fileName}`;
+    const fileType = this.fileService.checkFileType(url);
+    this.url = url
+    this.fileName = mediaName
+    if (fileType == "image")
+      this.format = "image";
+    else
+      this.format = "video";
+    $('#myModal').modal('show');
+    $('.modal-backdrop').remove();
+    //const fileType = await fileTypeFromStream(media.filePath);
+  }
   getDataForMediaPlayer(id: number): void {
     let body = {
       "searchItem": "",
@@ -136,7 +169,12 @@ export class MediaPlayerEditComponent {
 
 
   }
+  removeModal() {
+    $('#myModal').modal('hide');
 
+    // Remove the modal-backdrop class after the modal is closed
+    $('.modal-backdrop').remove();
+  }
   populateFormWithData(data: any): void {
 
     const requestData = JSON.parse(data.requestData);
@@ -144,6 +182,7 @@ export class MediaPlayerEditComponent {
 
     const mediaPlayerName = requestData.name;
     const mediaLoopCount = requestData.mediaLoopCount;
+    
     this.selectedMediaPlayerId = data.id;
     this.vmsid = data.vmsId;
 
@@ -156,6 +195,7 @@ export class MediaPlayerEditComponent {
       mediaLoopCount: mediaLoopCount,
       SelectedControllerId: ipaddress,
       id:responseid
+      
 
     });
 
@@ -174,6 +214,7 @@ export class MediaPlayerEditComponent {
         fontSizeCommon: [0],
         colorFont: [''],
         colorBg: [''],
+        filepath:[''],
 
         // playlist: this.fb.array(tile.playlist.map((item: any) => this.fb.group({
 
@@ -208,6 +249,7 @@ export class MediaPlayerEditComponent {
         
           const formGroup = this.fb.group({
             playOrder: [item.playOrder],
+            filepath:[item.filepath],
             imageTextDuration: [item.imageTextDuration],
             mediaId: [item.mediaId],
             mediaName: [item.mediaName],
@@ -236,6 +278,7 @@ export class MediaPlayerEditComponent {
       _tileDetails.tileNo = tile.tileNo;
       _tileDetails.playlist = tile.playlist.map((item: any) => ({
         playOrder: item.playOrder,
+        filepath:item.filepath,
         imageTextDuration: item.imageTextDuration,
         mediaId: item.mediaId,
         mediaName: item.mediaName,

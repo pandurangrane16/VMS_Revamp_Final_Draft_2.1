@@ -54,6 +54,7 @@ text-decoration: none;
     background-color: #ec37fc;
     border-color: #ec37fc;
 }
+
 .badge{color:#222}
 ::ng-deep .dataTables_wrapper div.dataTables_length select {
   width: 30px!important;
@@ -68,6 +69,26 @@ border-color: #51c81c!important;
 color: #001737 !important;
 border-radius: 50px!important;
 }
+.reload {
+  background-color: DodgerBlue;
+  border: none;
+  color: white;
+  padding: 6px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Darker background on mouse-over */
+.reload:hover {
+  background-color: RoyalBlue;
+}
+::ng-deep .nav-tabs{border-bottom:none!important;}
+::ng-deep .tab-content{border-top:1px solid #ccc;background-color:transparent;  padding: 5px;}
+::ng-deep .bgTable .nav-tabs .nav-link{line-height: 20px; color:#fff} 
+::ng-deep .bgTable .nav-item.active .nav-link.active{line-height: 20px; color:#4801ff} 
+::ng-deep .pgn{color: #fff!important;}
+::ng-deep .pgn select{color: #fff!important;}
+::ng-deep .pgn select:focus{color: #fff!important;}
 
 
 .badge-success {

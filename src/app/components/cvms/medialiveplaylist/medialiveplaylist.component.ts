@@ -39,18 +39,19 @@ export class MedialiveplaylistComponent {
       { "Head": "Controller Name", "FieldName": "ipAddress", "type": "string" },     
       { "Head": "MediaPlayerName", "FieldName": "mediaPlayerName", "type": "string" },   
       { "Head": "Status", "FieldName": "statusdesc", "type": "string" },
-      { "Head": "Action", "FieldName": "actions", "type": "button" },
+    
       { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
+      { "Head": "Action", "FieldName": "actions", "type": "button" },
       
     ];
     listOfMedialist:any=[];
     btnArray: any[] = [
       { 
         "name": "Error", 
-        "icon": "icon-eye",  
+        "icon": "icon-cross",  
         "tip": "View Error Message", 
         "action": "error", 
-        "condition": (row: any) => row.status === 2 
+         "condition": (row: any) => row.status === 2 
       }
     ];
   

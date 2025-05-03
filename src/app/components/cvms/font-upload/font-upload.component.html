@@ -103,7 +103,10 @@
         <div class="col-xl-12 stretch-card" id="listView">
             <div class="card  border-0">
                 <div class="card-body p-2 bgTable" style="border-radius: 0 0;">
-
+                    <div class="text-right">
+                        <button class="btn reload" (click)="getMediaUploadData()"><i class="icon-reload"></i>
+                            Reload</button>
+                    </div>
                     <app-cm-table [headArr]="headerArr" [gridArr]="listOfMediaSet" [totalRecords]="totalRecords"
                         [totalPages]="totalPages" [perPage]="recordPerPage" (pager)="onPager($event)"
                         [btnArray]="btnArray" [collectionSize]="totalRecords"

@@ -88,7 +88,7 @@ import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-
       btnArray: any[] = [{ "name": "Remove", "icon": "icon-trash", "tip": "Click to Remove", "action": "delete","condition": (row: any) => row.status === 1  },
         { 
           "name": "Error", 
-          "icon": "icon-eye",  
+          "icon": "icon-cross",  
           "tip": "View Error Message", 
           "action": "error", 
           "condition": (row: any) => row.status === 2 

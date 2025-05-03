@@ -11,4 +11,5 @@ export class PlaylistMedia{
     videoLoopCount:number;
     textStyle :{};
     filesize :number;
+    filepath :any;
 }

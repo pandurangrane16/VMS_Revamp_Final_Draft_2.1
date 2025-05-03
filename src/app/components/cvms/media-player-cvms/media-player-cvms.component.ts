@@ -144,6 +144,7 @@ export class MediaPlayerCvmsComponent {
       imageTextDuration: [{ value: ele.imageTextDuration, disabled: video }, [Validators.required]],
       mediaId: [ele.mediaId, ''],
       filesize :[ele.filesize,''],
+      filepath :[ele.filepath,''],
       mediaName: [ele.mediaName, ''],
       videoLoopCount: [ele.videoLoopCount],
       partyId: ['', Validators.required],
@@ -303,6 +304,7 @@ export class MediaPlayerCvmsComponent {
       if (this.selectedMediaId[0][i].mediaDetails != null) {
         _plMedia.imageTextDuration = this.selectedMediaId[0][i].mediaDetails.duration;
         _plMedia.filesize= this.selectedMediaId[0][i].mediaDetails.filesize;
+        _plMedia.filepath= this.selectedMediaId[0][i].mediaDetails.filepath;
         _plMedia.mediaId = this.selectedMediaId[0][i].resposneId;
         _plMedia.mediaName = this.selectedMediaId[0][i].mediaDetails.displayname;
         _plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
@@ -509,6 +511,7 @@ export class MediaPlayerCvmsComponent {
           plData.tarrifId = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.tarrifId.value;
           plData.videoLoopCount = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.videoLoopCount.value;
           plData.filesize = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.filesize.value;
+          plData.filepath = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.filepath.value;
           plData.textStyle = {
             fontSize : this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.textStyle.controls['fontSize'].value,
             fontColor : this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.textStyle.controls['fontColor'].value,
