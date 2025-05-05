@@ -41,7 +41,7 @@ import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-
     changeToShow = false;
     label1: string = "Select Controller";
      _request: any = new InputRequest();
-    recordPerPage: number = 0;
+    recordPerPage: number = 10;
     files: File[] = [];
    
     selectedFile: File | null = null;
@@ -103,15 +103,16 @@ import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-
       });
     }
     ngOnInit(): void {
-      this.getMediaUploadData();
       this.GetVmsDetails();
+      this.getMediaUploadData();
+      
     }
   
     GetVmsDetails() {
-      this._request.currentPage = this.pager;
-      this._request.pageSize = Number(this.recordPerPage);
-      this._request.startId = this.startId;
-      this._request.searchItem = this.searchText;
+      // this._request.currentPage = this.pager;
+      // this._request.pageSize = Number(this.recordPerPage);
+      // this._request.startId = this.startId;
+      // this._request.searchItem = this.searchText;
   
       this.adminFacade.getVmss(this._request).subscribe(data => {
         if (data != null) {
