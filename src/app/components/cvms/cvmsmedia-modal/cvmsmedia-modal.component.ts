@@ -63,7 +63,7 @@ export class CVMSMediaModalComponent implements OnInit {
             let resnew = JSON.parse(res);
             if (resnew != null && resnew.length > 0) {
               resnew.forEach((ele:any) => {
-                if(ele.fileType.toLocaleLowerCase() == "text" || ele.fileType.toLocaleUpperCase() == "RTSP_URL"|| ele.fileType.toLocaleUpperCase() == "YOUTUBE_VIDEO" || ele.fileType.toLocaleUpperCase() == "YOUTUBE_LIVE"||ele.fileType.toLocaleUpperCase() == "URL")
+                if(ele.fileType.toLocaleLowerCase() == "text" || ele.fileType.toLocaleUpperCase() == "RTSP_URL"|| ele.fileType.toLocaleUpperCase() == "YOUTUBE_VIDEO" || ele.fileType.toLocaleUpperCase() == "YOUTUBE_LIVE_VIDEO"||ele.fileType.toLocaleUpperCase() == "URL")
                   this.listOfMedialist.push(ele);
               });
             }
