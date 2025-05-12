@@ -103,7 +103,7 @@ export class MediaschedulerListComponent {
 
 retry(element?: any){
  
-  this.confirmationDialogService.confirm('Please confirm..', 'Do you really want to retry... ?')
+  this.confirmationDialogService.confirm('Please confirm..', 'Do you want to Schedule again... ?')
           .then((confirmed) => { if (confirmed == true)
             { const id= element.id;
             element.status=0;
@@ -113,9 +113,11 @@ retry(element?: any){
               this.mediaFacade.getMediaSchedulerById(id).subscribe(response => {
 
                 const data = response[0];
+                response[0].status = 0;
+                const data2=response[0]
           
                 if (data) {
-                  this.mediaFacade.UpdateMediascheduler(data).subscribe(data => {
+                  this.mediaFacade.UpdateMediascheduler(data2).subscribe(data => {
                     if (data == 0) {
                       this.toast.error("Error occured while saving data for " + element.IpAddress);
                     }
