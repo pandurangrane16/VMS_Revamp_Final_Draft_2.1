@@ -45,15 +45,15 @@ export class MediaschedulerComponent {
   showCustomize: boolean = false;
 
 
-  selectedMinutes: string='*'; // Default to every minute
-  startHour: string='*'; // Default start hour
-  endHour: string ='*'; // Default end hour
-  Duration : any;
+  selectedMinutes: string = '*'; // Default to every minute
+  startHour: string = '*'; // Default start hour
+  endHour: string = '*'; // Default end hour
+  Duration: any;
   selectedDays: string[] = [];
-  weekdaysselect :any=[]
+  weekdaysselect: any = []
 
   minutesOptions = Array.from({ length: 60 }, (_, i) => ({
-    value: `*/${i}`,
+    value: `${i}`,
     display: `${i}`
   }));
   hoursOptions = Array.from({ length: 24 }, (_, i) => ({
@@ -61,7 +61,7 @@ export class MediaschedulerComponent {
     display: i.toString().padStart(2, '0') // Ensures "0" appears as "00", "1" as "01", etc.
   }));
   weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  daysOptions:any =[];
+  daysOptions: any = [];
   humanReadableCron: string;
 
   get f() { return this.form.controls; }
@@ -73,7 +73,7 @@ export class MediaschedulerComponent {
     private adminFacade: AdminFacadeService,
     private fb: FormBuilder,
     private _toast: ToastrService,
-    
+
     private _commonFacade: CommonFacadeService,
     public datepipe: DatePipe,
 
@@ -100,12 +100,13 @@ export class MediaschedulerComponent {
       globalToDt: ["", Validators.required],
       globalToTm: ["", Validators.required],
       schedulename: ['', [Validators.required, Validators.pattern("[A-Za-z0-9][A-Za-z0-9 ]*$"), this.noLeadingEndingWhitespace]],
-      selectedMinutes:[''],
+      selectedMinutes: [''],
       startHour: [''],
       endHour: [''],
       weekdaysselect: [[]],
       cronexpression: [''],
-      Duration:[''],
+      Duration: [''],
+      VmsController:['']
     });
   }
 
@@ -174,7 +175,7 @@ export class MediaschedulerComponent {
   }
 
   GetVmsDetails() {
-    
+
     this.adminFacade.getVmss(this._request).subscribe(data => {
       if (data != null) {
         let commonList: CommonSelectList[] = [];
@@ -235,69 +236,110 @@ export class MediaschedulerComponent {
     }
     console.log(this.playersIds);
   }
-  
 
-    getSelectedDays(event: any, action: number) {
-      if (action === 1) {
-        // Handling Select All
-        if (Array.isArray(event)) {
-          this.selectedDays = event.map(item => item.value);
-        } else {
-          this.selectedDays.push(event.value);
-        }
+
+  getSelectedDays(event: any, action: number) {
+    if (action === 1) {
+      // Handling Select All
+      if (Array.isArray(event)) {
+        this.selectedDays = event.map(item => item.value);
       } else {
-        // Handling Unselect All
-        if (Array.isArray(event)) {
-          this.selectedDays = [];
-        } else {
-          this.selectedDays = this.selectedDays.filter(day => day !== event.value);
-        }
+        this.selectedDays.push(event.value);
       }
-      this.form.patchValue({
-        weekdaysselect:this.selectedDays
-      })
+    } else {
+      // Handling Unselect All
+      if (Array.isArray(event)) {
+        this.selectedDays = [];
+      } else {
+        this.selectedDays = this.selectedDays.filter(day => day !== event.value);
+      }
     }
-    
-    generateCron() {
-      // Ensure that endHour is greater than or equal to startHour
-      const start = this.startHour !== '*' ? parseInt(this.startHour, 10) : '*';
-      const end = this.endHour !== '*' ? parseInt(this.endHour, 10) : '*';
-    
-      if (start !== '*' && end !== '*' && end < start) {
-        alert("End hour cannot be less than start hour.");
-        return;
-      }
-    
-      // Format Hours
+    this.form.patchValue({
+      weekdaysselect: this.selectedDays
+    })
+  }
+
+  // generateCron() {
+  //   // Ensure that endHour is greater than or equal to startHour
+  //   const start = this.startHour !== '*' ? parseInt(this.startHour, 10) : '*';
+  //   //const end = this.endHour !== '*' ? parseInt(this.endHour, 10) : '*';
+
+  //   // if (start !== '*' && end !== '*' && end < start) {
+  //   //   alert("End hour cannot be less than start hour.");
+  //   //   return;
+  //   // }
+
+  //   // Format Hours
+  //   let hourValue;
+  //   if (start === '*') {
+  //     hourValue = '*';
+  //   } else {
+  //     hourValue = start;
+  //   }
+
+  //   // Ensure selectedMinutes defaults to '*' if no selection is made
+  //   const minutesValue = this.selectedMinutes !== '*' ? this.selectedMinutes : '*';
+
+  //   // Ensure selectedDays defaults to '*' if no selection is made
+  //   const daysValue = this.selectedDays.length > 0 ? this.selectedDays.join(",") : "*";
+
+  //   // Construct the cron expression
+  //   this.cronExpression = `${minutesValue} ${hourValue} * * ${daysValue}`;
+
+  //   try {
+  //     this.humanReadableCron = cronstrue.toString(this.cronExpression);
+  //   } catch (error) {
+  //     console.error("Error converting cron:", error);
+  //     this.humanReadableCron = "Invalid cron expression";
+  //   }
+
+  //   console.log("Cron:", this.cronExpression);
+  //   this.form.patchValue({
+  //     cronexpression :this.cronExpression
+  //   })
+  //   console.log("Readable:", this.humanReadableCron);
+  // }
+
+  generateCron() {
+    if (this.form.controls["Duration"].value == "" || this.form.controls["Duration"].value == undefined) {
+      this._toast.error("Please enter duration(Minutes)");
+      return;
+    }
+    else if (this.form.controls["selectedMinutes"].value == "" || this.form.controls["selectedMinutes"].value == undefined) {
+      this._toast.error("Please select Start minute");
+      return;
+    }
+    else if (this.form.controls["startHour"].value == "" || this.form.controls["startHour"].value == undefined) {
+      this._toast.error("Please select Start hour");
+      return;
+    }
+    else {
+      const start = this.form.controls["startHour"].value !== '*' ? parseInt(this.form.controls["startHour"].value, 10) : '*';
       let hourValue;
-      if (start === '*' || end === '*') {
+      if (start === '*') {
         hourValue = '*';
       } else {
-        hourValue = start === end ? `${start}` : `${start}-${end}`;
+        hourValue = start;
       }
-    
-      // Ensure selectedMinutes defaults to '*' if no selection is made
-      const minutesValue = this.selectedMinutes !== '*' ? this.selectedMinutes : '*';
-    
-      // Ensure selectedDays defaults to '*' if no selection is made
+
+      const minutesValue = this.form.controls["selectedMinutes"].value !== '*' ? this.form.controls["selectedMinutes"].value : '*';
       const daysValue = this.selectedDays.length > 0 ? this.selectedDays.join(",") : "*";
-    
-      // Construct the cron expression
       this.cronExpression = `${minutesValue} ${hourValue} * * ${daysValue}`;
-    
+
       try {
         this.humanReadableCron = cronstrue.toString(this.cronExpression);
       } catch (error) {
         console.error("Error converting cron:", error);
         this.humanReadableCron = "Invalid cron expression";
       }
-    
+
       console.log("Cron:", this.cronExpression);
       this.form.patchValue({
-        cronexpression :this.cronExpression
+        cronexpression: this.cronExpression
       })
       console.log("Readable:", this.humanReadableCron);
     }
+  }
 
   getMediaPlayerList() {
 
@@ -327,14 +369,14 @@ export class MediaschedulerComponent {
             // } else {
             //   console.log('_data.tiles is not an array:', _data.tiles);
             // }
-            
+
 
             // console.log("Total Image Text Duration:", total_duration);
 
             var _commonSelect = new CommonSelectList();
             _commonSelect.displayName = _data.name;
             _commonSelect.value = _responseId;
-           //  _commonSelect.Tduration=total_duration
+            //  _commonSelect.Tduration=total_duration
             commonList.push(_commonSelect);
           });
           let _data = {
@@ -342,23 +384,23 @@ export class MediaschedulerComponent {
             disabled: false
           }
           this._inputPlayerData = _data;
-          console.log("inputplayerdata:",_data)
+          console.log("inputplayerdata:", _data)
         }
       }
     })
   }
   toggleCustomize() {
     this.showCustomize = !this.showCustomize;
-  
-      // if (this.showCustomize) {
-      // // Add validators when Customize is shown
-      // this.form.get('selectedMinutes')?.setValidators([Validators.required]);
-      // this.form.get('startHour')?.setValidators([Validators.required]);
-      // this.form.get('endHour')?.setValidators([Validators.required]);
-      // this.form.get('Duration')?.setValidators([Validators.required, Validators.min(1)]);
-      // this.form.get('weekdaysselect')?.setValidators([Validators.required]);
-      // this.form.get('cronexpression')?.setValidators([Validators.required]);
-      // }
+
+    // if (this.showCustomize) {
+    // // Add validators when Customize is shown
+    // this.form.get('selectedMinutes')?.setValidators([Validators.required]);
+    // this.form.get('startHour')?.setValidators([Validators.required]);
+    // this.form.get('endHour')?.setValidators([Validators.required]);
+    // this.form.get('Duration')?.setValidators([Validators.required, Validators.min(1)]);
+    // this.form.get('weekdaysselect')?.setValidators([Validators.required]);
+    // this.form.get('cronexpression')?.setValidators([Validators.required]);
+    // }
     //   else {
     //   // Remove validators when hidden
     //   this.form.get('selectedMinutes')?.clearValidators();
@@ -367,15 +409,15 @@ export class MediaschedulerComponent {
     //   this.form.get('Duration')?.clearValidators();
     //   this.form.get('weekdaysselect')?.setValidators([Validators.required]);
     //   this.form.get('cronexpression')?.setValidators([Validators.required]);
-    
-  
-     
+
+
+
     // }
-  
+
     // // Update the form's validity
     // this.form.updateValueAndValidity();
   }
-  
+
   OnSaveDetails() {
 
     if (this.SelectedControllerId == undefined || this.SelectedControllerId.length < 1) {
@@ -388,42 +430,41 @@ export class MediaschedulerComponent {
       return;
     }
 
-    if(this.form.controls["globalFromDt"].value =='' || this.form.controls["globalFromTm"].value == '')
-    {
+    if (this.form.controls["globalFromDt"].value == '' || this.form.controls["globalFromTm"].value == '') {
       this._toast.error("Either From Date or Time missing ,Please select From Date and Time for Media Scheduler");
       return;
     }
-    
-    if( this.form.controls["globalToDt"].value == '' || this.form.controls["globalToTm"].value == ''){
+
+    if (this.form.controls["globalToDt"].value == '' || this.form.controls["globalToTm"].value == '') {
       this._toast.error("Either To Date or Time missing, Please select To Date and Time for Media Scheduler. ");
-      return; 
+      return;
     }
 
-      // if (this.showCustomize) {
-      // // Add validators when Customize is shown
-      // this.form.get('selectedMinutes')?.setValidators([Validators.required]);
-      // this.form.get('startHour')?.setValidators([Validators.required]);
-      // this.form.get('endHour')?.setValidators([Validators.required]);
-      // this.form.get('Duration')?.setValidators([Validators.required, Validators.min(1)]);
-      // this.form.get('weekdaysselect')?.setValidators([Validators.required]);
-      // this.form.get('cronexpression')?.setValidators([Validators.required]);
-      
-      // }
-      if (this.showCustomize) {
-        const fields = ['selectedMinutes', 'startHour', 'endHour', 'Duration', 'weekdaysselect', 'cronexpression'];
-        fields.forEach(field => {
-          this.form.get(field)?.setValidators([Validators.required]);
-          this.form.get(field)?.updateValueAndValidity();
-        });
-      }
+    // if (this.showCustomize) {
+    // // Add validators when Customize is shown
+    // this.form.get('selectedMinutes')?.setValidators([Validators.required]);
+    // this.form.get('startHour')?.setValidators([Validators.required]);
+    // this.form.get('endHour')?.setValidators([Validators.required]);
+    // this.form.get('Duration')?.setValidators([Validators.required, Validators.min(1)]);
+    // this.form.get('weekdaysselect')?.setValidators([Validators.required]);
+    // this.form.get('cronexpression')?.setValidators([Validators.required]);
 
-      if (!this.showCustomize) {
-        const fields = ['selectedMinutes', 'startHour', 'endHour', 'Duration', 'weekdaysselect', 'cronexpression'];
-        fields.forEach(field => {
-          this.form.get(field)?.clearValidators();
-          this.form.get(field)?.updateValueAndValidity();
-        });
-      }
+    // }
+    if (this.showCustomize) {
+      const fields = ['selectedMinutes', 'startHour', 'endHour', 'Duration', 'weekdaysselect', 'cronexpression'];
+      fields.forEach(field => {
+        this.form.get(field)?.setValidators([Validators.required]);
+        this.form.get(field)?.updateValueAndValidity();
+      });
+    }
+
+    if (!this.showCustomize) {
+      const fields = ['selectedMinutes', 'startHour', 'endHour', 'Duration', 'weekdaysselect', 'cronexpression'];
+      fields.forEach(field => {
+        this.form.get(field)?.clearValidators();
+        this.form.get(field)?.updateValueAndValidity();
+      });
+    }
 
     if (this.form.valid) {
 
@@ -488,7 +529,7 @@ export class MediaschedulerComponent {
         "fromDate": jsonfromdate,
         "toDate": jsontodate,
         "cronExpression": this.cronExpression,
-        "playerDuration" : this.form.controls["Duration"].value,
+        "playerDuration": this.form.controls["Duration"].value,
 
       }
       _vcmsmedischedulerdata.IpAddress = this.SelectedControllerId[0];
@@ -500,38 +541,24 @@ export class MediaschedulerComponent {
       _vcmsmedischedulerdata.AuditedTime = new Date();
       _vcmsmedischedulerdata.status = 0;
       _vcmsmedischedulerdata.Reason = "Create Media Scheduler";
-      _vcmsmedischedulerdata.requesttype="/mediaSchedule/createMediaPlayerScheduler";
-      
-          this._CVMSfacade.CheckDuplicateMediaSchedulerName(this.form.controls["schedulename"].value).subscribe(data => {
-      
-            if (JSON.parse(data) == 1) {
-              this._toast.error("Media Player Name already exists in the System.");
-              
-              return;
-            }
-            else {
-              this._CVMSfacade.SaveMediaScheduler(_vcmsmedischedulerdata).pipe(catchError((err) => {
-                this._toast.error("Error occured while saving data for " + err);
-                throw err;
-              })).subscribe(data => {
-                if (data == 0) {
-                  this._toast.error("Error occured while saving data for " + _vcmsmedischedulerdata.IpAddress);
-                }
-                else {
-        
-                  this._toast.success("Saved successfully for " + _vcmsmedischedulerdata.IpAddress);
-                  this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-                    this._router.navigate(['cvms/MediaPlayerSchedulerList']);
-                  });
-                }
-              })
-            }
+      _vcmsmedischedulerdata.requesttype = "/mediaSchedule/createMediaPlayerScheduler";
+
+
+      this._CVMSfacade.SaveMediaScheduler(_vcmsmedischedulerdata).pipe(catchError((err) => {
+        this._toast.error("Error occured while saving data for " + err);
+        throw err;
+      })).subscribe(data => {
+        if (data == 0) {
+          this._toast.error("Error occured while saving data for " + _vcmsmedischedulerdata.IpAddress);
+        }
+        else {
+
+          this._toast.success("Saved successfully for " + _vcmsmedischedulerdata.IpAddress);
+          this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this._router.navigate(['cvms/MediaPlayerSchedulerList']);
           });
-
-
-
-
-     
+        }
+      })
     }
     else {
       this._toast.error("Error occured while saving data. Please select Input Values.");
