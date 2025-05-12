@@ -451,7 +451,7 @@ export class MediaschedulerComponent {
 
     // }
     if (this.showCustomize) {
-      const fields = ['selectedMinutes', 'startHour', 'endHour', 'Duration', 'weekdaysselect', 'cronexpression'];
+      const fields = ['selectedMinutes', 'startHour', 'Duration', 'weekdaysselect', 'cronexpression'];
       fields.forEach(field => {
         this.form.get(field)?.setValidators([Validators.required]);
         this.form.get(field)?.updateValueAndValidity();
@@ -459,7 +459,7 @@ export class MediaschedulerComponent {
     }
 
     if (!this.showCustomize) {
-      const fields = ['selectedMinutes', 'startHour', 'endHour', 'Duration', 'weekdaysselect', 'cronexpression'];
+      const fields = ['selectedMinutes', 'startHour', 'Duration', 'weekdaysselect', 'cronexpression'];
       fields.forEach(field => {
         this.form.get(field)?.clearValidators();
         this.form.get(field)?.updateValueAndValidity();
