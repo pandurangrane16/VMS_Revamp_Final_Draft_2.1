@@ -15,7 +15,7 @@
                                 <label class="form-label lable-bold">Select Controller</label>
 
                                 <select class="form-control form-control-sm" [(ngModel)]="SelectedControllerId"
-                                    (change)="getSelectedVms($event)" formControlName="VmsController">
+                                    (change)="getSelectedVms($event)">
                                     <option [ngValue]="null" disabled>Choose Controller</option>
                                     <option *ngFor="let type of inputVmsData.data" [ngValue]="type.value">
                                         {{type.displayName}}</option>
