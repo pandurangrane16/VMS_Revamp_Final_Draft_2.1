@@ -355,16 +355,13 @@ export class MediaPlayerEditComponent {
         if (data === 1) {
           this.toast.error("Media Player Name already exists in the System.");
           this.editForm.setErrors({ duplicateName: true });
-          return;
         }
-      });
-
+    else{
       const tiles = this.editForm.controls['tiles'];
       const tileCount = tiles.length;
 
       if (tileCount === 0) {
         this.toast.error("At least one playlist must be created to set up the media player.");
-        return;
       }
 
       // Iterate through tiles and playlists to extract text styles
@@ -412,7 +409,16 @@ export class MediaPlayerEditComponent {
           });
         }
       });
-    } else {
+    
+    }
+
+
+
+        
+      });
+
+    }
+    else {
       this.toast.error("Invalid sequence available in tiles");
     }
 

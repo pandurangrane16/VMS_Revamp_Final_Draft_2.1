@@ -90,6 +90,11 @@ export class CVMSMediaFacadeServiceService {
     return this._mediascheduler.SaveMediascheduler(data);
   }
 
+  CheckDuplicateMediaSchedulerName(name:any){
+    
+    return this._mediascheduler.CheckDuplicateMediaSchedulerName(name);
+  }
+
 
   UpdateMediascheduler(data:any){
     

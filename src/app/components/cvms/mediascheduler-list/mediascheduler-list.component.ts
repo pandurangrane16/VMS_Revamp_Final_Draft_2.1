@@ -9,6 +9,7 @@ import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-
 import { InputRequest } from 'src/app/models/request/inputReq';
 import { Globals } from 'src/app/utils/global';
 import { Mediascheduler } from 'src/app/models/vcms/mediascheduler';
+import { catchError } from 'rxjs';
 
 @Component({
   selector: 'app-mediascheduler-list',
@@ -59,12 +60,20 @@ export class MediaschedulerListComponent {
     "tip": "View Error Message", 
     "action": "error", 
     "condition": (row: any) => row.status === 2 
+  },
+  { 
+    "name": "Retry", 
+    "icon": "icon-reload",  
+    "tip": "Click to Retry", 
+    "action": "retry", 
+    "condition": (row: any) => row.status === 2 
   }]; 
 
   constructor(private _commonFacade: CommonFacadeService,
     private global: Globals,
     private _router: Router,
     private mediaFacade: CVMSMediaFacadeServiceService,
+    
     private confirmationDialogService: ConfirmationDialogService,
     public datepipe: DatePipe,
     private toast: ToastrService,
@@ -87,7 +96,55 @@ export class MediaschedulerListComponent {
     if (actiondata.action === "error") {
       this.Show_error(actiondata.data);
     }
+    if (actiondata.action === "retry") {
+      this.retry(actiondata.data);
+    }
   }
+
+retry(element?: any){
+ 
+  this.confirmationDialogService.confirm('Please confirm..', 'Do you really want to retry... ?')
+          .then((confirmed) => { if (confirmed == true)
+            { const id= element.id;
+            element.status=0;
+           
+            if(id){
+
+              this.mediaFacade.getMediaSchedulerById(id).subscribe(response => {
+
+                const data = response[0];
+          
+                if (data) {
+                  this.mediaFacade.UpdateMediascheduler(data).subscribe(data => {
+                    if (data == 0) {
+                      this.toast.error("Error occured while saving data for " + element.IpAddress);
+                    }
+                    else {
+            
+                      this.toast.success("Saved successfully for " + element.IpAddress);
+                      this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                        this._router.navigate(['cvms/MediaPlayerSchedulerList']);
+                      });
+                    }
+                  })
+                  
+          
+                } else {
+                  this.toast.error('No data found for the selected media player.');
+                }
+              }, error => {
+                this.toast.error('Error fetching data.');
+              })
+
+
+             
+            }} })
+          .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
+       
+
+
+ 
+}
   updateRecord(element?: any){
     const id= element.id;
     if (id) {

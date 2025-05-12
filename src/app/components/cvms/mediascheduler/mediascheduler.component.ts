@@ -502,22 +502,36 @@ export class MediaschedulerComponent {
       _vcmsmedischedulerdata.Reason = "Create Media Scheduler";
       _vcmsmedischedulerdata.requesttype="/mediaSchedule/createMediaPlayerScheduler";
       
-
-      this._CVMSfacade.SaveMediaScheduler(_vcmsmedischedulerdata).pipe(catchError((err) => {
-        this._toast.error("Error occured while saving data for " + err);
-        throw err;
-      })).subscribe(data => {
-        if (data == 0) {
-          this._toast.error("Error occured while saving data for " + _vcmsmedischedulerdata.IpAddress);
-        }
-        else {
-
-          this._toast.success("Saved successfully for " + _vcmsmedischedulerdata.IpAddress);
-          this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-            this._router.navigate(['cvms/MediaPlayerSchedulerList']);
+          this._CVMSfacade.CheckDuplicateMediaSchedulerName(this.form.controls["schedulename"].value).subscribe(data => {
+      
+            if (JSON.parse(data) == 1) {
+              this._toast.error("Media Player Name already exists in the System.");
+              
+              return;
+            }
+            else {
+              this._CVMSfacade.SaveMediaScheduler(_vcmsmedischedulerdata).pipe(catchError((err) => {
+                this._toast.error("Error occured while saving data for " + err);
+                throw err;
+              })).subscribe(data => {
+                if (data == 0) {
+                  this._toast.error("Error occured while saving data for " + _vcmsmedischedulerdata.IpAddress);
+                }
+                else {
+        
+                  this._toast.success("Saved successfully for " + _vcmsmedischedulerdata.IpAddress);
+                  this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                    this._router.navigate(['cvms/MediaPlayerSchedulerList']);
+                  });
+                }
+              })
+            }
           });
-        }
-      })
+
+
+
+
+     
     }
     else {
       this._toast.error("Error occured while saving data. Please select Input Values.");

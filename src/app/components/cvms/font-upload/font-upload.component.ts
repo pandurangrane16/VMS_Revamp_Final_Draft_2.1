@@ -306,7 +306,7 @@ import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-
       //this.router.navigate(['masters/add-party']);
     }
     getMediaUploadData() {
-      this._request.currentPage = this.pager;
+      this._request.currentPage = (this.pager-1);
       this._request.pageSize = Number(this.recordPerPage);
       this._request.startId = this.startId;
       this._request.searchItem = this.searchText;

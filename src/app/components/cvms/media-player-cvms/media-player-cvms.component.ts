@@ -447,6 +447,7 @@ export class MediaPlayerCvmsComponent {
     }
   }
   OnSavePlaylistDetails_new(): void {
+    let empty_tile = "false";
     this.validateFields();
     if (this.isSeqValidate) {
       const ipAddress = this.SelectedControllerId[0];
@@ -471,6 +472,17 @@ export class MediaPlayerCvmsComponent {
 
       // Iterate through tiles and playlists to extract text styles
       tiles.controls.forEach((tile: any, i: number) => {
+
+        const playlists = tile.controls["playlist"];
+  
+        if (!playlists || !playlists.controls || !Array.isArray(playlists.controls) ||  playlists.controls.length === 0) {
+       
+          empty_tile="true";
+          return;
+        }
+       
+
+
         tile.controls["playlist"].controls.forEach((playlist: any, j: number) => {
           const textStyle = playlist.controls["textStyle"].value;
           const formattedTextStyle = {
@@ -563,7 +575,10 @@ this._CVMSfacade.SpaceCheck(ipAddress).subscribe(data => {
 });
 
 
-
+ if (empty_tile == "true"){
+  this.toast.error("Playlist details should be provided."); 
+  return; 
+}   else{
       this._CVMSfacade.SaveMediaPlayer(mediaPlayerData).subscribe(data => {
         if (data === 0) {
           this.toast.error(`Error occurred while saving data for ${mediaPlayerData.IpAddress}`);
@@ -573,8 +588,10 @@ this._CVMSfacade.SpaceCheck(ipAddress).subscribe(data => {
             this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
           });
         }
-      });
-    } else {
+      });}
+    } 
+   
+     else {
       this.toast.error("Invalid sequence available in tiles");
     }
 
