@@ -49,7 +49,7 @@ export class CVMSMediaModalComponent implements OnInit {
           this.listOfMedialist = res;
         }
         else
-          this.toast.error("Failed to failed media details.", "Error", { positionClass: "toast-bottom-right" });
+          this.toast.error("Failed to fetch media details.", "Error", { positionClass: "toast-bottom-right" });
       }, (err) => { console.log(err) });
     }
     else {
@@ -68,7 +68,7 @@ export class CVMSMediaModalComponent implements OnInit {
               });
             }
             else
-              this.toast.error("Failed to failed media details.", "Error", { positionClass: "top-up-right" });
+              this.toast.error("Failed to fetch text details.", "Error", { positionClass: "top-up-right" });
           }, (err) => { console.log(err);
             this.sessionService._setSessionValue("isNotHeader", undefined); });
         }

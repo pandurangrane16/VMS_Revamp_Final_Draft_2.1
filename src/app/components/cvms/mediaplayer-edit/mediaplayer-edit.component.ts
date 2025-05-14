@@ -80,7 +80,7 @@ export class MediaPlayerEditComponent {
     //this.getDataForMediaPlayer(this.mediaId);
     this.editForm = this.fb.group({
       name: ['', ''],
-      mediaLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
+      mediaLoopCount: ['', [ Validators.pattern("[0-9][0-9]*$")]],
       tiles: this.fb.array([]),
       SelectedControllerId: ['', Validators.required],
       id:[0]
@@ -245,7 +245,7 @@ export class MediaPlayerEditComponent {
         // })))
         playlist: this.fb.array(tile.playlist.map((item: any) => {
           // Define inside the map function
-          const isVideo = item.mediaName?.toLowerCase().endsWith('.mp4');
+          const isVideo = item.mediaName?.toLowerCase().endsWith('.mp4')||item.mediaName?.toLowerCase().endsWith('.avi')||item.mediaName?.toLowerCase().endsWith('.mkv') ;
         
           const formGroup = this.fb.group({
             playOrder: [item.playOrder],
@@ -578,7 +578,7 @@ export class MediaPlayerEditComponent {
   createUser2(): FormGroup {
     return this.fb.group({
       tileNo: ['', [Validators.required, Validators.pattern("[1-999][1-999]*$")]],
-      playlistLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
+      playlistLoopCount: ['', [ Validators.pattern("[0-9][0-9]*$")]],
       playlist: this.fb.array([])
     });
   }
@@ -594,7 +594,7 @@ export class MediaPlayerEditComponent {
       tarrifIdCommon: [''],
       fontSizeCommon: [0],
       //playlistLoopCount: ['', ''],
-      playlistLoopCount: ['', [Validators.required, Validators.pattern("[0-9][0-9]*$")]],
+      playlistLoopCount: ['', [ Validators.pattern("[0-9][0-9]*$")]],
       colorFont: [''],
       colorBg: [''],
       playlist: this.fb.array([])
@@ -822,7 +822,7 @@ export class MediaPlayerEditComponent {
 
       mediaId: [ele.mediaId, ''],
       mediaName: [ele.mediaName, ''],
-      videoLoopCount: [ele.videoLoopCount, Validators.required],
+      videoLoopCount: [ele.videoLoopCount],
       partyId: ['', Validators.required],
       tarrifId: ['', Validators.required],
       textStyle: this.fb.group({

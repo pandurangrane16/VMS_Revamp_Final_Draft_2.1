@@ -460,135 +460,137 @@ export class MediaPlayerCvmsComponent {
           this.registrationForm.setErrors({ duplicateName: true });
           return;
         }
-      });
 
-      const tiles = this.registrationForm.controls['tiles'];
-      const tileCount = tiles.length;
-
-      if (tileCount === 0) {
-        this.toast.error("At least one playlist must be created to set up the media player.");
-        return;
-      }
-
-      // Iterate through tiles and playlists to extract text styles
-      tiles.controls.forEach((tile: any, i: number) => {
-
-        const playlists = tile.controls["playlist"];
-  
-        if (!playlists || !playlists.controls || !Array.isArray(playlists.controls) ||  playlists.controls.length === 0) {
-       
-          empty_tile="true";
-          return;
-        }
-       
-
-
-        tile.controls["playlist"].controls.forEach((playlist: any, j: number) => {
-          const textStyle = playlist.controls["textStyle"].value;
-          const formattedTextStyle = {
-            backgroundColor: textStyle.backgroundColor,
-            fontSize: textStyle.fontSize,
-            fontColor: textStyle.fontColor
-          };
-          this.patchTileValue(i, j, formattedTextStyle);
-        });
-      });
-
-      if (!this.registrationForm.valid) {
-        this.toast.error("There was a problem saving your data. Please review your input for any errors.");
-        return;
-      }
-
-      // Create and populate Mediaplayer object
-      let _newPlayer = new mediaPlayerSave();
-      _newPlayer.controllerName = ipAddress;
-      _newPlayer.mediaLoopCount = this.registrationForm.controls["mediaLoopCount"].value;
-      _newPlayer.name = this.registrationForm.controls["name"].value;
-
-      let tileLength = this.registrationForm.controls.tiles.controls.length;
-      let _playerArray :any[]=[];
-      for (var i = 0; i < tileLength; i++) {
-        let _plArray : any[]=[];
-        let _tiles = new MediaPlayerTiles();
-        _tiles.playlistLoopCount = this.registrationForm.controls.tiles.controls[i].controls.playlistLoopCount.value;
-        _tiles.tileNo = this.registrationForm.controls.tiles.controls[i].controls.tileNo.value;
-        let plLength = this.registrationForm.controls.tiles.controls[i].controls.playlist.length;
-        for (var j = 0; j < plLength; j++) {
-          let plData = new mpPlaylist();
-          plData.playOrder = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.playOrder.value;
-          plData.imageTextDuration = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.imageTextDuration.value;
-          plData.mediaId = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.mediaId.value;
-          plData.mediaName = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.mediaName.value;
-          plData.partyId = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.partyId.value;
-          plData.tarrifId = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.tarrifId.value;
-          plData.videoLoopCount = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.videoLoopCount.value;
-          plData.filesize = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.filesize.value;
-          plData.filepath = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.filepath.value;
-          plData.textStyle = {
-            fontSize : this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.textStyle.controls['fontSize'].value,
-            fontColor : this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.textStyle.controls['fontColor'].value,
-            backgroundColor : this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.textStyle.controls['backgroundColor'].value
+        else{      const tiles = this.registrationForm.controls['tiles'];
+          const tileCount = tiles.length;
+    
+          if (tileCount === 0) {
+            this.toast.error("At least one playlist must be created to set up the media player.");
+            return;
           }
-
-          _plArray.push(plData);
-        }
-        _tiles.playlist = _plArray;
-        _playerArray.push(_tiles);
-      }
-      _newPlayer.tiles = _playerArray;
-
-
-      //console.log(_newPlayer);
-      const mediaPlayerData = new Mediaplayer();
-      mediaPlayerData.VmsId = Number.parseInt(this.SelectedControllerId[1]);
-      mediaPlayerData.IpAddress = ipAddress;
-      mediaPlayerData.mediaplayername = mediaPlayerName;
-      mediaPlayerData.status = 0;
-      mediaPlayerData.AuditedBy = "System";
-      mediaPlayerData.IsAudited = true;
-      mediaPlayerData.AuditedTime = new Date();
-      mediaPlayerData.Reason = "Upload Data for new MediaPlayer";
-      mediaPlayerData.CreationTime = new Date();
-      mediaPlayerData.RequestData = JSON.stringify(_newPlayer);
-      mediaPlayerData.RequestType = "/mediaPlayer/createMediaPlayerAndPlaylist";
-
-      // Save media player data
-
+    
+          // Iterate through tiles and playlists to extract text styles
+          tiles.controls.forEach((tile: any, i: number) => {
+    
+            const playlists = tile.controls["playlist"];
       
-const obj = JSON.parse( mediaPlayerData.RequestData);
-
-// Sum all the filesizes
-let totalFileSize = 0;
-
-obj.tiles.forEach((tile:any)=> {
-  tile.playlist.forEach((item :any)=> {
-    if (item.filesize) {
-      totalFileSize += item.filesize;
-    }
-  });
-});
-const totalFileSizeInGB = +(totalFileSize / (1024 ** 3)).toFixed(2);;
-console.log("Total File Size (in GB):", totalFileSizeInGB);
-
-this._CVMSfacade.SpaceCheck(ipAddress).subscribe(data => {
- 
-});
-
-
- if (empty_tile == "true"){
-  this.toast.error("Playlist details should be provided."); 
-  return; 
-}   else{
-      this._CVMSfacade.SaveMediaPlayer(mediaPlayerData).subscribe(data => {
-        if (data === 0) {
-          this.toast.error(`Error occurred while saving data for ${mediaPlayerData.IpAddress}`);
-        } else {
-          this.toast.success(`Saved successfully for ${mediaPlayerData.IpAddress}`);
-          this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-            this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
+            if (!playlists || !playlists.controls || !Array.isArray(playlists.controls) ||  playlists.controls.length === 0) {
+           
+              empty_tile="true";
+              return;
+            }
+           
+    
+    
+            tile.controls["playlist"].controls.forEach((playlist: any, j: number) => {
+              const textStyle = playlist.controls["textStyle"].value;
+              const formattedTextStyle = {
+                backgroundColor: textStyle.backgroundColor,
+                fontSize: textStyle.fontSize,
+                fontColor: textStyle.fontColor
+              };
+              this.patchTileValue(i, j, formattedTextStyle);
+            });
           });
+    
+          if (!this.registrationForm.valid) {
+            this.toast.error("There was a problem saving your data. Please review your input for any errors.");
+            return;
+          }
+    
+          // Create and populate Mediaplayer object
+          let _newPlayer = new mediaPlayerSave();
+          _newPlayer.controllerName = ipAddress;
+          _newPlayer.mediaLoopCount = this.registrationForm.controls["mediaLoopCount"].value;
+          _newPlayer.name = this.registrationForm.controls["name"].value;
+    
+          let tileLength = this.registrationForm.controls.tiles.controls.length;
+          let _playerArray :any[]=[];
+          for (var i = 0; i < tileLength; i++) {
+            let _plArray : any[]=[];
+            let _tiles = new MediaPlayerTiles();
+            _tiles.playlistLoopCount = this.registrationForm.controls.tiles.controls[i].controls.playlistLoopCount.value;
+            _tiles.tileNo = this.registrationForm.controls.tiles.controls[i].controls.tileNo.value;
+            let plLength = this.registrationForm.controls.tiles.controls[i].controls.playlist.length;
+            for (var j = 0; j < plLength; j++) {
+              let plData = new mpPlaylist();
+              plData.playOrder = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.playOrder.value;
+              plData.imageTextDuration = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.imageTextDuration.value;
+              plData.mediaId = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.mediaId.value;
+              plData.mediaName = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.mediaName.value;
+              plData.partyId = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.partyId.value;
+              plData.tarrifId = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.tarrifId.value;
+              plData.videoLoopCount = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.videoLoopCount.value;
+              plData.filesize = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.filesize.value;
+              plData.filepath = this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.filepath.value;
+              plData.textStyle = {
+                fontSize : this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.textStyle.controls['fontSize'].value,
+                fontColor : this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.textStyle.controls['fontColor'].value,
+                backgroundColor : this.registrationForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.textStyle.controls['backgroundColor'].value
+              }
+    
+              _plArray.push(plData);
+            }
+            _tiles.playlist = _plArray;
+            _playerArray.push(_tiles);
+          }
+          _newPlayer.tiles = _playerArray;
+    
+    
+          //console.log(_newPlayer);
+          const mediaPlayerData = new Mediaplayer();
+          mediaPlayerData.VmsId = Number.parseInt(this.SelectedControllerId[1]);
+          mediaPlayerData.IpAddress = ipAddress;
+          mediaPlayerData.mediaplayername = mediaPlayerName;
+          mediaPlayerData.status = 0;
+          mediaPlayerData.AuditedBy = "System";
+          mediaPlayerData.IsAudited = true;
+          mediaPlayerData.AuditedTime = new Date();
+          mediaPlayerData.Reason = "Upload Data for new MediaPlayer";
+          mediaPlayerData.CreationTime = new Date();
+          mediaPlayerData.RequestData = JSON.stringify(_newPlayer);
+          mediaPlayerData.RequestType = "/mediaPlayer/createMediaPlayerAndPlaylist";
+    
+          // Save media player data
+    
+          
+    const obj = JSON.parse( mediaPlayerData.RequestData);
+    
+    // Sum all the filesizes
+    let totalFileSize = 0;
+    
+    obj.tiles.forEach((tile:any)=> {
+      tile.playlist.forEach((item :any)=> {
+        if (item.filesize) {
+          totalFileSize += item.filesize;
         }
-      });}
+      });
+    });
+    const totalFileSizeInGB = +(totalFileSize / (1024 ** 3)).toFixed(2);;
+    console.log("Total File Size (in GB):", totalFileSizeInGB);
+    
+    this._CVMSfacade.SpaceCheck(ipAddress).subscribe(data => {
+     
+    });
+    
+    
+     if (empty_tile == "true"){
+      this.toast.error("Playlist details should be provided."); 
+      return; 
+    }   else{
+          this._CVMSfacade.SaveMediaPlayer(mediaPlayerData).subscribe(data => {
+            if (data === 0) {
+              this.toast.error(`Error occurred while saving data for ${mediaPlayerData.IpAddress}`);
+            } else {
+              this.toast.success(`Saved successfully for ${mediaPlayerData.IpAddress}`);
+              this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
+              });
+            }
+          });}}
+      });
+
+
     } 
    
      else {
