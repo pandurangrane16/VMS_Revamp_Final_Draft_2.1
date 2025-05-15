@@ -409,14 +409,17 @@
                                 </div>
                                 
                                 <div class="col-sm-6 col-md-6 col" >
-                                    <button ngClass="btn btn-success" 
-                                        (click)=" Getting_id()" style="width: 45%" 
-                                        class="form-control">Save
-                                        Details</button>
+                                  
+                            <button ngClass="btn btn-success" 
+                            [disabled]="!this.editForm.valid" (click)=" Getting_id()"
+                            style="width: 45%" class="form-control">Save
+                            Details</button>
                                 </div>
                             </div>
 
 
+
+                       
 
 
 

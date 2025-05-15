@@ -7,8 +7,9 @@ import { ActivatedRoute } from '@angular/router';
 import { AdminFacadeService } from 'src/app/facade/facade_services/admin-facade.service';
 import { CVMSMediaFacadeServiceService } from 'src/app/facade/facade_services/cvmsmedia-facade-service.service';
 import { MediaFacadeService } from 'src/app/facade/facade_services/media-facade.service';
-import { Mediaplayer } from 'src/app/models/vcms/mediaplayer';
+
 import { PlaylistMedia, SelectedMediaVCMS } from 'src/app/models/vcms/selectedMedia';
+import { Mediaplayer, mediaPlayerSave, MediaPlayerTiles, mpPlaylist } from 'src/app/models/vcms/mediaplayer';
 import { CVMSMediaModalComponent } from '../cvmsmedia-modal/cvmsmedia-modal.component';
 import { getErrorMsg } from 'src/app/utils/utils';
 import { ToastrService } from 'ngx-toastr';
@@ -355,6 +356,7 @@ export class MediaPlayerEditComponent {
         if (data === 1) {
           this.toast.error("Media Player Name already exists in the System.");
           this.editForm.setErrors({ duplicateName: true });
+          return;
         }
     else{
       const tiles = this.editForm.controls['tiles'];
@@ -382,6 +384,54 @@ export class MediaPlayerEditComponent {
         return;
       }
 
+
+      // Create and populate Mediaplayer obje
+                let _newPlayer = new mediaPlayerSave();
+                _newPlayer.controllerName = ipAddress;
+                _newPlayer.mediaLoopCount = this.editForm.controls["mediaLoopCount"].value;
+                _newPlayer.name = this.editForm.controls["name"].value;
+          
+                let tileLength = this.editForm.controls.tiles.controls.length;
+                let _playerArray :any[]=[];
+                for (var i = 0; i < tileLength; i++) {
+                  let _plArray : any[]=[];
+                  let _tiles = new MediaPlayerTiles();
+                  _tiles.playlistLoopCount = this.editForm.controls.tiles.controls[i].controls.playlistLoopCount.value;
+                  _tiles.tileNo = this.editForm.controls.tiles.controls[i].controls.tileNo.value;
+                  let plLength = this.editForm.controls.tiles.controls[i].controls.playlist.length;
+                  for (var j = 0; j < plLength; j++) {
+                    let plData = new mpPlaylist();
+                    plData.playOrder = this.editForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.playOrder.value;
+                    plData.imageTextDuration = this.editForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.imageTextDuration.value;
+                    plData.mediaId = this.editForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.mediaId.value;
+                    plData.mediaName = this.editForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.mediaName.value;
+                    plData.partyId = this.editForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.partyId.value;
+                    plData.tarrifId = this.editForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.tarrifId.value;
+                    plData.videoLoopCount = this.editForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.videoLoopCount.value;
+                   // plData.filesize = this.editForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.filesize.value;
+                    plData.filepath = this.editForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.filepath.value;
+                    plData.textStyle = {
+                      fontSize : this.editForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.textStyle.controls['fontSize'].value,
+                      fontColor : this.editForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.textStyle.controls['fontColor'].value,
+                      backgroundColor : this.editForm.controls.tiles.controls[i].controls.playlist.controls[j].controls.textStyle.controls['backgroundColor'].value
+                    }
+          
+                    _plArray.push(plData);
+                  }
+                  _tiles.playlist = _plArray;
+                  _playerArray.push(_tiles);
+                }
+                _newPlayer.tiles = _playerArray;
+
+
+
+
+
+
+
+
+
+
       // Create and populate Mediaplayer object
       const mediaPlayerData = new Mediaplayer();
       mediaPlayerData.VmsId = this.vmsid;
@@ -393,7 +443,7 @@ export class MediaPlayerEditComponent {
       mediaPlayerData.AuditedTime = new Date();
       mediaPlayerData.Reason = "Upload Data for new MediaPlayer";
       mediaPlayerData.CreationTime = new Date();
-      mediaPlayerData.RequestData = JSON.stringify(this.editForm.value);
+      mediaPlayerData.RequestData = JSON.stringify(_newPlayer);
       mediaPlayerData.RequestType = "/mediaPlayer/createMediaPlayerAndPlaylist";
 
 
@@ -587,8 +637,8 @@ export class MediaPlayerEditComponent {
     let len = this.editForm.controls['tiles'].length;
     return this.fb.group({
       tileNo: [(len+1), [Validators.required, Validators.pattern("[1-999][1-999]*$")]],
-      isPlayOrder: [0],
-      duration: [0],
+      isPlayOrder: [0 , [Validators.required]],
+      duration: [0 , [Validators.required]],
       mediaLoopCount: [0],
       partyIdCommon: [''],
       tarrifIdCommon: [''],
@@ -703,6 +753,14 @@ export class MediaPlayerEditComponent {
     }
   }
   checkValue(event: any) {
+      
+    const val = event.target.value;
+
+    if (val === '') {
+     
+      return;
+    }
+
     if (event.target.value <= 0) {
       event.target.value = 1;
     }
@@ -738,6 +796,7 @@ export class MediaPlayerEditComponent {
         _plMedia.mediaName = this.selectedMediaId[0][i].mediaDetails.displayname;
         _plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
         _plMedia.videoLoopCount = this.selectedMediaId[0][i].mediaDetails.videoLoopCount;
+        _plMedia.textStyle = _textStyle;
         if (this.selectedMediaId[0][i].mediaDetails.duration != null) {
           _plMedia.imageTextDuration = this.selectedMediaId[0][i].mediaDetails.duration;
 
@@ -751,8 +810,20 @@ export class MediaPlayerEditComponent {
         //console.log("text", this.selectedMediaId[0])
         //_plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
         //_plMedia.videoLoopCount = this.selectedMediaId[0][i].mediaDetails.videoLoopCount;
+        if (this.selectedMediaId[0][i].fileType == "TEXT") {
+          let _textStyle2 = {
+            "fontSize": 20,
+            "fontColor": "#ffffff",
+            "backgroundColor": "#000000"
+          }
+          _plMedia.textStyle = _textStyle2;
+        }
+        else{
+          _plMedia.textStyle = _textStyle;
+        }
+
       }
-      _plMedia.textStyle = _textStyle;
+     
       _plMediaList.push(_plMedia);
 
     }
@@ -799,9 +870,9 @@ export class MediaPlayerEditComponent {
       mediaName: [ele.mediaName, ''],
       videoLoopCount: [ele.videoLoopCount, ''],
       textStyle: this.fb.group({
-        fontSize: [0],
-        fontColor: [''],
-        backgroundColor: [''],
+        fontSize: [ele.textStyle?.fontSize ?? 0],
+        fontColor: [ele.textStyle?.fontColor ?? ''],
+        backgroundColor: [ele.textStyle?.backgroundColor ?? '']
       }),
     });
   }
@@ -819,16 +890,16 @@ export class MediaPlayerEditComponent {
 
       //imageTextDuration: [ele.imageTextDuration, [Validators.required]],
       imageTextDuration: [{ value: ele.imageTextDuration, disabled: video }, [Validators.required]],
-
+      filepath :[ele.filepath,''],
       mediaId: [ele.mediaId, ''],
       mediaName: [ele.mediaName, ''],
       videoLoopCount: [ele.videoLoopCount],
       partyId: ['', Validators.required],
       tarrifId: ['', Validators.required],
       textStyle: this.fb.group({
-        fontSize: [0],
-        fontColor: [''],
-        backgroundColor: ['']
+        fontSize: [ele.textStyle?.fontSize ?? 0],
+        fontColor: [ele.textStyle?.fontColor ?? ''],
+        backgroundColor: [ele.textStyle?.backgroundColor ?? '']
       }),
     }
     );

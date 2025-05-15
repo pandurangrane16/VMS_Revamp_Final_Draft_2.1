@@ -125,20 +125,22 @@ export class MediaPlayerCvmsComponent {
     let len = this.registrationForm.controls['tiles'].length;
     return this.fb.group({
       tileNo: [(len + 1), [Validators.required, Validators.pattern("[1-999][1-999]*$")]],
-      isPlayOrder: [0],
-      duration: [0],
+      isPlayOrder: [0 , [Validators.required]],
+      duration: [0 , [Validators.required]],
       mediaLoopCount: [0],
       partyIdCommon: [''],
       tarrifIdCommon: [''],
       fontSizeCommon: [0],
       //playlistLoopCount: ['', ''],
-      playlistLoopCount: ['', [ Validators.pattern("[0-9][0-9]*$")]],
+      //playlistLoopCount: ['', [ Validators.pattern("[0-9][0-9]*$")]],
+      playlistLoopCount: ['', [Validators.pattern(/^\d*$/)]],
       colorFont: [''],
       colorBg: [''],
       playlist: this.fb.array([])
     });
   }
   createPlaylistItem(ele: any, cnt: number, video: boolean): FormGroup {
+    console.log(ele);
     return this.fb.group({
       playOrder: [{ value: cnt, disabled: true }, [Validators.required]],
       imageTextDuration: [{ value: ele.imageTextDuration, disabled: video }, [Validators.required]],
@@ -150,9 +152,9 @@ export class MediaPlayerCvmsComponent {
       partyId: ['', Validators.required],
       tarrifId: ['', Validators.required],
       textStyle: this.fb.group({
-        fontSize: [0],
-        fontColor: [''],
-        backgroundColor: ['']
+        fontSize: [ele.textStyle?.fontSize ?? 0],
+        fontColor: [ele.textStyle?.fontColor ?? ''],
+        backgroundColor: [ele.textStyle?.backgroundColor ?? '']
       }),
     }
     );
@@ -309,10 +311,13 @@ export class MediaPlayerCvmsComponent {
         _plMedia.mediaName = this.selectedMediaId[0][i].mediaDetails.displayname;
         _plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
         _plMedia.videoLoopCount = this.selectedMediaId[0][i].mediaDetails.videoLoopCount;
+        _plMedia.textStyle = _textStyle;
         if (this.selectedMediaId[0][i].mediaDetails.duration != null) {
           _plMedia.imageTextDuration = this.selectedMediaId[0][i].mediaDetails.duration;
 
         }
+       
+
         // console.log("video", this.selectedMediaId[0])
       }
       else {
@@ -322,8 +327,21 @@ export class MediaPlayerCvmsComponent {
         //console.log("text", this.selectedMediaId[0])
         _plMedia.playOrder = 0;
         //_plMedia.videoLoopCount = this.selectedMediaId[0][i].mediaDetails.videoLoopCount;
+        if (this.selectedMediaId[0][i].fileType == "TEXT") {
+          let _textStyle2 = {
+            "fontSize": 20,
+            "fontColor": "#ffffff",
+            "backgroundColor": "#000000"
+          }
+          _plMedia.textStyle = _textStyle2;
+        }
+        else{
+          _plMedia.textStyle = _textStyle;
+        }
       }
-      _plMedia.textStyle = _textStyle;
+    
+      
+     
       _plMediaList.push(_plMedia);
 
     }
@@ -461,7 +479,9 @@ export class MediaPlayerCvmsComponent {
           return;
         }
 
-        else{      const tiles = this.registrationForm.controls['tiles'];
+        else
+        {      
+          const tiles = this.registrationForm.controls['tiles'];
           const tileCount = tiles.length;
     
           if (tileCount === 0) {
@@ -687,10 +707,18 @@ export class MediaPlayerCvmsComponent {
   }
 
   checkValue(event: any) {
+
+    const val = event.target.value;
+
+    if (val === '') {
+     
+      return;
+    }
     if (event.target.value <= 0) {
       event.target.value = 1;
     }
   }
+
   noLeadingEndingWhitespace(control: FormControl) {
 
     if (control.value && control.value.trimStart().length !== control.value.length) {
