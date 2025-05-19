@@ -347,22 +347,25 @@ export class MediaPlayerEditComponent {
   }
   OnSavePlaylistDetails_new(id: number): void {
     this.validateFields();
-    if (this.isSeqValidate) {
+    if (this.isSeqValidate) 
+      
+    {
       const ipAddress = this.editForm.controls["SelectedControllerId"].value;
       const mediaPlayerName = this.editForm.controls["name"].value;
 
       // Check for duplicate media player name
-      this._CVMSfacade.CheckDuplicateMediaPlayerName(mediaPlayerName, ipAddress).subscribe(data => {
-        if (data === 1) {
-          this.toast.error("Media Player Name already exists in the System.");
-          this.editForm.setErrors({ duplicateName: true });
-          return;
-        }
-    else{
+      // this._CVMSfacade.CheckDuplicateMediaPlayerName(mediaPlayerName, ipAddress).subscribe(data => {
+      //   if (data === 1) {
+      //     this.toast.error("Media Player Name already exists in the System.");
+      //     this.editForm.setErrors({ duplicateName: true });
+      //     return;
+      //   }
+    
       const tiles = this.editForm.controls['tiles'];
       const tileCount = tiles.length;
 
-      if (tileCount === 0) {
+      if (tileCount === 0) 
+      {
         this.toast.error("At least one playlist must be created to set up the media player.");
       }
 
@@ -445,30 +448,102 @@ export class MediaPlayerEditComponent {
       mediaPlayerData.CreationTime = new Date();
       mediaPlayerData.RequestData = JSON.stringify(_newPlayer);
       mediaPlayerData.RequestType = "/mediaPlayer/createMediaPlayerAndPlaylist";
+      mediaPlayerData.id=this.mediaId;
 
+      // sending a copy
+      let body = {
+        "searchItem": "",
+        "pageSize": 0,
+        "currentPage": 0,
+        "startId": 0,
+        "cachekey": "string"
+      }
+      this._CVMSfacade.getMediaPlayerById(this.mediaId, body).subscribe(response => {
+  
+        const data = response.data[0];
+  
+        if (data) 
+          
+        {
+          
+          let data2=JSON.parse(JSON.stringify(data));
+          let requestDataObj = JSON.parse(data.requestData);
+          let responseid=data.responseId
+          let ipadd=data.ipAddress
+          requestDataObj.name = requestDataObj.name + "_01";
+          data.requestData = JSON.stringify(requestDataObj);
+          delete data.id;
 
+          this._CVMSfacade.SaveMediaPlayer(data).subscribe(data => {
+          if (data === 0) 
+            {
+              this.toast.error(`Error occurred while creating copy for ${mediaPlayerData.IpAddress}`);
+              return;
+            } 
+          else
+            {  
+               this._CVMSfacade.DeleteMediaPlayerFromController(responseid,ipadd).subscribe(data => {
+               if (data === 1) 
+               {  
+                let requestDataObj = JSON.parse(data2.requestData);
+                let name = requestDataObj.name + "_01";
+                let requestDataObj2= {"mediaPlayerId":responseid,"mediaPlayerName":name}              
+                data2.requestData = JSON.stringify(requestDataObj2);
+                delete data2.id;
+                data2.RequestType="/mediaPlayer/deleteMediaPlayer";
 
-      // Save media player data
-      this._CVMSfacade.SaveMediaPlayer(mediaPlayerData).subscribe(data => {
-        if (data === 0) {
-          this.toast.error(`Error occurred while saving data for ${mediaPlayerData.IpAddress}`);
-        } else {
-          this.toast.success(`Saved successfully for ${mediaPlayerData.IpAddress}`);
-          this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-            this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);
-          });
+                this._CVMSfacade.SaveMediaPlayer(data2).subscribe(data => {
+                  if (data === 0) 
+                  {
+                    this.toast.error(`Player deleted : no request for delete in table.`);
+                    return;
+                  } 
+                  else
+                  {
+                    this._CVMSfacade.UpdateMediaPlayer(mediaPlayerData).subscribe(data => {
+                      if (data === 0) 
+                      {
+                        this.toast.error(`Error occurred while updating data for ${mediaPlayerData.IpAddress}`);
+                        return;
+                      } 
+                      else 
+                      {
+                        this.toast.success(`Saved successfully for ${mediaPlayerData.IpAddress}`);
+                        this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                        this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);});
+                      }
+                      });
+                  } 
+                       
+          
+          
+                      });
+                }
+                else
+                {
+                  this.toast.error(`Error occured in deleting the original player from the controller`);
+                  return;
+
+                }
+                    
+                    });
+            }
+                });
+               
+  
+        } 
+        else 
+        {
+          this.toast.error('No data found for the selected media player.');
         }
-      });
-    
-    }
-
-
-
-        
+      }, error => {
+        this.toast.error('Error fetching data.');
       });
 
+
     }
-    else {
+    else 
+    {
       this.toast.error("Invalid sequence available in tiles");
     }
 

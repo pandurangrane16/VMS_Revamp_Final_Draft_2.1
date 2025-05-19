@@ -15,6 +15,15 @@ export class MediaplayerserviceService {
   getUploadMediaDetails(inputReq :any) {
     return this._httpService._postMethod(inputReq,'Vcms_API/api/Mediaplayer/GetMediaPlayer');
   }
+
+ 
+
+ 
+  DeleteMediaPlayerFromController(id: any,ipadd:any) {
+
+    return this._httpService._getMethod('Vcms_API/api/Mediaplayer/DeleteMediaPlayerFromController?_mdPlyerId='+id+'&_ipaddres='+ ipadd);
+  }
+
   SaveMedia(_data: any) {
 
     return this._httpService._postMethod(_data, 'Vcms_API/api/Mediaplayer/SaveMediaPlayerMaster');

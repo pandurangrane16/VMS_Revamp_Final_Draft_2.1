@@ -392,30 +392,7 @@ export class MediaschedulerComponent {
   toggleCustomize() {
     this.showCustomize = !this.showCustomize;
 
-    // if (this.showCustomize) {
-    // // Add validators when Customize is shown
-    // this.form.get('selectedMinutes')?.setValidators([Validators.required]);
-    // this.form.get('startHour')?.setValidators([Validators.required]);
-    // this.form.get('endHour')?.setValidators([Validators.required]);
-    // this.form.get('Duration')?.setValidators([Validators.required, Validators.min(1)]);
-    // this.form.get('weekdaysselect')?.setValidators([Validators.required]);
-    // this.form.get('cronexpression')?.setValidators([Validators.required]);
-    // }
-    //   else {
-    //   // Remove validators when hidden
-    //   this.form.get('selectedMinutes')?.clearValidators();
-    //   this.form.get('startHour')?.clearValidators();
-    //   this.form.get('endHour')?.clearValidators();
-    //   this.form.get('Duration')?.clearValidators();
-    //   this.form.get('weekdaysselect')?.setValidators([Validators.required]);
-    //   this.form.get('cronexpression')?.setValidators([Validators.required]);
-
-
-
-    // }
-
-    // // Update the form's validity
-    // this.form.updateValueAndValidity();
+   
   }
 
   OnSaveDetails() {
@@ -528,7 +505,7 @@ export class MediaschedulerComponent {
         "name": this.form.controls["schedulename"].value,
         "fromDate": jsonfromdate,
         "toDate": jsontodate,
-        "cronExpression": this.cronExpression,
+        "cronExpression": this.form.controls["cronexpression"].value,
         "playerDuration": this.form.controls["Duration"].value,
 
       }

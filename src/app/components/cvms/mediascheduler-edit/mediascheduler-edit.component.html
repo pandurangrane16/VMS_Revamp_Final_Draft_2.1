@@ -12,7 +12,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="mb-4 form-group">
-                                <label class="form-label">Select Controller</label>
+                                <label class="form-label lable-bold">Select Controller</label>
                                 <input
                                 type="text" formControlName="SelectedControllerId"
                                 class="form-control form-control-sm" 
@@ -100,12 +100,37 @@
                                 (focusout)="ValidateTime()" />
 
                         </div>
+  <!-- Customize button -->
+                        <div class="row mb-3">
+                            <div class="col-md-3 d-flex align-items-center ms-5">
+                                <input type="checkbox" id="customizeToggle" [(ngModel)]="showCustomize"
+                                  class="form-check-input me-2" />
+                                <label for="customizeToggle" class="form-check-label">
+                                    Customize
+                                </label>
+                            </div>
+                        </div>
 
-                       <!-- Minutes Dropdown -->
-                      
-                       <div *ngIf="showScheduleOptions">
+                       <div *ngIf="showCustomize">
+                       
+                        
+                       
 
-                       <div class="row mb-2">
+
+                    
+
+
+                         <!-- DURATION -->
+                         <div class="row mb-2">
+                            <div class="col-md-1"></div>
+                            <label class="col-md-2 text-right mt-2">Duration in Minutes:</label>
+                            <div class="col-md-4">
+                                <input type="number" class="form-control" formControlName="Duration"
+                                    placeholder="Enter duration in minutes" min="1" />
+                            </div>
+                        </div>
+                        <!-- Minutes Dropdown -->
+                       <!-- <div class="row mb-2">
                         <div class="col-md-1"></div>
                         <label class="col-md-2 text-right mt-2">Minutes: </label>
                         <div class="col-md-4">
@@ -114,44 +139,57 @@
                                 <option *ngFor="let min of minutesOptions" [value]="min.value">{{ min.display }}</option>
                             </select>
                         </div>
-                    </div>
+                    </div> -->
 
-<!-- Hours Dropdown -->
-<div class="row mb-2">
-    <div class="col-md-1"></div>
-    <label class="col-md-2 text-right mt-2">Hour(s): </label>
-    <div class="col-md-4">
-        <div class="input-group">
-            <select formControlName="startHour" class="form-control" (change)="generateCron()" [(ngModel)]="startHour">
-                <option value="*">-- Every Hour (*) --</option>
-                <option *ngFor="let hr of hoursOptions" [value]="hr.value">{{ hr.display }}</option>
-            </select>
-            <span class="input-group-text">to</span>
-            <select formControlName="endHour" class="form-control"   (change)="generateCron()" [(ngModel)]="endHour">
-                <option value="*">-- Every Hour (*) --</option>
-                <option *ngFor="let hr of hoursOptions" [value]="hr.value">{{ hr.display }}</option>
-            </select>
-        </div>
-    </div>
-</div>
-<!-- Days of the Week Dropdown -->
+                      <!-- Hours Dropdown -->
+                      <!-- <div class="row mb-2">
+                        <div class="col-md-1"></div>
+                        <label class="col-md-2 text-right mt-2">Hour(s): </label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <select formControlName="startHour" class="form-control"
+                                    (change)="generateCron()" [(ngModel)]="startHour">
+                                     <option value="*">-- Every Hour (*) --</option> 
+                                    <option *ngFor="let hr of hoursOptions" [value]="hr.value">{{ hr.display }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div> -->
 
-<div class="row mb-2">
+
+  <!-- Days of the Week Dropdown -->
+
+  <!-- <div class="row mb-2">
     <div class="col-md-1"></div>
-  
+
     <label class="col-md-2 text-right mt-2">Day(s) of Week: </label>
     <div class="col-md-4">
-        <cm-multiselect-auto-complt 
-            [inputData]="weekdaysselect" 
-            
-            [dropdownSettings]="dropdownSettingsVms" 
+        <cm-multiselect-auto-complt [inputData]="weekdaysselect"
+            [dropdownSettings]="dropdownSettingsVms"
             (selectedItem)="getSelectedDays($event, 1); generateCron()"
             (deSelectedItem)="getSelectedDays($event, 0); generateCron()"
-            (selectedAllItems)="getSelectedDays($event, 1); generateCron()" 
+            (selectedAllItems)="getSelectedDays($event, 1); generateCron()"
             (deSelectedAllItems)="getSelectedDays($event, 0); generateCron()">>
         </cm-multiselect-auto-complt>
     </div>
+</div> -->
+<!-- cron display -->
+<div class="row mt-5 justify-content-start">
+    <div class="col-md-5 offset-md-3">
+        <div class="card shadow-lg border-success">
+            <div class="card-body text-center">
+                <h5 class="card-title text-success">Generated Cron Expression</h5>
+                <input type="text" readonly="true" formControlName="cronexpression"
+                    class="card-text font-weight-bold text-dark text-center w-100" />
+                <p class="card-text font-weight-bold text-dark">{{ humanReadableCron }}</p>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
 
  <!-- <p>Selected Days: {{ selectedDays | json }}</p>  -->
 <!-- <div class="row mt-2">
@@ -163,20 +201,22 @@
 </div>
         
   <!-- Display Generated Cron in a Styled Block -->
-  <div class="row mt-5 justify-content-start">
+  <!-- <div class="row mt-5 justify-content-start">
     <div class="col-md-5 offset-md-3"> 
       <div class="card shadow-lg border-success">
         <div class="card-body text-center">
-          <!-- <h5 class="card-title text-success">Generated Cron Expression</h5>
-          <p class="card-text font-weight-bold text-dark">{{ cronExpression }}</p> -->
+           <h5 class="card-title text-success">Generated Cron Expression</h5>
+          <p class="card-text font-weight-bold text-dark">{{ cronExpression }}</p> 
           <p class="card-text font-weight-bold text-dark">{{ humanReadableCron }}</p>
         </div>
       </div>
     </div>
-  </div>
- <div *ngIf="showScheduleOptions">
+  </div> -->
+
+
+ <!-- <div *ngIf="showScheduleOptions">
   <div class="row">
-    <div class="mb-3 col">
+     <div class="mb-3 col">
      
         <button [disabled]="!this.form.valid" ngClass="btn btn-secondary" (click)="Getting_id()"
             style="width: 20%;" formControlName="SaveDetails" class="form-control">Save
@@ -184,11 +224,11 @@
             <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
         </button>
 
-    </div>
+    </div> 
 </div>
-</div>
+</div> -->
   
-<div class="row mt-1">
+<!-- <div class="row mt-1">
     <div class="col-md-7 d-flex justify-content-end"> 
         <button class="btn px-4 py-2" 
                 [ngClass]="showScheduleOptions ? 'btn-danger' : 'btn-success'" 
@@ -196,7 +236,7 @@
             {{ showScheduleOptions ? 'Cancel' : 'Change Schedule' }}
         </button>
     </div>
-</div>
+</div> -->
 
                 </form>
             

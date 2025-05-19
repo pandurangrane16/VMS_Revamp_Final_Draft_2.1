@@ -75,6 +75,8 @@ daysOptions:any =[];
   currentTile: number = -1;
   mediauploadtype: string;
   _inputVmsData: any;
+  Duration: any;
+
   MediaName: string;
   _inputPlayerData: any = [];
   listOfMedialist: any = [];
@@ -95,6 +97,7 @@ daysOptions:any =[];
     startHour: string='*'; // Default start hour
     endHour: string ='*'; // Default end hour
     showScheduleOptions = false;
+    showCustomize: boolean = false;
    
   
     // Generated Cron Expression
@@ -144,6 +147,7 @@ daysOptions:any =[];
           startHour: ['', Validators.required],
           endHour: ['', Validators.required],
           weekdaysselect: [[], Validators.required],
+          Duration: [''],
         });
       }
 
@@ -170,6 +174,11 @@ daysOptions:any =[];
   }
   onDaysChange(event: any) {
     this.selectedDays = Array.from(event.target.selectedOptions).map((option: any) => option.value);
+  }
+  toggleCustomize() {
+    this.showCustomize = !this.showCustomize;
+
+   
   }
   BacktoList() {
     this._router.navigate(['cvms/MediaPlayerSchedulerList']);
@@ -557,6 +566,8 @@ daysOptions:any =[];
 
       if (response[0]) {
 
+      
+
         this.populateFormWithData(response[0]);  // Populate the form with fetched data
 
       } else {
@@ -582,6 +593,11 @@ daysOptions:any =[];
   
   populateFormWithData(data: any): void {
     
+    const requestData2 = JSON.parse(data.requestData);
+    if (requestData2.cronExpression != null && requestData2.cronExpression.trim() !== '') {
+      this.showCustomize = true;
+    }
+
     this.daysOptions = this.weekDays.map((day, i) => ({
       value: i.toString(),
       displayName: day
@@ -612,6 +628,8 @@ daysOptions:any =[];
       this.Mpn = requestData.mediaPlayerName;
       this.getMediaPlayerList();
       console.log("first ",this.form.controls)
+
+
       this.form.patchValue({
 
 
@@ -624,6 +642,8 @@ daysOptions:any =[];
       globalToDt: this.convertToDateObject(requestData.toDate),
       globalToTm: this.convertToTimeObject(requestData.toDate),
       cronexpression:requestData.cronExpression,
+      Duration:requestData.playerDuration,
+      
       
     });
     console.log("after",this.form.controls)

@@ -22,6 +22,14 @@ export class CVMSMediaFacadeServiceService {
     return this._mediaplayer.getUploadMediaDetails(inputReq);
   }
 
+ 
+
+  
+  DeleteMediaPlayerFromController(id: any,ipadd:any){   
+    return this._mediaplayer.DeleteMediaPlayerFromController(id,ipadd);
+  }
+  
+
   SaveMediaPlayer(data:any){   
     return this._mediaplayer.SaveMedia(data);
   }
