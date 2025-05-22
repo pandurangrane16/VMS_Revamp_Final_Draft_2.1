@@ -104,6 +104,8 @@ import { MediaUploadcvmsComponent } from './components/cvms/media-uploadcvms/med
 import { MediaschedulerComponent } from './components/cvms/mediascheduler/mediascheduler.component';
 import { CVMSMediaModalComponent } from './components/cvms/cvmsmedia-modal/cvmsmedia-modal.component';
 import { MediaUploadCvmsListComponent } from './components/cvms/media-upload-cvms-list/media-upload-cvms-list.component';
+
+import { AirtimeReportCvmsComponent } from './components/cvms/cvms-airtime-report/cvms-airtime-report.component';
 import { EmergencyPlayCvmsComponent } from './components/cvms/emergency-play-cvms/emergency-play-cvms.component';
 import { MediaPlayerCvmsComponent } from './components/cvms/media-player-cvms/media-player-cvms.component';
 import { MediaplayerlistComponent } from './components/cvms/mediaplayerlist/mediaplayerlist.component';
@@ -187,6 +189,7 @@ const config: SocketIoConfig = { url: environment.Socket_URL, options: {} };
     MediaschedulerComponent,
     CVMSMediaModalComponent,
     MediaUploadCvmsListComponent,
+    AirtimeReportCvmsComponent,
     EmergencyPlayCvmsComponent,
     MediaPlayerCvmsComponent,
     MediaplayerlistComponent,

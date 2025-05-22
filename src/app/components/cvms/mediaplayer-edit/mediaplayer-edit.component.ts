@@ -481,52 +481,63 @@ export class MediaPlayerEditComponent {
               return;
             } 
           else
-            {  
-               this._CVMSfacade.DeleteMediaPlayerFromController(responseid,ipadd).subscribe(data => {
-               if (data === 1) 
-               {  
-                let requestDataObj = JSON.parse(data2.requestData);
-                let name = requestDataObj.name + "_01";
-                let requestDataObj2= {"mediaPlayerId":responseid,"mediaPlayerName":name}              
-                data2.requestData = JSON.stringify(requestDataObj2);
-                delete data2.id;
-                data2.RequestType="/mediaPlayer/deleteMediaPlayer";
+            {   
+              let requestDataObj = JSON.parse(data2.requestData);
+              let name = requestDataObj.name + "_01";
+              let requestDataObj2= {"mediaPlayerId":responseid,"mediaPlayerName":name}              
+              data2.requestData = JSON.stringify(requestDataObj2);
+              delete data2.id;
+              data2.RequestType="/mediaPlayer/deleteMediaPlayer";
 
-                this._CVMSfacade.SaveMediaPlayer(data2).subscribe(data => {
-                  if (data === 0) 
-                  {
-                    this.toast.error(`Player deleted : no request for delete in table.`);
-                    return;
-                  } 
-                  else
-                  {
-                    this._CVMSfacade.UpdateMediaPlayer(mediaPlayerData).subscribe(data => {
-                      if (data === 0) 
-                      {
-                        this.toast.error(`Error occurred while updating data for ${mediaPlayerData.IpAddress}`);
-                        return;
-                      } 
-                      else 
-                      {
-                        this.toast.success(`Saved successfully for ${mediaPlayerData.IpAddress}`);
-                        this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-                        this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);});
-                      }
-                      });
-                  } 
-                       
-          
-          
-                      });
-                }
+              this._CVMSfacade.SaveMediaPlayer(data2).subscribe(data => {
+                if (data === 0) 
+                {
+                  this.toast.error(`copy entry: SAVED , delete entry: NOT_SAVED`);
+                  return;
+                } 
                 else
                 {
-                  this.toast.error(`Error occured in deleting the original player from the controller`);
-                  return;
+                  
+                this._CVMSfacade.DeleteMediaPlayerFromController(responseid,ipadd).subscribe(data => {
+                if (data === 1) 
+                {  
 
-                }
-                    
+                  this._CVMSfacade.UpdateMediaPlayer(mediaPlayerData).subscribe(data => {
+                    if (data === 0) 
+                    {
+                      this.toast.error(`Error occurred while updating data for ${mediaPlayerData.IpAddress}`);
+                      return;
+                    } 
+                    else 
+                    {
+                      this.toast.success(`Saved successfully for ${mediaPlayerData.IpAddress}`);
+                      this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                      this._router.navigate(['cvms/createMediaPlayerAndPlaylist']);});
+                    }
                     });
+               
+ 
+               
+                 }
+                 else
+                 {
+                   this.toast.error(`Error occured in deleting:`+data);
+                   return;
+ 
+                 }
+                     
+                     });
+                 
+                
+                } 
+                     
+        
+        
+                    }); 
+
+
+
+             
             }
                 });
                

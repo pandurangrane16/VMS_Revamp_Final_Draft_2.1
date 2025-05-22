@@ -51,6 +51,7 @@ import { MediaSchedulerEditComponent } from './components/cvms/mediascheduler-ed
 import { MediareportComponent } from './components/cvms/mediareport/mediareport.component';
 import { AiredReportComponent } from './components/reports/aired-report/aired-report.component';
 import { FontUploadComponent } from './components/cvms/font-upload/font-upload.component';
+import {AirtimeReportCvmsComponent} from './components/cvms/cvms-airtime-report/cvms-airtime-report.component';
 const routes: Routes = [
   {
     path: "",
@@ -288,6 +289,12 @@ const routes: Routes = [
     path: "cvms/mediareport", 
     component: MediareportComponent,
     data: { title: 'Media Report' },
+    canActivate: [AuthGuradService]
+  },
+  { 
+    path: "cvms/airtimereport", 
+    component: AirtimeReportCvmsComponent,
+    data: { title: 'Airtime Report' },
     canActivate: [AuthGuradService]
   },
   { 

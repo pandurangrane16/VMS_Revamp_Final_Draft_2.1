@@ -6,4 +6,5 @@ export class PlaylistRequest{
     reportType:string;
     startId : number;
     PageSize:number;
+    ControllerType:string;
 }
