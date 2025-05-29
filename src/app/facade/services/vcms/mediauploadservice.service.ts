@@ -16,6 +16,10 @@ export class MediauploadserviceService {
     //return this._httpService._getMethod('Vcms_API/api/MediaUpload/GetVMSMasterUploadDetails_new');
     return this._httpService._postMethod(inputReq,'Vcms_API/api/MediaUpload/GetMediaUploadPaging?type=' + type);
   }
+
+  GetFilteredList(inputReq :any,type:any) {
+    return this._httpService._postMethod(inputReq,'Vcms_API/api/MediaUpload/GetFilteredList?type='+type);
+  }
   getMediauploadDetails(inputReq: any, type: number) {
      return this._httpService._postMethod(inputReq, 'Vcms_API/api/MediaUpload/GetDetails?type=' + type);
   }

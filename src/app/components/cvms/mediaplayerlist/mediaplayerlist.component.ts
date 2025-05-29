@@ -35,8 +35,14 @@ export class MediaplayerlistComponent {
   isSearch: boolean = false;
   closeResult!: string;
   _request: any = new InputRequest();
+  headerArr: any[] = [];
+  dropdownOptions:any[] = [];
+
+
+ filter2: boolean = false;
    
-  headerArr = [      
+  buildHeader(){
+    this.headerArr = [      
       { "Head": "Controller IP", "FieldName": "ipAddress", "type": "string" },      
       { "Head": "Media Player Name", "FieldName": "name", "type": "string" },   
       { "Head": "Media Player Status", "FieldName": "statusdesc", "type": "string" },
@@ -44,6 +50,19 @@ export class MediaplayerlistComponent {
       { "Head": "Created Date", "FieldName": "creationTime", "type": "string" },
       { "Head": "Action", "FieldName": "actions", "type": "button" },
     ];
+
+    if (this.filter2) {
+
+      this.headerArr = this.headerArr.filter(header => header.Head !== "Action");
+    
+      this.headerArr.push(
+        { "Head": "Request Type", "FieldName": "requesttype2", "type": "string" },
+        { "Head": "Action", "FieldName": "actions", "type": "button" },
+      );
+    
+      }
+  }
+ 
     listOfMedialist:any=[];
    
   
@@ -62,7 +81,12 @@ export class MediaplayerlistComponent {
       this.tabno = status;
       this.searchText = "";
       this.isSearch = false;
-      this.getMediaDetails();
+      if(this.filter2){
+        this.getFilteredList();
+      }
+      else{
+        this.getMediaDetails();
+      }
     }
   
     //Common Functionalities
@@ -70,7 +94,12 @@ export class MediaplayerlistComponent {
       this._request.pageSize =Number(this.recordPerPage);
       this.pager = pager;
       this.startId = (this.pager - 1) * Number(this.recordPerPage);
-      this.getMediaDetails();
+      if(this.filter2){
+        this.getFilteredList();
+      }
+      else{
+        this.getMediaDetails();
+      }
     }
   
     onRecordPageChange(recordPerPage: number) {
@@ -80,13 +109,23 @@ export class MediaplayerlistComponent {
       this.recordPerPage = Number(recordPerPage);
       this.startId = 0;
       this.pager = 1;
-      this.getMediaDetails();
+      if(this.filter2){
+        this.getFilteredList();
+      }
+      else{
+        this.getMediaDetails();
+      }
     }
   
     onPageSearch(search: string) {
       this.isSearch = true;
       this.searchText = search;
-      this.getMediaDetails();
+      if(this.filter2){
+        this.getFilteredList();
+      }
+      else{
+        this.getMediaDetails();
+      }
     }
   
     SearchWithId(_searchItem: any) {
@@ -95,11 +134,123 @@ export class MediaplayerlistComponent {
     }
   
     ngOnInit(): void {
+      this.mediaFacade.getKeysDataForConfig("dropdownOptions").subscribe((data2: any) => {
+    
+        this.dropdownOptions = data2.dropdownOptions; 
+       
+      });
+      this.buildHeader();
       this.tabno = 2;
       this.getMediaDetails();
     }
     OpenUploadMedia() {
       this._router.navigate(['cvms/MediaPlayerPlaylist']);
+    }
+    dropdownOpen = false;
+
+    toggleDropdown(): void {
+      this.dropdownOpen = !this.dropdownOpen;
+    }
+    Reload(){
+      if(this.filter2){
+        this.buildHeader();
+        this.getFilteredList();
+      }
+      else{
+        this.buildHeader();
+        this.getMediaDetails();
+      }
+    }
+    applyFilter(status: string): void {
+      switch (status) {
+        case 'Sent':
+          this.tabno=1;
+          this.filter2=true;
+          this.buildHeader();
+          this.getFilteredList();
+          break;
+        case 'Pending':
+          this.tabno=0;
+          this.filter2=true;
+          this.buildHeader();
+          this.getFilteredList();
+          break;
+        case 'Failed':
+          this.tabno=2;
+          this.filter2=true;
+          this.buildHeader();
+          this.getFilteredList();
+          break;
+        case  'All':
+          this.tabno=2;
+          this.filter2=false;
+          this.buildHeader();
+          this.getMediaDetails();
+          break;
+        default:
+          console.warn('Unknown filter option:', status);
+      }
+    
+      // Close dropdown after selecting
+      this.dropdownOpen = false;
+    }
+  
+    getFilteredList() {
+      this._request.currentPage = this.pager;
+      this._request.pageSize = Number(this.recordPerPage);
+      this._request.startId = this.startId;
+      this._request.searchItem = this.searchText;
+      this.mediaFacade.GetFilteredListP(this._request,this.tabno).subscribe(data => {
+
+        if (data != null) {
+          this.listOfMediaUpload = data.data;
+          this.listOfMediaUpload.forEach((element: any) => {
+           
+
+            let _data = JSON.parse(element.requestData);
+            element.schedulename = _data.name;
+            element.mediaPlayerName = _data.mediaPlayerName;
+            element.name = _data.name;
+
+            if(element.status == 2)
+              {    const parsedData2 = JSON.parse(element.responseData);
+              const message= parsedData2.message;
+              element.ErrorMessage=message;}
+            if (element.creationTime != null) {
+              var _d = new Date(element.creationTime);
+              var _dateStr = this.datepipe.transform(_d, "dd-MM-yyyy HH:mm:ss");
+              element.creationTime = _dateStr;
+            }
+            if(element.requestType=="/mediaPlayer/createMediaPlayerAndPlaylist"){
+              element.requesttype2="Create";
+            }
+            if(element.requestType=="/mediaPlayer/deleteMediaPlayer"){
+              let _data2 = JSON.parse(element.requestData);
+              element.name = _data2.mediaPlayerName;
+  
+              element.requesttype2="Delete";
+            }
+            if (element.status == 1) {
+              element.statusdesc = "Sent Successfully"
+            }
+            else if (element.status == 0) {
+              element.statusdesc = "Sent Pending"
+            }
+            else if (element.status == 2) {
+              element.statusdesc = "Sent Failed"
+            }
+          });
+          var _length = data.totalRecords / Number(this.recordPerPage);
+          if (_length > Math.floor(_length) && Math.floor(_length) != 0)
+            this.totalRecords = Number(this.recordPerPage) * (_length);
+          else if (Math.floor(_length) == 0)
+            this.totalRecords = 10;
+          else
+            this.totalRecords = data.totalRecords;
+          this.totalPages = this.totalRecords / this.pager;
+          //this.getMediaByStatus(this.tabno);
+        }
+      })
     }
     getMediaDetails() {
       this._request.currentPage = this.pager;

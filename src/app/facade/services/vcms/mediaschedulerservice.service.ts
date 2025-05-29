@@ -9,8 +9,9 @@ export class MediaschedulerserviceService {
 
   constructor(private http: HttpClient,
        private _httpService: HttpService,
+       
        private _http: HttpClient) { }
-  
+       jsonurl: string = '/assets/config/config.json';
        getMediaschedulerDetails(_data: any) {
         return this._httpService._getMethod('Vcms_API/api/MediaUpload/GetDetails'+_data);
       }
@@ -38,6 +39,12 @@ export class MediaschedulerserviceService {
 
       getMediaschedulersList(_data: any,type:number){
         return this._httpService._postMethod(_data,'Vcms_API/api/MediaScheduler/GetMediaScheduler?type=' + type);
+      }
+      GetFilteredList(_data: any,type:number){
+        return this._httpService._postMethod(_data,'Vcms_API/api/MediaScheduler/GetFilteredList?type=' + type);
+      }
+      getKeysDataForConfig(key: string) {
+        return this._http.get(this.jsonurl);
       }
 
       getMediaSchedulerById(id: number) {

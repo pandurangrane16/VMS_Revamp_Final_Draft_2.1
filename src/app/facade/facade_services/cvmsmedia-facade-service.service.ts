@@ -21,7 +21,12 @@ export class CVMSMediaFacadeServiceService {
   GetMediaPlayer(inputReq :any,) {
     return this._mediaplayer.getUploadMediaDetails(inputReq);
   }
-
+  GetFilteredListP(inputReq :any,type:any) {
+    return this._mediaplayer.GetFilteredList(inputReq,type);
+  }
+  GetFilteredListM(inputReq :any,type:any) {
+    return this._mediupload.GetFilteredList(inputReq,type);
+  }
  
 
   
@@ -133,9 +138,15 @@ export class CVMSMediaFacadeServiceService {
   getKeysDataForConfig(key: string) {
     return this._mediupload.getKeysDataForConfig(key);
   }
+ 
+
   getMediaschedulersList(_data: any,type:number) {       
     return this._mediascheduler.getMediaschedulersList(_data,type);
   }
+  GetFilteredList(_data: any,type:number) {       
+    return this._mediascheduler.GetFilteredList(_data,type);
+  }
+  
  
 
   GetPlaybackDetails(_data:any,fromdate: string, todate: string, ipadd?: string, type?: string ,pdf_excel?:string){   

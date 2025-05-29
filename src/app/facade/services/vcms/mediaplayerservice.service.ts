@@ -11,9 +11,18 @@ export class MediaplayerserviceService {
     private _httpService: HttpService,
     private _http: HttpClient) { }
 
+    jsonurl: string = '/assets/config/config.json';
 
   getUploadMediaDetails(inputReq :any) {
     return this._httpService._postMethod(inputReq,'Vcms_API/api/Mediaplayer/GetMediaPlayer');
+  }
+  GetFilteredList(inputReq :any,type:any) {
+    return this._httpService._postMethod(inputReq,'Vcms_API/api/Mediaplayer/GetFilteredList?type='+type);
+  }
+
+
+  getKeysDataForConfig(key: string) {
+    return this._http.get(this.jsonurl);
   }
 
  

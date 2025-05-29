@@ -44,7 +44,13 @@ export class MediaUploadCvmsListComponent {
   closeResult!: string;
   subscription: any;
   _request: any = new InputRequest();
-  headerArr = [
+  headerArr: any[] = [];
+  dropdownOptions:any[] = [];
+  
+
+ filter2: boolean = false;
+ buildHeader(){
+  this.headerArr = [
     // { "Head": "ID", "FieldName": "id", "type": "number" },
     { "Head": "Controller Name", "FieldName": "ipAddress", "type": "string" },
     { "Head": "Media Type", "FieldName": "mediatype", "type": "string" },
@@ -55,6 +61,18 @@ export class MediaUploadCvmsListComponent {
     { "Head": "Action", "FieldName": "actions", "type": "button" },
    
   ];
+  if (this.filter2) {
+
+    this.headerArr = this.headerArr.filter(header => header.Head !== "Action");
+  
+    this.headerArr.push(
+      { "Head": "Request Type", "FieldName": "requesttype2", "type": "string" },
+      { "Head": "Action", "FieldName": "actions", "type": "button" },
+    );
+  
+    }
+ }
+
   listOfMedialist: any = [];
   //btnArray: any[] = [];
   btnArray: any[] = [
@@ -82,6 +100,12 @@ export class MediaUploadCvmsListComponent {
 
   }
   ngOnInit(): void {
+    this.mediaFacade.getKeysDataForConfig("dropdownOptions").subscribe((data2: any) => {
+    
+      this.dropdownOptions = data2.dropdownOptions; 
+     
+    });
+    this.buildHeader();
     this.type = 2;
     this.getMediaDetails();
     //this.refreshPage();
@@ -125,7 +149,12 @@ export class MediaUploadCvmsListComponent {
     this._request.pageSize = Number(this.recordPerPage);
     this.pager = pager;
     this.startId = (this.pager - 1) *  Number(this.recordPerPage);
-    this.getMediaDetails();
+    if(this.filter2){
+      this.getFilteredList();
+    }
+    else{
+      this.getMediaDetails();
+    }
   }
 
   onRecordPageChange(recordPerPage: number) {
@@ -135,13 +164,23 @@ export class MediaUploadCvmsListComponent {
     this.recordPerPage = Number(recordPerPage);
     this.startId = 0;
     this.pager = 1;
-    this.getMediaDetails();
+    if(this.filter2){
+      this.getFilteredList();
+    }
+    else{
+      this.getMediaDetails();
+    }
   }
 
   onPageSearch(search: string) {
     this.isSearch = true;
     this.searchText = search;
-    this.getMediaDetails();
+    if(this.filter2){
+      this.getFilteredList();
+    }
+    else{
+      this.getMediaDetails();
+    }
   }
 
   SearchWithId(_searchItem: any) {
@@ -162,7 +201,112 @@ export class MediaUploadCvmsListComponent {
       }
     })
   }
+  dropdownOpen = false;
 
+  toggleDropdown(): void {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
+  Reload(){
+    if(this.filter2){
+      this.buildHeader();
+      this.getFilteredList();
+    }
+    else{
+      this.buildHeader();
+      this.getMediaDetails();
+    }
+  }
+  applyFilter(status: string): void {
+    switch (status) {
+      case 'Sent':
+        this.tabno=1;
+        this.filter2=true;
+        this.buildHeader();
+        this.getFilteredList();
+        break;
+      case 'Pending':
+        this.tabno=0;
+        this.filter2=true;
+        this.buildHeader();
+        this.getFilteredList();
+        break;
+      case 'Failed':
+        this.tabno=2;
+        this.filter2=true;
+        this.buildHeader();
+        this.getFilteredList();
+        break;
+      case  'All':
+        this.tabno=2;
+        this.filter2=false;
+        this.buildHeader();
+        this.getMediaDetails();
+        break;
+      default:
+        console.warn('Unknown filter option:', status);
+    }
+  
+    // Close dropdown after selecting
+    this.dropdownOpen = false;
+  }
+  getFilteredList() {
+    this._request.currentPage = (this.pager-1);
+    this._request.pageSize = Number(this.recordPerPage);
+    this._request.startId = this.startId;
+    this._request.searchItem = this.searchText;
+    this.mediaFacade.GetFilteredListM(this._request, this.tabno).subscribe(data => {
+      if (data != null) {
+        this.listOfMediaUpload = data.data;
+
+  
+
+          this.listOfMediaUpload.forEach((element: any) => {
+          if (element.creationTime != null) {
+            var _d = new Date(element.creationTime);
+            var _dateStr = this.datepipe.transform(_d, "dd-MM-yyyy HH:mm:ss");
+            element.creationTime = _dateStr;
+            const parsedData = JSON.parse(element.requestData);
+            if(element.status == 2)
+              {    const parsedData2 = JSON.parse(element.responseData);
+              const message= parsedData2.message;
+              element.ErrorMessage=message;}
+            const mediaType = parsedData.mediaType;
+            element.mediatype=mediaType;
+            
+          }
+
+          if(element.requestType=="/media/uploadMedia"){
+            element.requesttype2="Upload";
+          }
+          if(element.requestType=="/media/deleteMediaDetails"){
+            let _data2 = JSON.parse(element.requestData);
+            element.mediaName = _data2.mediaName;
+
+            element.requesttype2="Delete";
+          }
+          if (element.status == 1) {
+            console.log(element)
+            element.statusdesc = "Sent Successfully"
+          }
+          else if (element.status == 0) {
+            element.statusdesc = "Sent Pending"
+          }
+          else if (element.status == 2) {
+            element.statusdesc = "Sent Failed"
+          }
+        });
+        var _length = data.totalRecords / Number(this.recordPerPage);
+        if (_length > Math.floor(_length) && Math.floor(_length) != 0)
+          this.totalRecords = Number(this.recordPerPage) * (_length);
+        else if (Math.floor(_length) == 0)
+          this.totalRecords = 10;
+        else
+          this.totalRecords = data.totalRecords;
+        this.totalPages = this.totalRecords / this.pager;
+        //this.getMediaByStatus(this.tabno);
+      }
+    })
+  }
   getMediaDetails() {
     this._request.currentPage = (this.pager-1);
     this._request.pageSize = Number(this.recordPerPage);

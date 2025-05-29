@@ -7,7 +7,12 @@
         "Socket_URL": "http://172.19.32.51:8030",
         "cronexpression":"*/3 * * * *",
         "fileTypes": ["VIDEO_FILE", "IMAGE", "GIF", "TEXT", "URL", "YOUTUBE_LIVE_VIDEO", "YOUTUBE_VIDEO", "RTSP_URL"],
-
+        "dropdownOptions" : [
+            { "label": "Sent", "value": "Sent" },
+            { "label": "Pending", "value": "Pending" },
+            { "label": "Failed", "value": "Failed" },
+            { "label": "All", "value": "All" }
+          ],
 
         
 

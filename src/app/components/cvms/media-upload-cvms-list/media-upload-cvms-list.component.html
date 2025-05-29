@@ -14,8 +14,27 @@
                                         <i class="icon-plus"></i> Upload Media
                                     </button>
 
+                                     <!-- Filter Button with Dropdown -->
+                                     <div class="dropdown" style="position: relative; display: inline-block; margin-top: 50px; margin-left: -145px;">
+                                        <button 
+                                          (click)="toggleDropdown()" 
+                                          style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                          Filter
+                                        </button>
+  
+  
+
+    <div *ngIf="dropdownOpen" style="position: absolute; top: 110%; left: 0; background-color: white; box-shadow: 0 8px 16px rgba(0,0,0,0.2); border-radius: 5px; min-width: 160px; z-index: 1;">
+        <a *ngFor="let option of dropdownOptions"
+           (click)="applyFilter(option.value)"
+           style="display: block; padding: 10px 15px; text-decoration: none; color: black; cursor: pointer;">
+          {{ option.label }}
+        </a>
+      </div>
+  </div>
+
                                     <div class="text-right">
-                                        <button class="btn reload" (click)="getMediaDetails()"><i class="icon-reload"></i>
+                                        <button class="btn reload" (click)="Reload()"><i class="icon-reload"></i>
                                             Reload</button>
                                     </div>
                                     <app-cm-table [headArr]="headerArr" [gridArr]="listOfMediaUpload"
