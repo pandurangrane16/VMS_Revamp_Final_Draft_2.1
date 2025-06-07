@@ -52,6 +52,7 @@ import { MediareportComponent } from './components/cvms/mediareport/mediareport.
 import { AiredReportComponent } from './components/reports/aired-report/aired-report.component';
 import { FontUploadComponent } from './components/cvms/font-upload/font-upload.component';
 import {AirtimeReportCvmsComponent} from './components/cvms/cvms-airtime-report/cvms-airtime-report.component';
+import { CmGmapComponent } from './components/shared/cm-gmap/cm-gmap.component';
 const routes: Routes = [
   {
     path: "",
@@ -361,10 +362,16 @@ const routes: Routes = [
   },  
   { 
     path: "cvms/livePlaylist", 
+    component: CmGmapComponent,
+    data: { title: 'Emergency Play' },
+    canActivate: [AuthGuradService]
+  },    
+  { 
+    path: "cvms/livePlaylist", 
     component: MedialiveplaylistComponent,
     data: { title: 'Emergency Play' },
     canActivate: [AuthGuradService]
-  },  
+  }, 
   
   //Wild Card Route for 404 request 
   { path: '**',  
