@@ -425,6 +425,7 @@ export class MediaPlayerEditComponent {
                   _playerArray.push(_tiles);
                 }
                 _newPlayer.tiles = _playerArray;
+                _newPlayer.id=this.editForm.controls["id"].value;
 
 
 
@@ -447,7 +448,7 @@ export class MediaPlayerEditComponent {
       mediaPlayerData.Reason = "Upload Data for new MediaPlayer";
       mediaPlayerData.CreationTime = new Date();
       mediaPlayerData.RequestData = JSON.stringify(_newPlayer);
-      mediaPlayerData.RequestType = "/mediaPlayer/createMediaPlayerAndPlaylist";
+      mediaPlayerData.RequestType = "/mediaPlayer/updateMediaPlayer";
       mediaPlayerData.id=this.mediaId;
 
       // sending a copy
@@ -498,9 +499,7 @@ export class MediaPlayerEditComponent {
                 else
                 {
                   
-                this._CVMSfacade.DeleteMediaPlayerFromController(responseid,ipadd).subscribe(data => {
-                if (data === 1) 
-                {  
+             
 
                   this._CVMSfacade.UpdateMediaPlayer(mediaPlayerData).subscribe(data => {
                     if (data === 0) 
@@ -518,15 +517,6 @@ export class MediaPlayerEditComponent {
                
  
                
-                 }
-                 else
-                 {
-                   this.toast.error(`Error occured in deleting:`+data);
-                   return;
- 
-                 }
-                     
-                     });
                  
                 
                 } 

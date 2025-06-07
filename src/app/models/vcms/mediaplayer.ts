@@ -24,6 +24,7 @@ export class mediaPlayerSave{
     mediaLoopCount:string;
     controllerName! :string;
     tiles : any[];
+    id:any;
 }
  export class MediaPlayerTiles {
     tileNo:number;
