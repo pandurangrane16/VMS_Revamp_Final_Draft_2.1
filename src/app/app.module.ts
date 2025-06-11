@@ -119,6 +119,7 @@ import { FontUploadComponent } from './components/cvms/font-upload/font-upload.c
 import { AiredReportComponent } from './components/reports/aired-report/aired-report.component';
 import { ScreenshotListviewComponent } from './components/dashboard/screenshot-listview/screenshot-listview.component';
 import { CmGmapComponent } from './components/shared/cm-gmap/cm-gmap.component';
+import { ForgotPasswordComponent } from './components/user/forgot-password/forgot-password.component';
 
 
 
@@ -202,7 +203,8 @@ const config: SocketIoConfig = { url: environment.Socket_URL, options: {} };
     FontUploadComponent,
     AiredReportComponent,
     ScreenshotListviewComponent,
-    CmGmapComponent
+    CmGmapComponent,
+    ForgotPasswordComponent
     
   ],
   imports: [
