@@ -129,4 +129,8 @@ export class LoginComponent implements OnInit {
     this.swaggerUrl = this._commonFacade.getSwaggerUrl();
     //window.location.href = this.swaggerUrl;
   }
+
+  forgotPass(){
+    this.router.navigate(['forgotPass']);
+  }
 }

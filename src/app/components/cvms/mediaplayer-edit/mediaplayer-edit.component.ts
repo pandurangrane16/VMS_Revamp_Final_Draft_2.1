@@ -672,6 +672,7 @@ export class MediaPlayerEditComponent {
       this.initiate = false;
     }
     else {
+        this.selectedMediaPlaylist.push(_tileDetails);
       this.userDetails.push(this.createUser());
     }
   }

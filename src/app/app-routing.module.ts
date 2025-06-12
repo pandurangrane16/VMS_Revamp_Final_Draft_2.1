@@ -53,6 +53,7 @@ import { AiredReportComponent } from './components/reports/aired-report/aired-re
 import { FontUploadComponent } from './components/cvms/font-upload/font-upload.component';
 import {AirtimeReportCvmsComponent} from './components/cvms/cvms-airtime-report/cvms-airtime-report.component';
 import { CmGmapComponent } from './components/shared/cm-gmap/cm-gmap.component';
+import { ForgotPasswordComponent } from './components/user/forgot-password/forgot-password.component';
 const routes: Routes = [
   {
     path: "",
@@ -371,6 +372,11 @@ const routes: Routes = [
     component: MedialiveplaylistComponent,
     data: { title: 'Emergency Play' },
     canActivate: [AuthGuradService]
+  },    
+  { 
+    path: "forgotPass", 
+    component: ForgotPasswordComponent,
+    data: { title: 'forgotPass' },
   }, 
   
   //Wild Card Route for 404 request 
