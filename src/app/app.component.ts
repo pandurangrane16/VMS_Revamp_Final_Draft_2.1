@@ -14,6 +14,7 @@ import { UserLoggedIn } from './models/$bs/userLoggedIn';
 import { HttpService } from './facade/services/common/http.service';
 import { Globals } from './utils/global';
 import { SocketService } from './facade/services/common/socket.service';
+import { IdletimeoutService } from './facade/services/common/idletimeout.service';
 
 
 let browserRefresh = false;
@@ -42,7 +43,8 @@ export class AppComponent implements OnInit {
     private _toast: ToastrService,
     private _httpService: HttpService,
     private _global: Globals,
-    private singlarService: SocketService
+    private singlarService: SocketService,
+    private idleService: IdletimeoutService
   ) {
     this.ver = environment.version;
     //console.log(this.loggedIn);

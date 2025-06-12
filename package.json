@@ -4,7 +4,6 @@
   "scripts": {
     "ng": "ng",
     "start:dev": "ng serve",
-    
     "build": "ng build",
     "build-prod": "ng build --prod --base-href",
     "build-test": "ng build --configuration=test --base-href",
@@ -56,6 +55,8 @@
     "datatables.net-dt": "^1.13.6",
     "date-fns": "^4.1.0",
     "file-saver": "^2.0.5",
+    "highcharts": "^12.2.0",
+    "highcharts-angular": "^4.0.1",
     "jquery": "^3.7.1",
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",

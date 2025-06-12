@@ -7,14 +7,19 @@
         <div class="card-body p-0 pt-2 pb-2 text-center" style="height:200px;">
 
           <!-- <canvas id="deviceChart"></canvas> -->
-          <canvas
+          <!-- <canvas
                   baseChart
                   [data]="chartDataDevice"
                   [type]="'pie'"
                   [options]="chartOptions"
                   style="margin: 0 auto;"
                 >
-                </canvas>
+                </canvas> -->
+
+          <highcharts-chart [Highcharts]="Highcharts" [options]="deviceChartOptions"
+            style="width: 100%; height: 400px; display: block;">
+          </highcharts-chart>
+
         </div>
         <div class="card-footer bgTable">
           <h4 class="card-title text-center">Device Status</h4>
@@ -24,12 +29,8 @@
     <div class="col-xl-4 d-flex grid-margin stretch-card">
       <div class="card border-0">
         <div class="card-body pb-0 pl-3 pr-3">
-          <canvas baseChart class="chart"
-          [data]="mediaData"
-          [options]="barChartOptions"
-          [type]="barChartType"
-          >
-        </canvas>
+          <canvas baseChart class="chart" [data]="mediaData" [options]="barChartOptions" [type]="barChartType">
+          </canvas>
         </div>
         <div class="card-footer bgTable">
           <h4 class="card-title text-center">Media Audit</h4>
@@ -40,11 +41,7 @@
       <div class="card border-0">
         <div class="card-body pb-0 pl-3 pr-3">
 
-          <canvas baseChart class="chart"
-          [data]="PlaylistData"
-          [options]="barChartOptions"
-          [type]="barChartType"
-          >
+          <canvas baseChart class="chart" [data]="PlaylistData" [options]="barChartOptions" [type]="barChartType">
           </canvas>
         </div>
         <div class="card-footer bgTable">
@@ -66,8 +63,7 @@
                 <div *ngFor="let legend of AdsData.labels; let i = index;" class="col-3">
                   <h5 class="font-weight-bold text-dark mb-1" *ngFor="let datalist of AdsData.datasets; let j = index;">
                     {{ datalist.data[i] }}</h5>
-                  <i class="legend-label mt-1" *ngFor="let color of AdsData.datasets;"
-                    ></i>
+                  <i class="legend-label mt-1" *ngFor="let color of AdsData.datasets;"></i>
                   <p class="text-muted m-0 ml-1"> {{ legend}}</p>
 
 

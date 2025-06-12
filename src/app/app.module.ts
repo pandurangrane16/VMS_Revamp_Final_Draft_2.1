@@ -120,6 +120,7 @@ import { AiredReportComponent } from './components/reports/aired-report/aired-re
 import { ScreenshotListviewComponent } from './components/dashboard/screenshot-listview/screenshot-listview.component';
 import { CmGmapComponent } from './components/shared/cm-gmap/cm-gmap.component';
 import { ForgotPasswordComponent } from './components/user/forgot-password/forgot-password.component';
+import { HighchartsChartModule } from 'highcharts-angular';
 
 
 
@@ -240,7 +241,8 @@ const config: SocketIoConfig = { url: environment.Socket_URL, options: {} };
     NgMultiSelectDropDownModule,
     ToastModule,
     NgxBootstrapIconsModule.pick(allIcons),
-    ColorPickerModule
+    ColorPickerModule,
+    HighchartsChartModule
     //SocketIoModule.forRoot(config),
   ],
   exports: [TooltipDirective,BlockCopyPasteDirective],
