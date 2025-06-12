@@ -520,8 +520,16 @@ export class MediaschedulerComponent {
       _vcmsmedischedulerdata.Reason = "Create Media Scheduler";
       _vcmsmedischedulerdata.requesttype = "/mediaSchedule/createMediaPlayerScheduler";
 
-
-      this._CVMSfacade.SaveMediaScheduler(_vcmsmedischedulerdata).pipe(catchError((err) => {
+      // Check for duplicate media player name
+      this._CVMSfacade.CheckDuplicateMediaSchedulerName(this.form.controls["schedulename"].value,).subscribe(data => {
+        if (data === 1) {
+          this._toast.error(" Name already exists in the System.");
+          this.form.setErrors({ duplicateName: true });
+          return;
+        }
+       
+        else{
+   this._CVMSfacade.SaveMediaScheduler(_vcmsmedischedulerdata).pipe(catchError((err) => {
         this._toast.error("Error occured while saving data for " + err);
         throw err;
       })).subscribe(data => {
@@ -536,6 +544,13 @@ export class MediaschedulerComponent {
           });
         }
       })
+        }
+        
+
+      });
+
+
+   
     }
     else {
       this._toast.error("Error occured while saving data. Please select Input Values.");
