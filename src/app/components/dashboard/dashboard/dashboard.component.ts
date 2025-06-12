@@ -6,6 +6,7 @@ import { ChartConfiguration, ChartData, ChartOptions, ChartType } from 'chart.js
 import { UserFacadeService } from 'src/app/facade/facade_services/user-facade.service';
 import { CommonFacadeService } from 'src/app/facade/facade_services/common-facade.service';
 import { Globals } from 'src/app/utils/global';
+import * as Highcharts from 'highcharts';
 
 declare let $: any;
 
@@ -16,6 +17,8 @@ declare let $: any;
 })
 export class DashboardComponent implements OnInit {
   totalBarChartSize: number = 20;
+  Highcharts: typeof Highcharts = Highcharts;
+  deviceChartOptions: any;
   chartDataDevice: ChartData<'pie'> = {
     labels: [],
     datasets: [
@@ -25,7 +28,17 @@ export class DashboardComponent implements OnInit {
     ]
   };
 
-
+  // chartOptions: Highcharts.Options = {
+  //   chart: { type: 'column' },
+  //   title: { text: 'Monthly Sales' },
+  //   xAxis: { categories: ['Jan', 'Feb', 'Mar', 'Apr'] },
+  //   yAxis: { title: { text: 'Sales' } },
+  //   series: [{
+  //     name: '2024',
+  //     type: 'column',
+  //     data: [29, 71, 106, 129]
+  //   }]
+  // };
 
   chartOptions: ChartOptions = {
     responsive: true,
@@ -157,7 +170,7 @@ export class DashboardComponent implements OnInit {
     this.GetChartData();
   }
   changeBarChartConfiguration() {
-   let barChartConfig : ChartConfiguration['options'] = {
+    let barChartConfig: ChartConfiguration['options'] = {
       responsive: true,
       indexAxis: 'y',
       // We use these empty structures as placeholders for dynamic theming.
@@ -175,7 +188,7 @@ export class DashboardComponent implements OnInit {
         legend: {
           display: false,
         },
-  
+
       }
     };
     this.barChartOptions = barChartConfig;
@@ -190,6 +203,19 @@ export class DashboardComponent implements OnInit {
       devdata.push(this.dashboardChart.deviceData.active);
       devdata.push(this.dashboardChart.deviceData.inActive);
 
+      this.deviceChartOptions = Highcharts.setOptions({
+        chart: { type: 'pie' },
+        title: { text: 'Market Share' },
+        series: [{
+          name: 'Share',
+          type: 'pie',
+          data: [
+            { name: 'Active', y: Number(devdata[1])},
+            { name: 'Inactive', y: Number(devdata[1])},
+          ]
+        }]
+      });
+      console.log(this.deviceChartOptions);
       let mediadata = [];
       mediadata.push(this.dashboardChart.mediaAudit.pending);
       mediadata.push(this.dashboardChart.mediaAudit.rejected);
@@ -201,7 +227,7 @@ export class DashboardComponent implements OnInit {
       pldata.push(this.dashboardChart.playlistAudit.approved);
       this.totalBarChartSize = (Number(this.dashboardChart.playlistAudit.pending) + Number(this.dashboardChart.playlistAudit.rejected) + Number(this.dashboardChart.playlistAudit.approved) + Number(this.dashboardChart.mediaAudit.pending) + Number(this.dashboardChart.mediaAudit.rejected) + Number(this.dashboardChart.mediaAudit.approved));
       this.changeBarChartConfiguration();
-      this.barChartOptions 
+      this.barChartOptions
       this.chartDataDevice = {
         labels: ['Enable', 'Disable',],
         datasets: [
