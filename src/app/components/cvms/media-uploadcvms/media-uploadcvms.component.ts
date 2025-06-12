@@ -187,6 +187,8 @@ export class MediaUploadcvmsComponent implements OnInit {
     MediaName?.updateValueAndValidity();
     MediaTextName?.updateValueAndValidity();
   }
+
+  
   getMediaUploadData() {
     this._request.currentPage = this.pager;
     this._request.pageSize = this.recordPerPage;

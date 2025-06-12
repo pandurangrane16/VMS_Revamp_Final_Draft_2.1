@@ -11,6 +11,7 @@ import { CommonFacadeService } from './common-facade.service';
 import { RolesService } from '../services/user/roles.service';
 import { MenusService } from '../services/user/menus.service';
 import { UserService } from '../services/user/user.service';
+import { ResetpasswordService } from '../services/user/resetpassword.service';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,7 @@ export class UserFacadeService {
     private _dashboard: DashboardService,
     private _roleService: RolesService,
     private _menusService: MenusService,
+    private _resetpass : ResetpasswordService,
     private _userService: UserService,
     private _sessionService:SessionService) {
     this.isLoggedin = this.isLoggedinSubject.asObservable();
@@ -114,6 +116,22 @@ export class UserFacadeService {
   getRoleMenuAccess(id: number) {
     return this._menusService.getRoleMenuAccessData(id);
   }
+  
+  SendOtp(username: any, email:any) {
+    return this._resetpass.SendOtp(username,email);
+  }
+  ValidateOTP(username: any, otp:any) {
+    return this._resetpass.ValidateOTP(username,otp);
+  }
+
+  ResetPassword(_data: any) {
+    return this._resetpass.ResetPassword(_data);
+  }
+
+
+
+
+
   updateRoleAccess(data: any) {
     return this._menusService.updateRoleAccess(data);
   }
