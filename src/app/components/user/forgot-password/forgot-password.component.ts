@@ -157,8 +157,11 @@ export class ForgotPasswordComponent implements OnInit {
 ValidateOTP(){
     this.validate = true;
     this.userFacade.ValidateOTP(this.form.controls.username.value, this.form.controls.otp.value).subscribe((response: any) => {
-     
-      if (response == 1 ) {
+     if(response == 2) {
+      this.toast.error("OTP validity is expired, kindly generate again.");
+
+     }
+      else if (response == 1 ) {
         
         
   
