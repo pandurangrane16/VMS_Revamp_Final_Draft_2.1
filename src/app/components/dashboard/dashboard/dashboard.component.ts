@@ -202,16 +202,21 @@ export class DashboardComponent implements OnInit {
       let backgroundColors: any[] = [];
       devdata.push(this.dashboardChart.deviceData.active);
       devdata.push(this.dashboardChart.deviceData.inActive);
-
+      let active = ((Number(devdata[0]) / (Number(devdata[0]) + Number(devdata[1]))) * 100).toFixed(2);
+      let inactive = ((Number(devdata[1]) / (Number(devdata[0]) + Number(devdata[1]))) * 100).toFixed(2);
       this.deviceChartOptions = Highcharts.setOptions({
         chart: { type: 'pie' },
-        title: { text: 'Market Share' },
+        title: { text: 'Device Status' },
         series: [{
-          name: 'Share',
+          name: 'Status',
           type: 'pie',
+          dataLabels:[{
+format: '{point.percentage:.1f}%',
+          }
+          ],
           data: [
-            { name: 'Active', y: Number(devdata[1])},
-            { name: 'Inactive', y: Number(devdata[1])},
+            { name: 'Active %', y: Number(active)},
+            { name: 'Inactive %', y: Number(inactive)},
           ]
         }]
       });
