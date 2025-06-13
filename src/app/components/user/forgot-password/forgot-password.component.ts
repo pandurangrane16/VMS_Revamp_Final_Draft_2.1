@@ -34,6 +34,7 @@ export class ForgotPasswordComponent implements OnInit {
 
   }
   startTimer() {
+    this.timeLeft = 60;
     this.resend = true;
     interval(1000)
       .pipe(takeUntil(this.destroy$))
@@ -101,6 +102,7 @@ export class ForgotPasswordComponent implements OnInit {
 
   Resend() {
     console.log(this.form);
+    
     this.stopTimer();
     this.resend=false;
 
@@ -166,12 +168,10 @@ ValidateOTP(){
         
   
         this.toast.success(`OTP validated successfully`);
-        this.stopTimer()
+        this.stopTimer();
         this.resend=false;
         this.validate = true;
       } else {
-        this.stopTimer()
-        this.resend=false;
         this.validate = false;
         this.form.patchValue({ otp: '' });
         this.toast.error('Failed to Validate. Please try again.');
