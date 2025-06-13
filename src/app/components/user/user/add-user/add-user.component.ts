@@ -168,7 +168,20 @@ export class AddUserComponent implements OnInit {
         })
       }
       else {
-        this._facade.addUser(_usrData).subscribe(r => {
+      //  if (_usrData.id != null && _usrData.id != 0){
+      //        this._facade.updateUser(_usrData).subscribe(r => {
+      //     if (r == 0) {
+      //       this.toast.error("Error occured while saving data");
+      //     } else if (r == 4) {
+      //       this.toast.error("Email or Contact number already in use.");
+      //     } else {
+      //       this.toast.success("Saved successfully.");
+      //       this.clearForm();
+      //     }
+      //   })
+      //  }
+       
+          this._facade.addUser(_usrData).subscribe(r => {
           if (r == 0) {
             this.toast.error("Error occured while saving data");
           } else if (r == 4) {
@@ -178,6 +191,9 @@ export class AddUserComponent implements OnInit {
             this.clearForm();
           }
         })
+       
+      
+        
       }
     }
   }

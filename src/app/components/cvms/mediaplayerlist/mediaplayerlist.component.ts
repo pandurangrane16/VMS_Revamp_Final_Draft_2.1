@@ -224,6 +224,9 @@ export class MediaplayerlistComponent {
             if(element.requestType=="/mediaPlayer/createMediaPlayerAndPlaylist"){
               element.requesttype2="Create";
             }
+              if(element.requestType=="/mediaPlayer/updateMediaPlayer"){
+              element.requesttype2="Update";
+            }
             if(element.requestType=="/mediaPlayer/deleteMediaPlayer"){
               let _data2 = JSON.parse(element.requestData);
               element.name = _data2.mediaPlayerName;
@@ -342,7 +345,7 @@ export class MediaplayerlistComponent {
       
         try {
           const responseObj = JSON.parse(element.responseData);
-          const message = responseObj.message || "No message field in response.";
+             const message = responseObj.message || responseObj.error;
         
           this.confirmationDialogService
             .confirm('Error Message', message)
