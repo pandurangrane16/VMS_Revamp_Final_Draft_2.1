@@ -2,11 +2,14 @@ import { Component } from '@angular/core';
 import { OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { map } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ChartConfiguration, ChartData, ChartOptions, ChartType } from 'chart.js'
 import { UserFacadeService } from 'src/app/facade/facade_services/user-facade.service';
 import { CommonFacadeService } from 'src/app/facade/facade_services/common-facade.service';
 import { Globals } from 'src/app/utils/global';
 import * as Highcharts from 'highcharts';
+import { ScreenshotListviewComponent } from '../screenshot-listview/screenshot-listview.component';
+import { DashboardFacadeService } from 'src/app/facade/facade_services/dashboard-facade.service';
 
 declare let $: any;
 
@@ -123,7 +126,7 @@ export class DashboardComponent implements OnInit {
 
     },
   };
-
+  listViewData : any[]=[];
   public AdsData: ChartData<'bar'> = {
     labels: [],
     datasets: [
@@ -160,7 +163,10 @@ export class DashboardComponent implements OnInit {
   constructor(private _userfacadeservice: UserFacadeService,
     private _router: Router,
     private _commonFacade: CommonFacadeService,
-    private global: Globals) {
+    private global: Globals,
+  private _dashboardFacade: DashboardFacadeService,
+private modalService: NgbModal,) {
+      
     this.global.CurrentPage = "Dashboard";
   }
   dashboardChart: any = [];
@@ -170,6 +176,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.GetChartData();
     this.GetChartData2();
+    this.getListViewData();
   }
   changeBarChartConfiguration() {
     let barChartConfig: ChartConfiguration['options'] = {
@@ -194,6 +201,21 @@ export class DashboardComponent implements OnInit {
       }
     };
     this.barChartOptions = barChartConfig;
+  }
+   ViewScreenshot(data:any){
+      console.log(data);
+  
+       const modalRef = this.modalService.open(ScreenshotListviewComponent, { ariaLabelledBy: 'modal-basic-title', size: 'xl' });
+            modalRef.componentInstance.data = data;
+            modalRef.componentInstance.passEntry.subscribe((receivedEntry: any) => {
+            })
+    }
+  getListViewData() {
+    this._dashboardFacade.getListViewData().subscribe(res => {
+      if (res != null && res != undefined && res.length > 0) {
+        this.listViewData =res;
+      }
+    })
   }
   GetChartData() {
     this._userfacadeservice.GetDashboardCharts().subscribe(res => {
