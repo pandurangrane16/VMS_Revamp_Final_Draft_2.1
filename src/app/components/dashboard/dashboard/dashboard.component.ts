@@ -164,10 +164,12 @@ export class DashboardComponent implements OnInit {
     this.global.CurrentPage = "Dashboard";
   }
   dashboardChart: any = [];
+  dashboardChart2: any = [];
   vmsList: any = [];
 
   ngOnInit(): void {
     this.GetChartData();
+    this.GetChartData2();
   }
   changeBarChartConfiguration() {
     let barChartConfig: ChartConfiguration['options'] = {
@@ -285,6 +287,77 @@ format: '{point.percentage:.1f}%',
       }
     });
   }
+   partyMediaChartOptions: Highcharts.Options = {};
+GetChartData2() {
+  this._userfacadeservice.GetPartyWiseMedia().subscribe((res: any[]) => {
+    const xAxisLabels: string[] = [];
+    const yAxisData: number[] = [];
+
+    res.forEach((ele: any) => {
+      xAxisLabels.push(ele.partyName);
+      yAxisData.push(ele.mediaCount);
+    });
+
+   this.partyMediaChartOptions = {
+  chart: {
+    type: 'column'
+  },
+  title: {
+    text: 'Party Wise Media Count'
+  },
+  xAxis: {
+    categories: xAxisLabels,
+    title: {
+      text: 'Party Name'
+    }
+  },
+  yAxis: {
+    min: 0,
+    max: 300,
+    title: {
+      text: 'Media Count'
+    }
+  },
+  tooltip: {
+    pointFormat: 'Media Count: <b>{point.y}</b>'
+  },
+  plotOptions: {
+    column: {
+      colorByPoint: true,
+      // dataLabels: {
+      //   enabled: true,
+      //   formatter: function () {
+      //      return this.y?.toString() ?? '';
+      //   },
+      //   style: {
+      //     fontWeight: 'bold',
+      //     fontSize: '13px',
+      //     color: '#000000'
+      //   }
+      // }
+    },
+   
+    // series: {                                                   
+    //   dataLabels: {
+    //     enabled: true,
+    //     formatter: function () {
+    //    return this.y?.toString() ?? '';
+    //     }
+    //   }
+    // }
+  },
+  series: [{
+    name: 'Media Count',
+    type: 'column',
+    data: yAxisData
+  }],
+  colors: ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80']
+} as Highcharts.Options;
+
+  });
+}
+
+
 
   randomRGB() {
     var x = Math.floor(Math.random() * 256);

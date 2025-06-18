@@ -172,6 +172,7 @@ ValidateOTP(){
         this.resend=false;
         this.validate = true;
       } else {
+        
         this.validate = false;
         this.form.patchValue({ otp: '' });
         this.toast.error('Failed to Validate. Please try again.');

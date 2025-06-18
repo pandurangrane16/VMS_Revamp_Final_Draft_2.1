@@ -25,6 +25,8 @@
           <h4 class="card-title text-center">Device Status</h4>
         </div>
       </div>
+
+      
     </div>
     <div class="col-xl-4 d-flex grid-margin stretch-card">
       <div class="card border-0">
@@ -51,7 +53,26 @@
     </div>
 
 
-    <div class="col-xl-6  grid-margin stretch-card">
+<div class="card border-0 w-50 mx-auto">       
+  <div class="card-body pt-3 pb-0 text-center" style="height:400px;">
+    <highcharts-chart
+      [Highcharts]="Highcharts"
+      [options]="partyMediaChartOptions"
+      style="width:100%; height:100%; display:block;">
+    </highcharts-chart>
+  </div>
+
+
+  <div class="card-footer bgTable ">
+    <h4 class="card-title text-center ">Media Count By Party</h4> 
+</div>
+
+</div>
+
+
+
+
+    <!-- <div class="col-xl-6  grid-margin stretch-card">
 
       <div class="card border-0">
         <div class="card-body pb-0 pt-3">
@@ -74,7 +95,7 @@
           </div>
           <div class="row">
             <div class="col-sm-12">
-              <!-- <canvas id="addParty" class="mt-3"></canvas> -->
+            
               <canvas baseChart class="chart" [data]="AdsData" [options]="AdsOptions" [type]="barChartType">
               </canvas>
             </div>
@@ -85,8 +106,14 @@
           <h4 class="card-title text-center">Top Ad Parties</h4>
         </div>
       </div>
-    </div>
+    </div> -->
 
+
+
+
+
+
+    
     <div class="col-xl-6  grid-margin stretch-card">
       <div class="card border-0">
 
