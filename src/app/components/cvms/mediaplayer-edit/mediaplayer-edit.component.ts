@@ -473,6 +473,7 @@ export class MediaPlayerEditComponent {
           let ipadd=data.ipAddress
           requestDataObj.name = requestDataObj.name + "_01";
           data.requestData = JSON.stringify(requestDataObj);
+          data.RequestType="/mediaPlayer/updateMediaPlayer";
           delete data.id;
 
           this._CVMSfacade.SaveMediaPlayer(data).subscribe(data => {
