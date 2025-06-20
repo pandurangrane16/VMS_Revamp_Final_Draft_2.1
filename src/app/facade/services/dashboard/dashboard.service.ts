@@ -15,6 +15,10 @@ export class DashboardService {
       return this._httpService._getMethod('dashboard_api/api/Dashboard/GetDashboardCharts');
     }
 
+       GetPartyWiseMedia(){
+      return this._httpService._getMethod('dashboard_api/api/Dashboard/GetPartyWiseMedia');
+    }
+
     getVmsStatusData(status:any,zone:any) {
       const _header = {InterceptorSkipHeader:"X-Skip-Interceptor"};
       return this._httpService._getMethod('publish_api/api/PublishDetails/GetVMSStatusData?status='+status+'&zoneid='+zone,_header);

@@ -97,6 +97,11 @@ export class UserFacadeService {
   GetDashboardCharts() {
     return this._dashboard.getDashboardChartData();
   }
+    GetPartyWiseMedia() {
+    return this._dashboard.GetPartyWiseMedia();
+  }
+
+
 
   getRoles(data: any) {
     return this._roleService.getRoles(data);

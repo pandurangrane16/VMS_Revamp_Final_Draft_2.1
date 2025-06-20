@@ -23,7 +23,6 @@ import { AdminDashboardComponent } from './components/dashboard/admin-dashboard/
 import { AdminConfigurationComponent } from './components/admin/admin-configuration/admin-configuration.component';
 import { NgbActiveModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
-import { BulkUploadComponent } from './components/admin/bulk-upload/bulk-upload.component';
 import { NgChartsModule } from 'ng2-charts';
 import { ZoneMngComponent } from './components/admin/zone-mng/zone-mng.component';
 import { Globals } from './utils/global';
@@ -141,7 +140,6 @@ const config: SocketIoConfig = { url: environment.Socket_URL, options: {} };
     EncdecComponent,
     AdminDashboardComponent,
     AdminConfigurationComponent,
-    BulkUploadComponent,
     ZoneMngComponent,
     CmTableComponent,
     CmPaginationComponent,

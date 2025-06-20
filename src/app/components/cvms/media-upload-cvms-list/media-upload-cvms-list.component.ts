@@ -132,7 +132,7 @@ export class MediaUploadCvmsListComponent {
   
     try {
       const responseObj = JSON.parse(element.responseData);
-      const message = responseObj.message || "No message field in response.";
+         const message = responseObj.message || responseObj.error;
     
       this.confirmationDialogService
         .confirm('Error Message', message)

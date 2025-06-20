@@ -4,7 +4,7 @@
 
       <div class="card border-0">
 
-        <div class="card-body p-0 pt-2 pb-2 text-center" style="height:200px;">
+        <div class="card-body p-0 pt-2 pb-2 text-center" style="height:400px;">
 
           <!-- <canvas id="deviceChart"></canvas> -->
           <!-- <canvas
@@ -25,6 +25,8 @@
           <h4 class="card-title text-center">Device Status</h4>
         </div>
       </div>
+
+      
     </div>
     <div class="col-xl-4 d-flex grid-margin stretch-card">
       <div class="card border-0">
@@ -51,7 +53,26 @@
     </div>
 
 
-    <div class="col-xl-6  grid-margin stretch-card">
+<div class="card border-0 w-50 mx-auto">       
+  <div class="card-body pt-3 pb-0 text-center" style="height:400px;">
+    <highcharts-chart
+      [Highcharts]="Highcharts"
+      [options]="partyMediaChartOptions"
+      style="width:100%; height:100%; display:block;">
+    </highcharts-chart>
+  </div>
+
+
+  <div class="card-footer bgTable ">
+    <h4 class="card-title text-center ">Party Wise Media Count</h4> 
+</div>
+
+</div>
+
+
+
+
+    <!-- <div class="col-xl-6  grid-margin stretch-card">
 
       <div class="card border-0">
         <div class="card-body pb-0 pt-3">
@@ -74,7 +95,7 @@
           </div>
           <div class="row">
             <div class="col-sm-12">
-              <!-- <canvas id="addParty" class="mt-3"></canvas> -->
+            
               <canvas baseChart class="chart" [data]="AdsData" [options]="AdsOptions" [type]="barChartType">
               </canvas>
             </div>
@@ -85,28 +106,35 @@
           <h4 class="card-title text-center">Top Ad Parties</h4>
         </div>
       </div>
-    </div>
+    </div> -->
 
+
+
+
+
+
+    
     <div class="col-xl-6  grid-margin stretch-card">
       <div class="card border-0">
 
-        <div class="card-body p-3 pb-0 bgTable">
-
-          <div class="table-responsive">
+        <div class="card-body p-3 pb-3 bgTable">
+         
+          <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+          <!-- <div class="table-responsive"> -->
             <table class="table table-striped text-center mb-0 table-light w-100" datatable>
               <thead>
                 <tr>
                   <th>Location</th>
                   <th>Preview</th>
-                  <th>Screenshot</th>
+                
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let vms of vmsList">
-                  <td class="p-0">{{ vms.location }}</td>
-                  <td class="p-0"><a class="badge badge-primary" [href]="vms.name"><i class="icon-eye"></i> Preview</a>
-                  </td>
-                  <td class="p-0"><i class="icon-image text-primary icon-md"></i></td>
+                <tr *ngFor="let vms of listViewData">
+                  <td class="p-0">{{ vms.vmsDescription }}</td>
+                 <td (click)="ViewScreenshot(vms)"><button type="button" class="btn btn-primary btn-sm"><i
+                  class="fa fa-eye" ></i> View</button></td>
+                  <!-- <td class="p-0"><i class="icon-image text-primary icon-md"></i></td> -->
                 </tr>
               </tbody>
             </table>

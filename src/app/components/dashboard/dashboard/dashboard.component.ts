@@ -2,11 +2,14 @@ import { Component } from '@angular/core';
 import { OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { map } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ChartConfiguration, ChartData, ChartOptions, ChartType } from 'chart.js'
 import { UserFacadeService } from 'src/app/facade/facade_services/user-facade.service';
 import { CommonFacadeService } from 'src/app/facade/facade_services/common-facade.service';
 import { Globals } from 'src/app/utils/global';
 import * as Highcharts from 'highcharts';
+import { ScreenshotListviewComponent } from '../screenshot-listview/screenshot-listview.component';
+import { DashboardFacadeService } from 'src/app/facade/facade_services/dashboard-facade.service';
 
 declare let $: any;
 
@@ -123,7 +126,7 @@ export class DashboardComponent implements OnInit {
 
     },
   };
-
+  listViewData : any[]=[];
   public AdsData: ChartData<'bar'> = {
     labels: [],
     datasets: [
@@ -160,14 +163,20 @@ export class DashboardComponent implements OnInit {
   constructor(private _userfacadeservice: UserFacadeService,
     private _router: Router,
     private _commonFacade: CommonFacadeService,
-    private global: Globals) {
+    private global: Globals,
+  private _dashboardFacade: DashboardFacadeService,
+private modalService: NgbModal,) {
+      
     this.global.CurrentPage = "Dashboard";
   }
   dashboardChart: any = [];
+  dashboardChart2: any = [];
   vmsList: any = [];
 
   ngOnInit(): void {
     this.GetChartData();
+    this.GetChartData2();
+    this.getListViewData();
   }
   changeBarChartConfiguration() {
     let barChartConfig: ChartConfiguration['options'] = {
@@ -193,6 +202,21 @@ export class DashboardComponent implements OnInit {
     };
     this.barChartOptions = barChartConfig;
   }
+   ViewScreenshot(data:any){
+      console.log(data);
+  
+       const modalRef = this.modalService.open(ScreenshotListviewComponent, { ariaLabelledBy: 'modal-basic-title', size: 'xl' });
+            modalRef.componentInstance.data = data;
+            modalRef.componentInstance.passEntry.subscribe((receivedEntry: any) => {
+            })
+    }
+  getListViewData() {
+    this._dashboardFacade.getListViewData().subscribe(res => {
+      if (res != null && res != undefined && res.length > 0) {
+        this.listViewData =res;
+      }
+    })
+  }
   GetChartData() {
     this._userfacadeservice.GetDashboardCharts().subscribe(res => {
       this.dashboardChart = res;
@@ -202,16 +226,21 @@ export class DashboardComponent implements OnInit {
       let backgroundColors: any[] = [];
       devdata.push(this.dashboardChart.deviceData.active);
       devdata.push(this.dashboardChart.deviceData.inActive);
-
+      let active = ((Number(devdata[0]) / (Number(devdata[0]) + Number(devdata[1]))) * 100).toFixed(2);
+      let inactive = ((Number(devdata[1]) / (Number(devdata[0]) + Number(devdata[1]))) * 100).toFixed(2);
       this.deviceChartOptions = Highcharts.setOptions({
         chart: { type: 'pie' },
-        title: { text: 'Market Share' },
+        title: { text: 'Device Status' },
         series: [{
-          name: 'Share',
+          name: 'Status',
           type: 'pie',
+          dataLabels:[{
+format: '{point.percentage:.1f}%',
+          }
+          ],
           data: [
-            { name: 'Active', y: Number(devdata[1])},
-            { name: 'Inactive', y: Number(devdata[1])},
+            { name: 'Active %', y: Number(active)},
+            { name: 'Inactive %', y: Number(inactive)},
           ]
         }]
       });
@@ -280,6 +309,77 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+   partyMediaChartOptions: Highcharts.Options = {};
+GetChartData2() {
+  this._userfacadeservice.GetPartyWiseMedia().subscribe((res: any[]) => {
+    const xAxisLabels: string[] = [];
+    const yAxisData: number[] = [];
+
+    res.forEach((ele: any) => {
+      xAxisLabels.push(ele.partyName);
+      yAxisData.push(ele.mediaCount);
+    });
+
+   this.partyMediaChartOptions = {
+  chart: {
+    type: 'column'
+  },
+  title: {
+    text: 'Party Wise Media Count'
+  },
+  xAxis: {
+    categories: xAxisLabels,
+    title: {
+      text: 'Party Name'
+    }
+  },
+  yAxis: {
+    min: 0,
+    max: 300,
+    title: {
+      text: 'Media Count'
+    }
+  },
+  tooltip: {
+    pointFormat: 'Media Count: <b>{point.y}</b>'
+  },
+  plotOptions: {
+    column: {
+      colorByPoint: true,
+      // dataLabels: {
+      //   enabled: true,
+      //   formatter: function () {
+      //      return this.y?.toString() ?? '';
+      //   },
+      //   style: {
+      //     fontWeight: 'bold',
+      //     fontSize: '13px',
+      //     color: '#000000'
+      //   }
+      // }
+    },
+   
+    // series: {                                                   
+    //   dataLabels: {
+    //     enabled: true,
+    //     formatter: function () {
+    //    return this.y?.toString() ?? '';
+    //     }
+    //   }
+    // }
+  },
+  series: [{
+    name: 'Media Count',
+    type: 'column',
+    data: yAxisData
+  }],
+  colors: ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80']
+} as Highcharts.Options;
+
+  });
+}
+
+
 
   randomRGB() {
     var x = Math.floor(Math.random() * 256);

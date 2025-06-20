@@ -1,5 +1,5 @@
 export const environment = {
-    version:"2.1.6",
+    version:"2.1.7",
     production: false,
     user:"superadmin",
     password:"Cms$$2023#1",
@@ -19,5 +19,5 @@ export const environment = {
     // PreviewPath : "https://172.19.32.161:442/mediaLists/playlists/",
     // SSE_Url : "https://172.19.32.161:442/publish_api/notify",
     // Socket_URL : "http://172.19.32.161:3000/",
-    autoTimeout : 5
+    autoTimeout : 15
   };
