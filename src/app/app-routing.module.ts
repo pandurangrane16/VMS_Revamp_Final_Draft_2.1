@@ -363,7 +363,7 @@ const routes: Routes = [
   },  
   { 
     path: "cvms/livePlaylist", 
-    component: CmGmapComponent,
+    component: EmergencyPlayCvmsComponent,
     data: { title: 'Emergency Play' },
     canActivate: [AuthGuradService]
   },    
