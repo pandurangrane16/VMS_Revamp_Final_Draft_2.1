@@ -367,12 +367,12 @@ const routes: Routes = [
     data: { title: 'Emergency Play' },
     canActivate: [AuthGuradService]
   },    
-  { 
-    path: "cvms/livePlaylist", 
-    component: MedialiveplaylistComponent,
-    data: { title: 'Emergency Play' },
-    canActivate: [AuthGuradService]
-  },    
+  // { 
+  //   path: "cvms/livePlaylist", 
+  //   component: MedialiveplaylistComponent,
+  //   data: { title: 'Emergency Play' },
+  //   canActivate: [AuthGuradService]
+  // },    
   { 
     path: "forgotPass", 
     component: ForgotPasswordComponent,
