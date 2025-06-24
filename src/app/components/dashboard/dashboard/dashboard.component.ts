@@ -310,6 +310,74 @@ format: '{point.percentage:.1f}%',
     });
   }
    partyMediaChartOptions: Highcharts.Options = {};
+// GetChartData2() {
+//   this._userfacadeservice.GetPartyWiseMedia().subscribe((res: any[]) => {
+//     const xAxisLabels: string[] = [];
+//     const yAxisData: number[] = [];
+
+//     res.forEach((ele: any) => {
+//       xAxisLabels.push(ele.partyName);
+//       yAxisData.push(ele.mediaCount);
+//     });
+
+//    this.partyMediaChartOptions = {
+//   chart: {
+//     type: 'column'
+//   },
+//   title: {
+//     text: 'Party Wise Media Count'
+//   },
+//   xAxis: {
+//     categories: xAxisLabels,
+//     title: {
+//       text: 'Party Name'
+//     }
+//   },
+//   yAxis: {
+//     min: 0,
+//     max: 300,
+//     title: {
+//       text: 'Media Count'
+//     }
+//   },
+//   tooltip: {
+//     pointFormat: 'Media Count: <b>{point.y}</b>'
+//   },
+//   plotOptions: {
+//     column: {
+//       colorByPoint: true,
+//       // dataLabels: {
+//       //   enabled: true,
+//       //   formatter: function () {
+//       //      return this.y?.toString() ?? '';
+//       //   },
+//       //   style: {
+//       //     fontWeight: 'bold',
+//       //     fontSize: '13px',
+//       //     color: '#000000'
+//       //   }
+//       // }
+//     },
+   
+//     // series: {                                                   
+//     //   dataLabels: {
+//     //     enabled: true,
+//     //     formatter: function () {
+//     //    return this.y?.toString() ?? '';
+//     //     }
+//     //   }
+//     // }
+//   },
+//   series: [{
+//     name: 'Media Count',
+//     type: 'column',
+//     data: yAxisData
+//   }],
+//   colors: ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80']
+// } as Highcharts.Options;
+
+//   });
+// }
 GetChartData2() {
   this._userfacadeservice.GetPartyWiseMedia().subscribe((res: any[]) => {
     const xAxisLabels: string[] = [];
@@ -320,64 +388,51 @@ GetChartData2() {
       yAxisData.push(ele.mediaCount);
     });
 
-   this.partyMediaChartOptions = {
-  chart: {
-    type: 'column'
-  },
-  title: {
-    text: 'Party Wise Media Count'
-  },
-  xAxis: {
-    categories: xAxisLabels,
-    title: {
-      text: 'Party Name'
-    }
-  },
-  yAxis: {
-    min: 0,
-    max: 300,
-    title: {
-      text: 'Media Count'
-    }
-  },
-  tooltip: {
-    pointFormat: 'Media Count: <b>{point.y}</b>'
-  },
-  plotOptions: {
-    column: {
-      colorByPoint: true,
-      // dataLabels: {
-      //   enabled: true,
-      //   formatter: function () {
-      //      return this.y?.toString() ?? '';
-      //   },
-      //   style: {
-      //     fontWeight: 'bold',
-      //     fontSize: '13px',
-      //     color: '#000000'
-      //   }
-      // }
-    },
-   
-    // series: {                                                   
-    //   dataLabels: {
-    //     enabled: true,
-    //     formatter: function () {
-    //    return this.y?.toString() ?? '';
-    //     }
-    //   }
-    // }
-  },
-  series: [{
-    name: 'Media Count',
-    type: 'column',
-    data: yAxisData
-  }],
-  colors: ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80']
-} as Highcharts.Options;
+    // Step 1: Find max media count
+    const maxMediaCount = Math.max(...yAxisData);
 
+    // Step 2: Add 300 and round up to nearest 100
+    const dynamicMax = Math.ceil((maxMediaCount + 300) / 100) * 100;
+
+    // Step 3: Set up chart options
+    this.partyMediaChartOptions = {
+      chart: {
+        type: 'column'
+      },
+      title: {
+        text: 'Party Wise Media Count'
+      },
+      xAxis: {
+        categories: xAxisLabels,
+        title: {
+          text: 'Party Name'
+        }
+      },
+      yAxis: {
+        min: 0,
+        max: dynamicMax,
+        title: {
+          text: 'Media Count'
+        }
+      },
+      tooltip: {
+        pointFormat: 'Media Count: <b>{point.y}</b>'
+      },
+      plotOptions: {
+        column: {
+          colorByPoint: true
+        }
+      },
+      series: [{
+        name: 'Media Count',
+        type: 'column',
+        data: yAxisData
+      }],
+      colors: ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80']
+    } as Highcharts.Options;
   });
 }
+
 
 
 
