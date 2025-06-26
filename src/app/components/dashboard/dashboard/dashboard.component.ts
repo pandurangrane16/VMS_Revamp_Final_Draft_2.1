@@ -383,6 +383,7 @@ GetChartData2() {
 
 
 
+
   randomRGB() {
     var x = Math.floor(Math.random() * 256);
     var y = Math.floor(Math.random() * 256);
