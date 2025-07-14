@@ -175,8 +175,9 @@ private modalService: NgbModal,) {
 
   ngOnInit(): void {
     this.GetChartData();
-    this.GetChartData2();
-    this.getListViewData();
+    setTimeout(()=>{
+      this.GetChartData2();
+    },500);
   }
   changeBarChartConfiguration() {
     let barChartConfig: ChartConfiguration['options'] = {
@@ -205,7 +206,7 @@ private modalService: NgbModal,) {
    ViewScreenshot(data:any){
       console.log(data);
   
-       const modalRef = this.modalService.open(ScreenshotListviewComponent, { ariaLabelledBy: 'modal-basic-title', size: 'xl' });
+       const modalRef = this.modalService.open(ScreenshotListviewComponent, { ariaLabelledBy: 'modal-basic-title', size: 'lg' });
             modalRef.componentInstance.data = data;
             modalRef.componentInstance.passEntry.subscribe((receivedEntry: any) => {
             })
@@ -309,7 +310,7 @@ format: '{point.percentage:.1f}%',
       }
     });
   }
-   partyMediaChartOptions: Highcharts.Options = {};
+   partyMediaChartOptions: any;
 GetChartData2() {
   this._userfacadeservice.GetPartyWiseMedia().subscribe((res: any[]) => {
     const xAxisLabels: string[] = [];
@@ -376,8 +377,10 @@ GetChartData2() {
   colors: ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80']
 } as Highcharts.Options;
 
+    this.getListViewData();
   });
 }
+
 
 
 

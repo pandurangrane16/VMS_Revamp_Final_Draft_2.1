@@ -88,7 +88,7 @@ export class MediareportComponent {
         private _sessionService: SessionService,
         public datepipe: DatePipe,
     ) {
-        this.global.CurrentPage = "Network Report";
+        this.global.CurrentPage = "Media Playback Details";
         this.dropdownSettingsVms = {
             singleSelection: false,
             idField: 'value',

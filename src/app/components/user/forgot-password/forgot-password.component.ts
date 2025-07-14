@@ -161,7 +161,7 @@ ValidateOTP(){
     this.userFacade.ValidateOTP(this.form.controls.username.value, this.form.controls.otp.value).subscribe((response: any) => {
      if(response == 2) {
       this.toast.error("OTP validity is expired, kindly generate again.");
-
+ this.validate=false;
      }
       else if (response == 1 ) {
         
