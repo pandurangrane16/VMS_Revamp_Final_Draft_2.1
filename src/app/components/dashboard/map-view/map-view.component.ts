@@ -13,6 +13,7 @@ import { Subject } from 'rxjs';
 import { CmLeafletComponent } from '../../shared/cm-leaflet/cm-leaflet.component';
 import { Router } from '@angular/router';
 import { CmEmergencyComponent } from 'src/app/widget/cm-emergency/cm-emergency.component';
+import { SessionService } from 'src/app/facade/services/common/session.service';
 const myStyle = {
 	"color": "green",
 	"weight": 5,
@@ -34,6 +35,7 @@ L.Marker.prototype.options.icon = markerIcon;
   styleUrls: ['./map-view.component.css'],
 })
 export class MapViewComponent {
+  isGmap : boolean = false;
   public map :any;
   drawnItems: any;
   cordsArr: any[] = [];
@@ -71,6 +73,7 @@ export class MapViewComponent {
     private _commonFacade: CommonFacadeService,
     private global: Globals,
     private router : Router,
+    private sessionService : SessionService,
     private adminFacade: AdminFacadeService) {
     this.global.CurrentPage = "Map View";
   }
@@ -90,6 +93,9 @@ export class MapViewComponent {
     //   }),
     // });
     //this.zoneId = 0;
+    if(this.sessionService._getSessionValue("mapType") == "GMAP")
+        this.isGmap = true;
+      else this.isGmap = false;
     this.getZoneData();
   }
 

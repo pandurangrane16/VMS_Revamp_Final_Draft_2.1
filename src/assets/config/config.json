@@ -1,4 +1,5 @@
     {
+        "map_type" : "GMAP",
         "api_url": "https://172.19.32.51:8025/",
         "swagger_url": "https://172.19.32.51:8025/user_api/swagger",
         "networkReportPath": "https://172.19.32.51:8025/MediaLists/",

@@ -38,6 +38,7 @@ export class HttpService {
       .pipe(take(1))
       .subscribe((_config: any) => {
         this._sessionService._setSessionValue("swagger_url", _config.swagger_url);
+        this._sessionService._setSessionValue("mapType",_config.map_type);
       })
   }
 

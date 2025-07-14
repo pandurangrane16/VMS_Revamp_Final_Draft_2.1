@@ -2,3 +2,75 @@
     width: 100%;
     height: 1000px;
   }
+
+
+  /*custom-popup style*/
+::ng-deep .leaflet-popup-content-wrapper {
+  background: #222222!important;
+  color: #ffffff!important;
+  font-size: 12px!important;
+  line-height: 24px!important;
+  border-radius: 0px!important;
+}
+::ng-deep .leaflet-popup-content-wrapper a {
+  color: #ffffff!important;
+}
+::ng-deep .leaflet-popup-tip-container {
+  width: 50px;
+  height: 15px;
+}
+::ng-deep .leaflet-popup-tip {
+  background: #222222!important;
+  border: none!important;
+  box-shadow: none!important;
+}
+::ng-deep .leaflet-popup-content{
+  color: #ffffff!important;
+}
+::ng-deep .leaflet-touch .leaflet-right .leaflet-draw-actions{
+  display: none!important;
+}
+
+.ol-popup {
+  position: absolute;
+   background: #222222!important;
+  color: #ffffff!important;
+  font-size: 12px!important;
+  line-height: 20px!important;
+  border-radius: 10px!important;
+  bottom: 12px;
+  left: -50px;
+  z-index: 10;
+  padding: 15px;
+}
+::ng-deep .ol-popup .popup-content p{margin-bottom: 0!important;}
+::ng-deep .ol-popup .popup-content img{margin-bottom:10px!important;}
+.ol-popup:after, .ol-popup:before {
+  top: 100%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.ol-popup:after {
+  border-top-color: #222222;
+  border-width: 10px;
+  left: 48px;
+  margin-left: -10px;
+}
+.ol-popup:before {
+  border-top-color: #222222;
+  border-width: 11px;
+  left: 48px;
+  margin-left: -11px;
+}
+
+.ol-popup-closer {
+  text-decoration: none;
+  position: absolute;
+  top: 5px;
+  right: 8px;
+}
