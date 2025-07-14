@@ -236,12 +236,13 @@ private modalService: NgbModal,) {
           name: 'Status',
           type: 'pie',
           dataLabels:[{
-format: '{point.percentage:.1f}%',
+//format: '{point.percentage:.1f}%',
+          format: '{point.name}: {point.y}',
           }
           ],
           data: [
-            { name: 'Active %', y: Number(active)},
-            { name: 'Inactive %', y: Number(inactive)},
+            { name: 'Active', y: Number(this.dashboardChart.deviceData.active)},
+            { name: 'Inactive', y: Number(this.dashboardChart.deviceData.inActive)},
           ]
         }]
       });
