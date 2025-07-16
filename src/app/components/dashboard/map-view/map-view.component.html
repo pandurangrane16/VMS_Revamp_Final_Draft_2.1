@@ -42,6 +42,7 @@
   [leafletOptions]="options"> 
 </div>-->
   <div style="height:60%; padding-bottom: 20px;">
-    <app-cm-leaflet type="map" [selectedFilter]="filters"></app-cm-leaflet>
+    <app-cm-leaflet *ngIf="!isGmap" type="map" [selectedFilter]="filters"></app-cm-leaflet>
+    <app-cm-gmap *ngIf="isGmap" type="map" [selectedFilter]="filters"></app-cm-gmap>
   </div>
 </div>

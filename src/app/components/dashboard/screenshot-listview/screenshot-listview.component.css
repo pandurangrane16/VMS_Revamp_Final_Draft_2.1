@@ -1,0 +1,5 @@
+.full-width-img {
+  width: 100%;   /* full viewport width */
+  height: auto;
+  display: block;
+}
