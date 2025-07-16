@@ -1,0 +1,66 @@
+ 
+<div class="p-4">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- <button class="btn btn-primary btn-rounded mb-1" >
+                <i class="icon-arrow-left"></i> Back To List
+            </button> -->
+            <div class="card">
+                <form  [formGroup]="form" #mediaform="ngForm">
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="mb-3 col">
+                                              <label class="form-label lable-bold">Select Controller</label>
+
+                                <select class="form-control form-control-sm"formControlName="SelectedControllerId"
+                                    (change)="getSelectedVms($event)">
+                                    <option [ngValue]="null">Choose Controller</option>
+                                    <option *ngFor="let type of inputVmsData.data" [ngValue]="type.value">
+                                        {{type.displayName}}</option>
+                                </select>
+                        </div>
+                        </div>
+
+
+
+
+
+                    </div>
+                    <div class="card-footer text-right">
+                        <button class="btn btn-primary mr-2" (click)="onSubmit()" >
+                            <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                            Submit
+                        </button>
+                       
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row mb-3">
+        <div class="col-xl-12 stretch-card" id="listView">
+            <div class="card  border-0">
+                <div class="card-body p-2 bgTable" style="border-radius: 0 0;">
+                    <div class="text-right">
+                        <button class="btn reload" (click)="getMediaUploadData()"><i class="icon-reload"></i>
+                            Reload</button>
+                    </div>
+                    <app-cm-table [headArr]="headerArr" [gridArr]="listOfMediaSet" [totalRecords]="totalRecords"
+                        [totalPages]="totalPages" [perPage]="recordPerPage" (pager)="onPager($event)"
+                        [btnArray]="btnArray" [collectionSize]="totalRecords"
+                        (recordPerPage)="onRecordPageChange($event)" link="masters/add-party" fieldName="id"
+                        (search)="onPageSearch($event)" (btnAction)="ButtonAction($event)" [isSearch]="isSearch"
+                        (searchWithId)="SearchWithId($event)">
+                    </app-cm-table>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</div>

@@ -18,4 +18,12 @@ export class MedialiveplayService {
      return this._httpService._postMethod(data,'Vcms_API/api/LivePlay/GetDetails?type=' + type);
   }
 
+    CancelPlay(data: any) {    
+    return this._httpService._postMethod(data, 'Vcms_API/api/PlayCancel/GetDetails');    
+  }
+      PostPlayCancel(data: any) {    
+    return this._httpService._postMethod(data, 'Vcms_API/api/PlayCancel/PostPlayCancel');    
+  }
+
+
 }

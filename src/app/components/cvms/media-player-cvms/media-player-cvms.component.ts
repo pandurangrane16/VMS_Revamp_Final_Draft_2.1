@@ -284,6 +284,17 @@ export class MediaPlayerCvmsComponent {
     this.ShowSaveBtn = true;
 
   }
+
+  extractFileName(originalName: string): string {
+    if (!originalName) {
+      return '';
+    }
+    const lastDotIndex = originalName.lastIndexOf('.');
+    const baseName = lastDotIndex === -1 ? originalName : originalName.substring(0, lastDotIndex);
+    const extension = lastDotIndex === -1 ? '' : originalName.substring(lastDotIndex);
+    const truncatedBaseName = baseName.substring(0, 25);
+    return truncatedBaseName + extension;
+  }
   generateRows(idx: number) {
     //console.log(JSON.stringify(this.selectedMediaId))
 
@@ -304,11 +315,15 @@ export class MediaPlayerCvmsComponent {
         "backgroundColor": ""
       }
       if (this.selectedMediaId[0][i].mediaDetails != null) {
+
+         
+
+
         _plMedia.imageTextDuration = this.selectedMediaId[0][i].mediaDetails.duration;
         _plMedia.filesize= this.selectedMediaId[0][i].mediaDetails.filesize;
         _plMedia.filepath= this.selectedMediaId[0][i].mediaDetails.filepath;
         _plMedia.mediaId = this.selectedMediaId[0][i].resposneId;
-        _plMedia.mediaName = this.selectedMediaId[0][i].mediaDetails.displayname;
+        _plMedia.mediaName =this.extractFileName(this.selectedMediaId[0][i].mediaDetails.filename);
         _plMedia.playOrder = this.selectedMediaId[0][i].mediaDetails.playOrder;
         _plMedia.videoLoopCount = this.selectedMediaId[0][i].mediaDetails.videoLoopCount;
         _plMedia.textStyle = _textStyle;

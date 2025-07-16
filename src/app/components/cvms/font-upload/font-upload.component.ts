@@ -47,10 +47,10 @@ import { ConfirmationDialogService } from 'src/app/facade/services/confirmation-
     selectedFile: File | null = null;
    constructor(
      // private fb: FormBuilder,
-     private global : Globals,
+      private global : Globals,
       private _toast: ToastrService,
       private adminFacade: AdminFacadeService,
-   private _commonFacade: CommonFacadeService,
+      private _commonFacade: CommonFacadeService,
       private _router: Router,
       private formBuilder: FormBuilder,
       private toast: ToastrService,

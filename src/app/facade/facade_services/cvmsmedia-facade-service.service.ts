@@ -67,7 +67,17 @@ export class CVMSMediaFacadeServiceService {
   GetFontuploaddata(data:any){   
     return this._vmscomm.GetFontuploaddata(data);
   }
-  
+
+
+  CancelPlay(data:any){   
+    return this._medialive.CancelPlay(data);
+  }
+
+    PostPlayCancel(data:any){   
+    return this._medialive.PostPlayCancel(data);
+  }
+
+ 
   
   GetFontupload_font(data:any){   
     return this._vmscomm.GetFontupload_font(data);

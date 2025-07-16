@@ -54,6 +54,8 @@ import { FontUploadComponent } from './components/cvms/font-upload/font-upload.c
 import {AirtimeReportCvmsComponent} from './components/cvms/cvms-airtime-report/cvms-airtime-report.component';
 import { CmGmapComponent } from './components/shared/cm-gmap/cm-gmap.component';
 import { ForgotPasswordComponent } from './components/user/forgot-password/forgot-password.component';
+import { CancelPlayComponent } from './components/cvms/cancel-play/cancel-play.component';
+
 const routes: Routes = [
   {
     path: "",
@@ -355,24 +357,31 @@ const routes: Routes = [
     data: { title: 'Media Scheduler' },
     canActivate: [AuthGuradService]
   },
+
   { 
     path: "cvms/livePlay", 
     component: EmergencyPlayCvmsComponent,
     data: { title: 'Emergency Play' },
     canActivate: [AuthGuradService]
   },  
-  { 
-    path: "cvms/livePlaylist", 
-    component: EmergencyPlayCvmsComponent,
-    data: { title: 'Emergency Play' },
+    { 
+    path: "cvms/cancel-play", 
+    component: CancelPlayComponent,
+    data: { title: 'Cancel Play' },
     canActivate: [AuthGuradService]
-  },    
+  },  
   // { 
   //   path: "cvms/livePlaylist", 
-  //   component: MedialiveplaylistComponent,
+  //   component: EmergencyPlayCvmsComponent,
   //   data: { title: 'Emergency Play' },
   //   canActivate: [AuthGuradService]
   // },    
+  { 
+    path: "cvms/livePlaylist", 
+    component: MedialiveplaylistComponent,
+    data: { title: 'Emergency Play' },
+    canActivate: [AuthGuradService]
+  },    
   { 
     path: "forgotPass", 
     component: ForgotPasswordComponent,

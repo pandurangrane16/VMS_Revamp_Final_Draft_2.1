@@ -120,6 +120,8 @@ import { ScreenshotListviewComponent } from './components/dashboard/screenshot-l
 import { CmGmapComponent } from './components/shared/cm-gmap/cm-gmap.component';
 import { ForgotPasswordComponent } from './components/user/forgot-password/forgot-password.component';
 import { HighchartsChartModule } from 'highcharts-angular';
+import { CancelPlayComponent } from './components/cvms/cancel-play/cancel-play.component';
+
 
 
 
@@ -203,7 +205,9 @@ const config: SocketIoConfig = { url: environment.Socket_URL, options: {} };
     AiredReportComponent,
     ScreenshotListviewComponent,
     CmGmapComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    CancelPlayComponent,
+  
     
   ],
   imports: [
