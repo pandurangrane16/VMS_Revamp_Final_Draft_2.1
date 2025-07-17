@@ -265,7 +265,9 @@ export class AirtimeReportCvmsComponent {
     this._reportService.getReportEnquiryDetails(1).subscribe(res => {
       if (res != null) {
         this.listOfData = res;
+          this.listOfData.sort((a: any, b: any) => b.id - a.id);
         this.listOfData.forEach((element: any) => {
+          
           let ids = element.vmsIds.split(",");
           let cnt = ids.length;
           if (cnt == 0)
