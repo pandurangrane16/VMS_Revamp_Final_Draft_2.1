@@ -321,7 +321,6 @@ GetChartData2() {
       xAxisLabels.push(ele.partyName);
       yAxisData.push(ele.mediaCount);
     });
-
    this.partyMediaChartOptions = {
   chart: {
     type: 'column'
@@ -337,7 +336,7 @@ GetChartData2() {
   },
   yAxis: {
     min: 0,
-    max: 300,
+    max: 1000,
     title: {
       text: 'Media Count'
     }
