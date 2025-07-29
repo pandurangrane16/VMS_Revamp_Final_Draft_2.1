@@ -64,6 +64,7 @@ export class DashboardComponent implements OnInit {
   };
 
   public barChartOptions: any;
+  public barMdChartOptions: any;
   public barChartType: ChartType = 'bar';
 
 
@@ -126,7 +127,7 @@ export class DashboardComponent implements OnInit {
 
     },
   };
-  listViewData : any[]=[];
+  listViewData: any[] = [];
   public AdsData: ChartData<'bar'> = {
     labels: [],
     datasets: [
@@ -140,81 +141,84 @@ export class DashboardComponent implements OnInit {
     ]
 
   };
-  //   public AdsData: ChartData<'bar'> = {
-  //     labels: ["Pepsi", "Coke", "Patanjali", "Government"],
-  //     datasets: [
-  //      { data: [12,19,13,24],
-  //        backgroundColor: [
-  //          'rgba(153, 102, 255, 1)',
-  //        'rgba(247, 33, 79, 1)',
-  //        'rgba(81, 200, 28, 1)',
-  //        'rgba(255, 159, 64, 1)',
-  //     ] ,
-  //     barThickness: 35,
-  //     maxBarThickness: 40,
-  //     barPercentage: 0.50,
-
-  //    },
-
-  //    ]
-
-  // } ;
-
   constructor(private _userfacadeservice: UserFacadeService,
     private _router: Router,
     private _commonFacade: CommonFacadeService,
     private global: Globals,
-  private _dashboardFacade: DashboardFacadeService,
-private modalService: NgbModal,) {
-      
+    private _dashboardFacade: DashboardFacadeService,
+    private modalService: NgbModal,) {
+
     this.global.CurrentPage = "Dashboard";
   }
+
+  // Highcharts: typeof Highcharts = Highcharts;
   dashboardChart: any = [];
   dashboardChart2: any = [];
   vmsList: any = [];
 
   ngOnInit(): void {
     this.GetChartData();
-    setTimeout(()=>{
+    setTimeout(() => {
       this.GetChartData2();
-    },500);
+    }, 500);
   }
-  changeBarChartConfiguration() {
-    let barChartConfig: ChartConfiguration['options'] = {
-      responsive: true,
-      indexAxis: 'y',
-      // We use these empty structures as placeholders for dynamic theming.
-      scales: {
-        x: {
-          min: 0,
-          max: this.totalBarChartSize
-        },
-        y: {
-          min: 0,
-          max: this.totalBarChartSize
+  changeBarChartConfiguration(data: any, type: string) {
+    let BarchartOptions: Highcharts.Options = {
+      chart: {
+        type: 'column'
+      },
+      title: {
+        text: type
+      },
+      xAxis: {
+        categories: ['Pending', 'Approved', 'Rejected']
+      },
+      yAxis: {
+        min: 0,
+        title: {
+          text: 'Quantity'
         }
       },
-      plugins: {
-        legend: {
-          display: false,
-        },
-
-      }
+      plotOptions: {
+        column: {
+          dataLabels: {
+            enabled: true,
+            inside: false,         // Ensures label is outside the bar
+            verticalAlign: 'bottom', // Required to anchor at bottom of label box (so it appears above bar)
+            align: 'center',       // Center horizontally on bar
+            y: -6,                 // Negative Y pushes label slightly above bar
+            style: {
+              fontWeight: 'bold',
+              color: '#000'
+            },
+            formatter: function () {
+              return this.y;       // Show the value
+            }
+          }
+        }
+      },
+      series: [{
+        type: 'column',
+        data: data
+      }]
     };
-    this.barChartOptions = barChartConfig;
+    if (type == 'Playlist Audit')
+      this.barChartOptions = BarchartOptions;
+    else
+      this.barMdChartOptions = BarchartOptions;
   }
-   ViewScreenshot(data:any){
-      console.log(data);
-  
-       const modalRef = this.modalService.open(ScreenshotListviewComponent, { ariaLabelledBy: 'modal-basic-title', size: 'lg' });
-            modalRef.componentInstance.data = data;
-            modalRef.componentInstance.passEntry.subscribe((receivedEntry: any) => {
-            })
-    }
+  ViewScreenshot(data: any) {
+    console.log(data);
+
+    const modalRef = this.modalService.open(ScreenshotListviewComponent, { ariaLabelledBy: 'modal-basic-title', size: 'lg' });
+    modalRef.componentInstance.data = data;
+    modalRef.componentInstance.passEntry.subscribe((receivedEntry: any) => {
+    })
+  }
   getListViewData() {
     this._dashboardFacade.getListViewData().subscribe(res => {
       if (res != null && res != undefined && res.length > 0) {
-        this.listViewData =res;
+        this.listViewData = res;
       }
     })
   }
@@ -235,29 +239,30 @@ private modalService: NgbModal,) {
         series: [{
           name: 'Status',
           type: 'pie',
-          dataLabels:[{
-//format: '{point.percentage:.1f}%',
-          format: '{point.name}: {point.y}',
+          dataLabels: [{
+            //format: '{point.percentage:.1f}%',
+            format: '{point.name}: {point.y}',
           }
           ],
           data: [
-            { name: 'Active', y: Number(this.dashboardChart.deviceData.active)},
-            { name: 'Inactive', y: Number(this.dashboardChart.deviceData.inActive)},
+            { name: 'Active', y: Number(this.dashboardChart.deviceData.active) },
+            { name: 'Inactive', y: Number(this.dashboardChart.deviceData.inActive) },
           ]
         }]
       });
       console.log(this.deviceChartOptions);
       let mediadata = [];
-      mediadata.push(this.dashboardChart.mediaAudit.pending);
-      mediadata.push(this.dashboardChart.mediaAudit.rejected);
-      mediadata.push(this.dashboardChart.mediaAudit.approved);
+      mediadata.push({ y: Number(this.dashboardChart.mediaAudit.pending),color:'#F7F40C', name: 'Pending Media count for approval' });
+      mediadata.push({ y: Number(this.dashboardChart.mediaAudit.approved),color:'#09D657', name: 'Approved Playlist count' });
+      mediadata.push({ y: Number(this.dashboardChart.mediaAudit.rejected),color:'#F52A05', name: 'Rejected Playlist count for apprval' });
 
       let pldata = [];
-      pldata.push(this.dashboardChart.playlistAudit.pending);
-      pldata.push(this.dashboardChart.playlistAudit.rejected);
-      pldata.push(this.dashboardChart.playlistAudit.approved);
+      pldata.push({ y: Number(this.dashboardChart.playlistAudit.pending), color: '#F7F40C', name: 'Pending Playlist count for apprval' });
+      pldata.push({ y: Number(this.dashboardChart.playlistAudit.approved), color: '#09D657', name: 'Approved Playlist count' });
+      pldata.push({ y: Number(this.dashboardChart.playlistAudit.rejected), color: '#F52A05', name: 'Rejected Playlist count for apprval' });
       this.totalBarChartSize = (Number(this.dashboardChart.playlistAudit.pending) + Number(this.dashboardChart.playlistAudit.rejected) + Number(this.dashboardChart.playlistAudit.approved) + Number(this.dashboardChart.mediaAudit.pending) + Number(this.dashboardChart.mediaAudit.rejected) + Number(this.dashboardChart.mediaAudit.approved));
-      this.changeBarChartConfiguration();
+      this.changeBarChartConfiguration(pldata, 'Playlist Audit');
+      this.changeBarChartConfiguration(mediadata, 'Media Audit');
       this.barChartOptions
       this.chartDataDevice = {
         labels: ['Enable', 'Disable',],
@@ -268,33 +273,33 @@ private modalService: NgbModal,) {
         ]
       };
 
-      this.mediaData = {
-        labels: ["Peding", "Rejected", "Approved"],
-        datasets: [
-          {
-            data: mediadata,
-            backgroundColor: [
-              'rgba(153, 102, 255, 1)',
-              'rgba(247, 33, 79, 1)',
-              'rgba(81, 200, 28, 1)',
-            ]
-          }
-        ]
-      };
+      // this.mediaData = {
+      //   labels: ["Peding", "Rejected", "Approved"],
+      //   datasets: [
+      //     {
+      //       data: mediadata,
+      //       backgroundColor: [
+      //         'rgba(153, 102, 255, 1)',
+      //         'rgba(247, 33, 79, 1)',
+      //         'rgba(81, 200, 28, 1)',
+      //       ]
+      //     }
+      //   ]
+      // };
 
-      this.PlaylistData = {
-        labels: ["Peding", "Rejected", "Approved"],
-        datasets: [
-          {
-            data: pldata,
-            backgroundColor: [
-              'rgba(153, 102, 255, 1)',
-              'rgba(247, 33, 79, 1)',
-              'rgba(81, 200, 28, 1)',
-            ]
-          }
-        ]
-      };
+      // this.PlaylistData = {
+      //   labels: ["Peding", "Rejected", "Approved"],
+      //   datasets: [
+      //     {
+      //       data: pldata,
+      //       backgroundColor: [
+      //         'rgba(153, 102, 255, 1)',
+      //         'rgba(247, 33, 79, 1)',
+      //         'rgba(81, 200, 28, 1)',
+      //       ]
+      //     }
+      //   ]
+      // };
       res.topPartiesData.forEach((ele: any) => {
         adslabels.push(ele.partyName);
         adsCounts.push(ele.adCount);
@@ -311,75 +316,75 @@ private modalService: NgbModal,) {
       }
     });
   }
-   partyMediaChartOptions: any;
-GetChartData2() {
-  this._userfacadeservice.GetPartyWiseMedia().subscribe((res: any[]) => {
-    const xAxisLabels: string[] = [];
-    const yAxisData: number[] = [];
+  partyMediaChartOptions: any;
+  GetChartData2() {
+    this._userfacadeservice.GetPartyWiseMedia().subscribe((res: any[]) => {
+      const xAxisLabels: string[] = [];
+      const yAxisData: number[] = [];
 
-    res.forEach((ele: any) => {
-      xAxisLabels.push(ele.partyName);
-      yAxisData.push(ele.mediaCount);
+      res.forEach((ele: any) => {
+        xAxisLabels.push(ele.partyName);
+        yAxisData.push(ele.mediaCount);
+      });
+      this.partyMediaChartOptions = {
+        chart: {
+          type: 'column'
+        },
+        title: {
+          text: 'Party Wise Media Count'
+        },
+        xAxis: {
+          categories: xAxisLabels,
+          title: {
+            text: 'Party Name'
+          }
+        },
+        yAxis: {
+          min: 0,
+          max: 1000,
+          title: {
+            text: 'Media Count'
+          }
+        },
+        tooltip: {
+          pointFormat: 'Media Count: <b>{point.y}</b>'
+        },
+        plotOptions: {
+          column: {
+            colorByPoint: true,
+            // dataLabels: {
+            //   enabled: true,
+            //   formatter: function () {
+            //      return this.y?.toString() ?? '';
+            //   },
+            //   style: {
+            //     fontWeight: 'bold',
+            //     fontSize: '13px',
+            //     color: '#000000'
+            //   }
+            // }
+          },
+
+          // series: {                                                   
+          //   dataLabels: {
+          //     enabled: true,
+          //     formatter: function () {
+          //    return this.y?.toString() ?? '';
+          //     }
+          //   }
+          // }
+        },
+        series: [{
+          name: 'Media Count',
+          type: 'column',
+          data: yAxisData
+        }],
+        colors: ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80']
+      } as Highcharts.Options;
+
+      this.getListViewData();
     });
-   this.partyMediaChartOptions = {
-  chart: {
-    type: 'column'
-  },
-  title: {
-    text: 'Party Wise Media Count'
-  },
-  xAxis: {
-    categories: xAxisLabels,
-    title: {
-      text: 'Party Name'
-    }
-  },
-  yAxis: {
-    min: 0,
-    max: 1000,
-    title: {
-      text: 'Media Count'
-    }
-  },
-  tooltip: {
-    pointFormat: 'Media Count: <b>{point.y}</b>'
-  },
-  plotOptions: {
-    column: {
-      colorByPoint: true,
-      // dataLabels: {
-      //   enabled: true,
-      //   formatter: function () {
-      //      return this.y?.toString() ?? '';
-      //   },
-      //   style: {
-      //     fontWeight: 'bold',
-      //     fontSize: '13px',
-      //     color: '#000000'
-      //   }
-      // }
-    },
-   
-    // series: {                                                   
-    //   dataLabels: {
-    //     enabled: true,
-    //     formatter: function () {
-    //    return this.y?.toString() ?? '';
-    //     }
-    //   }
-    // }
-  },
-  series: [{
-    name: 'Media Count',
-    type: 'column',
-    data: yAxisData
-  }],
-  colors: ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80']
-} as Highcharts.Options;
-
-    this.getListViewData();
-  });
-}
+  }
 
 
 
