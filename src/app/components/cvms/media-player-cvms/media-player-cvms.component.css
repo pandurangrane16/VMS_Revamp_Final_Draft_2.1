@@ -86,3 +86,23 @@
   border: 2px solid black; /* Blue border */
   
 }
+
+.list {
+  width: 100%;
+  max-width: 100%;
+  border: 1px dashed #ccc;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background: #f9f9f9;
+}
+
+.list-item {
+  padding: 8px;
+  margin-bottom: 6px;
+  border: 1px solid #999;
+  background: #fff;
+  border-radius: 4px;
+  cursor: move;
+}

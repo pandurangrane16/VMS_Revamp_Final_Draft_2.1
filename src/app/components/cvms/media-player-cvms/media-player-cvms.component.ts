@@ -19,6 +19,7 @@ import { Globals } from 'src/app/utils/global';
 import { json, numeric } from '@rxweb/reactive-form-validators';
 import { MediaFacadeService } from 'src/app/facade/facade_services/media-facade.service';
 import { FileServiceService } from 'src/app/facade/services/vcms/file-service.service';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 
 @Component({
@@ -834,5 +835,18 @@ export class MediaPlayerCvmsComponent {
     }
 
   }
+
+  drop(event:any) {
+  if (event.previousContainer === event.container) {
+    moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+  } else {
+    transferArrayItem(
+      event.previousContainer.data,
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex
+    );
+  }
+}
 
 }
