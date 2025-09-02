@@ -173,14 +173,15 @@ export class MediaUploadComponent implements OnInit {
         video.addEventListener('loadedmetadata', () => {
           vdoWidth = video.videoWidth;
           vdoHeight = video.videoHeight;
-          if (vdoWidth < 1920 && vdoHeight < 1080) {
-            this.toast.error("File resolution should be 1920*1080.");
-            this.selectedFiles = [];
-            this.files =[];
-            return false;
-          } else {
-            return true;
-          }
+          // if (vdoWidth < 1920 && vdoHeight < 1080) {
+          //   this.toast.error("File resolution should be 1920*1080.");
+          //   this.selectedFiles = [];
+          //   this.files =[];
+          //   return false;
+          // } else {
+          //   return true;
+          // }
+          return true;
         });
       }
       reader.readAsDataURL(Vdofile);
